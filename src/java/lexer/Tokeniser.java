@@ -149,7 +149,7 @@ public class Tokeniser extends CompilerPass {
         // handles: Include
         if (c == '#'){
             StringBoolPair pair = readIdentifier('#');
-            if (pair.first == "#include") {
+            if (pair.first.equals("#include")) {
                 return new Token(Token.Category.INCLUDE, line, column);
             } else {
                 error(c, line, column);
@@ -229,10 +229,12 @@ public class Tokeniser extends CompilerPass {
             s.append(temp);
 
             // handle escapable chars
-            if ( temp == '\\' && (!scanner.hasNext() || !ESCAPABLE_CHARS.contains(scanner.peek())) ) {
-                return new StringBoolPair(s.toString(), false);
-            } else {
-                s.append(scanner.next());
+            if ( temp == '\\') {
+                if (!scanner.hasNext() || !ESCAPABLE_CHARS.contains(scanner.peek())) {
+                    return new StringBoolPair(s.toString(), false);
+                } else {
+                    s.append(scanner.next());
+                }
             }
         }
         return new StringBoolPair(s.toString(), false);
