@@ -96,6 +96,11 @@ run_test_lexer nested_comments "$PASS"
 run_test_lexer empty "$PASS"
 run_test_lexer multiple_characters_in_single_quotes "$LEXER_FAIL"
 run_test_lexer single_comment "$PASS"
+run_test_lexer int "$PASS"
+run_test_lexer no_main "$PASS"
+
+# parser tests
+print_test_name "parser tests"
 
 
 

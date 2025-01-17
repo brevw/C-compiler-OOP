@@ -1,0 +1,6 @@
+INT
+IDENTIFIER(i)
+ASSIGN
+INT_LITERAL(0)
+SC
+Lexing: pass
