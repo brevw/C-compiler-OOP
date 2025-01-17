@@ -1,0 +1,3 @@
+INCLUDE
+STRING_LITERAL(minic-stdlib.h)
+Lexing: pass

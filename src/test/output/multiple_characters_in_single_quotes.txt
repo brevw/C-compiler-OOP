@@ -1,0 +1,17 @@
+INCLUDE
+STRING_LITERAL(minic-stdlib.h)
+INT
+IDENTIFIER(main)
+LPAR
+RPAR
+LBRA
+CHAR
+IDENTIFIER(c)
+ASSIGN
+Lexing error: unrecognised character (') at 4:14
+INVALID
+IDENTIFIER(aa)
+Lexing error: unrecognised character (') at 4:18
+INVALID
+RBRA
+Lexing: failed (2 errors)
