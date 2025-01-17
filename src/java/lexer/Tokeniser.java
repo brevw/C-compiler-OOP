@@ -32,11 +32,10 @@ public class Tokeniser extends CompilerPass {
     }
 
 
-
-    /*
-     * To be completed
-     */
     public Token nextToken() {
+
+        // skip white spaces between lexems
+        consumeWhiteSpaces();
 
         int line = scanner.getLine();
         int column = scanner.getColumn();
@@ -49,9 +48,54 @@ public class Tokeniser extends CompilerPass {
         // get the next character
         char c = scanner.next();
 
-        // skip white spaces between lexems
-        if (Character.isWhitespace(c))
-            return nextToken();
+        // remove comments
+        // handles: Comments
+        while (c == '/') {
+            if (scanner.hasNext()) {
+                char temp = scanner.peek();
+                if (temp == '/') {
+                    scanner.next(); // consume '/'
+                    consumeUntilChar('\n');
+
+                    // update c, line, column
+                    if (scanner.hasNext()) {
+                        consumeWhiteSpaces();
+                        line = scanner.getLine();
+                        column = scanner.getColumn();
+                        c = scanner.next();
+                        continue;
+                    } else {
+                        return new Token(Token.Category.EOF, line, column);
+                    }
+                }
+                if (temp == '*') {
+                    scanner.next(); // consume '*'
+                    do {
+                        consumeUntilChar('*');
+                    } while (scanner.hasNext() && scanner.peek() != '/');
+                    if (scanner.hasNext() && scanner.peek() == '/') {
+                        scanner.next(); // consume '/'
+
+                        // update c, line, column
+                        consumeWhiteSpaces();
+                        if (scanner.hasNext()) {
+                            line = scanner.getLine();
+                            column = scanner.getColumn();
+                            c = scanner.next();
+                            continue;
+                        } else {
+                            return new Token(Token.Category.EOF, line, column);
+                        }
+
+                    } else {
+                        error(c, line, column);
+                        return new Token(Token.Category.INVALID, line, column);
+                    }
+                }
+            } else {
+                return new Token(Token.Category.INVALID, line, column);
+            }
+        }
 
         // handle case of types of tokens that are encoded with just one char
         // handles : Assign, Delimiters, Operators, Dot
@@ -308,5 +352,22 @@ public class Tokeniser extends CompilerPass {
         map.put('.', Token.Category.DOT);
 
         return map;
+    }
+
+    // consume until see specific char or end (c is also consumed)
+    private void consumeUntilChar(char c){
+        while (scanner.hasNext() && scanner.peek() != c) {
+            scanner.next();
+        }
+        if (scanner.hasNext()) {
+            scanner.next();
+        }
+    }
+
+    // clean white spaces
+    private void consumeWhiteSpaces(){
+        while (scanner.hasNext() && Character.isWhitespace(scanner.peek())) {
+            scanner.next();
+        }
     }
 }
