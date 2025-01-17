@@ -58,8 +58,8 @@ public class Tokeniser extends CompilerPass {
                     consumeUntilChar('\n');
 
                     // update c, line, column
+                    consumeWhiteSpaces();
                     if (scanner.hasNext()) {
-                        consumeWhiteSpaces();
                         line = scanner.getLine();
                         column = scanner.getColumn();
                         c = scanner.next();
