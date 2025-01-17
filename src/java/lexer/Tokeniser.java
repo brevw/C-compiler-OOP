@@ -182,7 +182,8 @@ public class Tokeniser extends CompilerPass {
         if (c == '\'') {
             StringBoolPair pair = readChar();
             boolean success = pair.second;
-            if (success){
+            if (success && scanner.hasNext() && scanner.peek() == '\''){
+                scanner.next(); // consume the '\''
                 return new Token(Token.Category.CHAR_LITERAL, pair.first, line, column);
             } else {
                 error(c, line, column);
