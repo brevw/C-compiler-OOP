@@ -5,3 +5,7 @@ out/
 project/
 target/
 comp520-coursework-w2025.iml
+out.log
+
+# file system files
+.DS_Store
