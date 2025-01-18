@@ -53,6 +53,8 @@ public class Tokeniser extends CompilerPass {
         while (c == '/') {
             if (scanner.hasNext()) {
                 char temp = scanner.peek();
+
+                // single line comment
                 if (temp == '/') {
                     scanner.next(); // consume '/'
                     consumeUntilChar('\n');
@@ -68,6 +70,8 @@ public class Tokeniser extends CompilerPass {
                         return new Token(Token.Category.EOF, line, column);
                     }
                 }
+
+                // multi line comment
                 if (temp == '*') {
                     scanner.next(); // consume '*'
                     do {
@@ -92,8 +96,11 @@ public class Tokeniser extends CompilerPass {
                         return new Token(Token.Category.INVALID, line, column);
                     }
                 }
+
+                // if we reach this point, this is not a comment
+                break;
             } else {
-                return new Token(Token.Category.INVALID, line, column);
+                return new Token(Token.Category.DIV, line, column);
             }
         }
 
