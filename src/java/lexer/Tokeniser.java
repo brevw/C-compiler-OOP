@@ -191,7 +191,7 @@ public class Tokeniser extends CompilerPass {
             boolean success = pair.second;
             if (success && scanner.hasNext() && scanner.peek() == '\''){
                 scanner.next(); // consume the '\''
-                return new Token(Token.Category.CHAR_LITERAL, pair.first, line, column);
+                return new Token(Token.Category.CHAR_LITERAL, String.valueOf(stringToChar(pair.first)) , line, column);
             } else {
                 error(c, line, column);
                 return new Token(Token.Category.INVALID, line, column);
@@ -267,6 +267,36 @@ public class Tokeniser extends CompilerPass {
             }
         }
         return new StringBoolPair("", false);
+    }
+
+    // assume the string is a valid char (either a char or '\'+ escapable char)
+    private static char stringToChar(String s) {
+        if (s.charAt(0) != '\\') {
+            return s.charAt(0);
+        } else {
+            switch (s.charAt(1)) {
+                case 'a':
+                    return '\u0007';
+                case 'b':
+                    return '\b';
+                case 'n':
+                    return '\n';
+                case 'r':
+                    return '\r';
+                case 't':
+                    return '\t';
+                case '\\':
+                    return '\\';
+                case '\'':
+                    return '\'';
+                case '"':
+                    return '"';
+                case '0':
+                    return '\0';
+                default:
+                    throw new IllegalArgumentException("Invalid escapable char");
+            }
+        }
     }
 
     // read valid chars until you hit a specific char

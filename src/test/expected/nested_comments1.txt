@@ -1,0 +1,4 @@
+IDENTIFIER(comment)
+ASTERISK
+DIV
+Lexing: pass
