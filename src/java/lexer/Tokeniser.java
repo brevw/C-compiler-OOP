@@ -308,14 +308,16 @@ public class Tokeniser extends CompilerPass {
             if (temp == c) {
                 return new StringBoolPair(s.toString(), true);
             }
-            s.append(temp);
+            if (temp != '\\') {
+                s.append(temp);
+            }
 
             // handle escapable chars
             if ( temp == '\\') {
                 if (!scanner.hasNext() || !ESCAPABLE_CHARS.contains(scanner.peek())) {
                     return new StringBoolPair(s.toString(), false);
                 } else {
-                    s.append(scanner.next());
+                    s.append(stringToChar("\\" + scanner.next()));
                 }
             }
         }
