@@ -24,6 +24,7 @@ public class Parser  extends CompilerPass {
     private static final Category FIRST_TYPE[] = {Category.INT, Category.CHAR, Category.STRUCT, Category.VOID};
     private static final Category FIRST_EXP_PRIME[] = {Category.ASSIGN, Category.GT, Category.LT, Category.GE, Category.LE, Category.NE, Category.EQ, Category.PLUS, Category.MINUS, Category.DIV, Category.ASTERISK, Category.REM, Category.LOGOR, Category.LOGAND, Category.LSBR, Category.DOT};
     private static final Category FIRST_EXP[] = {Category.MINUS, Category.PLUS, Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.ASTERISK, Category.AND, Category.SIZEOF, Category.LPAR, Category.IDENTIFIER, Category.INT_LITERAL};
+    private static final Category FIRST_STMT[] = combine(FIRST_EXP, Category.WHILE, Category.IF, Category.RETURN, Category.CONTINUE, Category.BREAK);
 
 
 
@@ -154,7 +155,6 @@ public class Parser  extends CompilerPass {
 
             }
         }
-        // to be completed ...
 
         expect(Category.EOF);
     }
@@ -185,7 +185,7 @@ public class Parser  extends CompilerPass {
     }
 
     private void parseParam(){
-        while (accept(FIRST_TYPE)){
+        if (accept(FIRST_TYPE)){
             parseType();
             expect(Category.IDENTIFIER);
             while (accept(Category.LSBR)) {
@@ -279,7 +279,7 @@ public class Parser  extends CompilerPass {
             nextToken();
             if (wasIdentifier && accept(Category.LPAR)) {
                 nextToken();
-                if (!accept(Category.RPAR)) {
+                if (accept(FIRST_EXP)) {
                     parseExp();
                     while (accept(Category.COMMA)) {
                         nextToken();
@@ -290,6 +290,7 @@ public class Parser  extends CompilerPass {
             }
         } else {
             error(FIRST_EXP);
+            return;
         }
         parseExpPrime();
     }
@@ -315,16 +316,18 @@ public class Parser  extends CompilerPass {
             }
         } else if (accept(Category.RETURN)) {
             nextToken();
-            if (!accept(Category.SC)) {
+            if (accept(FIRST_EXP)) {
                 parseExp();
             }
             expect(Category.SC);
         } else if (accept(Category.CONTINUE, Category.BREAK)) {
             nextToken();
             expect(Category.SC);
-        } else {
+        } else if (accept(FIRST_EXP)) {
             parseExp();
             expect(Category.SC);
+        } else {
+            error(FIRST_STMT);
         }
     }
 
@@ -336,7 +339,7 @@ public class Parser  extends CompilerPass {
             expect(Category.IDENTIFIER);
             parseVarDeclWithoutTypeIdent();
         }
-        while (!accept(Category.RBRA)) {
+        while (accept(FIRST_STMT)) {
             // parse stmt
             parseStmt();
         }
@@ -344,4 +347,10 @@ public class Parser  extends CompilerPass {
         expect(Category.RBRA);
     }
 
+    private static Category[] combine(Category[] base, Category... extra) {
+        Category[] combined = new Category[base.length + extra.length];
+        System.arraycopy(base, 0, combined, 0, base.length);
+        System.arraycopy(extra, 0, combined, base.length, extra.length); // Copy extraElements
+        return combined;
+    }
 }
