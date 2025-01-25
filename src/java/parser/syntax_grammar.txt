@@ -1,0 +1,43 @@
+# #  comment
+# () grouping
+# [] optional
+# *  zero or more
+# +  one or more
+# |  alternative
+
+program    ::= (include)* (structdecl | vardecl | fundecl | fundef)* EOF
+
+include    ::= "#include" STRING_LITERAL
+
+
+
+
+stmt       ::= block
+             | "while" "(" exp ")" stmt              # while loop
+             | "if" "(" exp ")" stmt ["else" stmt]   # if then else
+             | "return" [exp] ";"                    # return
+             | exp ";"                               # expression statement, e.g. a function call
+             | "continue" ";"                        # continue
+             | "break" ";"                           # break
+
+block      ::= "{" (vardecl)* (stmt)* "}"
+
+exp        ::=
+           (  (IDENT | INT_LITERAL)
+             | IDENT "(" [ exp ("," exp)* ] ")"
+             | ("-" | "+") exp
+             | CHAR_LITERAL
+             | STRING_LITERAL
+             | ("*" | "&") exp
+             | "sizeof" "(" type ")"
+             | "(" exp ")"
+             | "(" type ")" exp   ) exp'
+
+
+exp'       ::=
+            (  "=" exp
+             | (">" | "<" | ">=" | "<=" | "!=" | "==" | "+" | "-" | "/" | "*" | "%" | "||" | "&&") exp
+             | "[" exp "]"
+             | "." IDENT   ) exp'
+
+             | epsilson

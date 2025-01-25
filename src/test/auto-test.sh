@@ -77,6 +77,29 @@ run_test_lexer() {
     fi
 }
 
+run_test_parser() {
+    # Local names
+    local filename="$1"
+    local expected_exit_code="$2"
+    local c_file_path="$CFILES_DIR/$filename.c"
+    local expected_path="$EXPECTED_DIR/$filename.txt"
+    local output_path="$OUTPUT_DIR/$filename.txt"
+
+    # Print test name
+    echo "$ARROW $filename"
+
+    # Execute the program
+    java -cp bin Main1 -lexer "$c_file_path" > /dev/null
+    local exit_code=$?  # Capture the program's exit code
+
+    # Check if program exit code is non-zero
+    if [ $exit_code -ne $expected_exit_code ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program exited with code $exit_code (expected $expected_exit_code)"
+    else
+        echo -e "Test ${GREEN}Passed${RESET}"
+    fi
+}
+
 # Compile Code using ant apache
 echo -e "${BLUE}$DASHED_LINES Compiling Code $DASHED_LINES${RESET}"
 ant build
@@ -103,6 +126,9 @@ run_test_lexer no_main "$PASS"
 
 # parser tests
 print_test_name "parser tests"
+run_test_parser empty "$PASS"
+run_test_parser fibonacci "$PASS"
+run_test_parser tictactoe "$PASS"
 
 
 

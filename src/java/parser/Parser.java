@@ -124,11 +124,30 @@ public class Parser  extends CompilerPass {
             if (token.category == Category.STRUCT &&
                     lookAhead(1).category == Category.IDENTIFIER &&
                     lookAhead(2).category == Category.LBRA) {
+                // parse as (structdecl)
                 parseStructDecl();
             }
             else {
-                // to be completed ...
-                nextToken(); // this line should be modified/removed
+                // parse as (fundecl | fundef | vardecl)
+                parseType();
+                expect(Category.IDENTIFIER);
+                if (accept(Category.LPAR)) {
+                    // keep parsing as (fundecl | fundef)
+                    nextToken();
+                    parseParam();
+                    expect(Category.RPAR);
+                    if (accept(Category.SC)) {
+                        // parsed as (fundecl)
+                        nextToken();
+                    } else {
+                        // keep parsing as (fundef)
+                        parseBlock();
+                    }
+                } else {
+                    // keep parsing as (vardecl)
+                    parseVarDeclWithoutTypeIdent();
+                }
+
             }
         }
         // to be completed ...
@@ -138,21 +157,185 @@ public class Parser  extends CompilerPass {
 
     // includes are ignored, so does not need to return an AST node
     private void parseIncludes() {
-        if (accept(Category.INCLUDE)) {
+        while (accept(Category.INCLUDE)) {
             nextToken();
             expect(Category.STRING_LITERAL);
-            parseIncludes();
         }
+    }
+
+    private void parseType(){
+        if (accept(Category.INT, Category.CHAR, Category.VOID)){
+            nextToken();
+        } else if (accept(Category.STRUCT)){
+            nextToken();
+            expect(Category.IDENTIFIER);
+        } else {
+            error(Category.INT, Category.CHAR, Category.VOID, Category.STRUCT);
+        }
+
+        while (accept(Category.ASTERISK)){
+            nextToken();
+        }
+    }
+
+    private void parseParam(){
+        while (accept(Category.INT, Category.CHAR, Category.STRUCT, Category.VOID)) {
+            parseType();
+            expect(Category.IDENTIFIER);
+            while (accept(Category.LSBR)) {
+                nextToken();
+                expect(Category.INT_LITERAL);
+                expect(Category.RSBR);
+            }
+            while (accept(Category.COMMA)) {
+                nextToken();
+                parseType();
+                expect(Category.IDENTIFIER);
+                while (accept(Category.LSBR)) {
+                    nextToken();
+                    expect(Category.INT_LITERAL);
+                    expect(Category.RSBR);
+                }
+            }
+        }
+    }
+
+    private void parseVarDeclWithoutTypeIdent(){
+        while (accept(Category.LSBR)) {
+            nextToken();
+            expect(Category.INT_LITERAL);
+            expect(Category.RSBR);
+        }
+        expect(Category.SC);
     }
 
     private void parseStructDecl(){
         expect(Category.STRUCT);
         expect(Category.IDENTIFIER);
         expect(Category.LBRA);
-        // to be completed ...
+
+        do {
+            parseType();
+            expect(Category.IDENTIFIER);
+            parseVarDeclWithoutTypeIdent();
+        } while (!accept(Category.RBRA));
+
+        expect(Category.RBRA);
+        expect(Category.SC);
     }
 
+    private void parseExpPrime(){
+        if (accept(Category.ASSIGN, Category.GT, Category.LT, Category.GE, Category.LE, Category.NE, Category.EQ, Category.PLUS, Category.MINUS, Category.DIV, Category.ASTERISK, Category.REM, Category.LOGOR, Category.LOGAND, Category.LSBR, Category.DOT)) {
+            if (accept(Category.ASSIGN)) {
+                nextToken();
+                parseExp();
+            } else if (accept(Category.LSBR)) {
+                nextToken();
+                parseExp();
+                expect(Category.RSBR);
+            } else if (accept(Category.DOT)) {
+                nextToken();
+                expect(Category.IDENTIFIER);
+            } else {
+                nextToken();
+                parseExp();
+            }
+            parseExpPrime();
+        }
+    }
 
+    private void parseExp(){
+        if (accept(Category.MINUS, Category.PLUS)) {
+            nextToken();
+            parseExp();
+        } else if (accept(Category.CHAR_LITERAL, Category.STRING_LITERAL)) {
+            nextToken();
+        } else if (accept(Category.ASTERISK, Category.AND)) {
+            nextToken();
+            parseExp();
+        } else if (accept(Category.SIZEOF)) {
+            nextToken();
+            expect(Category.LPAR);
+            parseType();
+            expect(Category.RPAR);
+        } else if (accept(Category.LPAR)) {
+            nextToken();
+            if (accept(Category.INT, Category.CHAR, Category.STRUCT, Category.VOID)) {
+                parseType();
+                expect(Category.RPAR);
+                parseExp();
+            } else {
+                parseExp();
+                expect(Category.RPAR);
+            }
+        } else if (accept(Category.IDENTIFIER, Category.INT_LITERAL)) {
+            boolean wasIdentifier = accept(Category.IDENTIFIER);
+            nextToken();
+            if (wasIdentifier && accept(Category.LPAR)) {
+                nextToken();
+                if (!accept(Category.RPAR)) {
+                    parseExp();
+                    while (accept(Category.COMMA)) {
+                        nextToken();
+                        parseExp();
+                    }
+                }
+                expect(Category.RPAR);
+            }
+        } else {
+            error(Category.LPAR, Category.IDENTIFIER, Category.INT_LITERAL, Category.PLUS, Category.MINUS, Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.ASTERISK, Category.AND, Category.SIZEOF);
+        }
+        parseExpPrime();
+    }
 
-    // to be completed ...
+    private void parseStmt(){
+        if (accept(Category.LBRA)) {
+            parseBlock();
+        } else if (accept(Category.WHILE)) {
+            nextToken();
+            expect(Category.LPAR);
+            parseExp();
+            expect(Category.RPAR);
+            parseStmt();
+        } else if (accept(Category.IF)) {
+            nextToken();
+            expect(Category.LPAR);
+            parseExp();
+            expect(Category.RPAR);
+            parseStmt();
+            if (accept(Category.ELSE)) {
+                nextToken();
+                parseStmt();
+            }
+        } else if (accept(Category.RETURN)) {
+            nextToken();
+            if (!accept(Category.SC)) {
+                parseExp();
+            }
+            expect(Category.SC);
+        } else if (accept(Category.CONTINUE, Category.BREAK)) {
+            nextToken();
+            expect(Category.SC);
+        } else {
+            parseExp();
+            expect(Category.SC);
+        }
+    }
+
+    private void parseBlock(){
+        expect(Category.LBRA);
+        while (accept(Category.INT, Category.CHAR, Category.STRUCT, Category.VOID)) {
+            // parse vardecl
+            parseType();
+            expect(Category.IDENTIFIER);
+            parseVarDeclWithoutTypeIdent();
+        }
+        while (!accept(Category.RBRA)) {
+            // parse stmt
+            parseStmt();
+        }
+
+        expect(Category.RBRA);
+    }
+
 }
