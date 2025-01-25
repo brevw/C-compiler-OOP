@@ -148,8 +148,3 @@ run_test_parser fibonacci "$PASS" "$DEFAULT_TIMEOUT"
 run_test_parser tictactoe "$PASS" "$DEFAULT_TIMEOUT"
 run_test_parser double_reference "$PASS" "$DEFAULT_TIMEOUT"
 run_test_parser reserved_keyword_as_identifier "$PARSER_FAIL" "$DEFAULT_TIMEOUT"
-
-
-
-
-
