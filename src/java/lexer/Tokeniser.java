@@ -104,11 +104,6 @@ public class Tokeniser extends CompilerPass {
             }
         }
 
-        // handle case of types of tokens that are encoded with just one char
-        // handles : Assign, Delimiters, Operators, Dot
-        if (SINGLE_CHAR_TOKEN_MAPPINGS.containsKey(c)) {
-            return new Token(SINGLE_CHAR_TOKEN_MAPPINGS.get(c), line, column);
-        }
 
         // handle case of types of tokens that are encoded using one or two chars
         // handles : Logical Operators, Comparaisons
@@ -119,6 +114,7 @@ public class Tokeniser extends CompilerPass {
                     scanner.next();
                     return new Token(Token.Category.LOGAND, line, column);
                 }
+                break; // early exit
             case '|':
                 if (scanner.hasNext() && scanner.peek() == '|') {
                     scanner.next();
@@ -137,6 +133,7 @@ public class Tokeniser extends CompilerPass {
                 break; // early exit
             case '!':
                 if (scanner.hasNext() && scanner.peek() == '=') {
+                    scanner.next();
                     return new Token(Token.Category.NE, line, column);
                 } else {
                     error(c, line, column);
@@ -158,6 +155,12 @@ public class Tokeniser extends CompilerPass {
                 }
             default:
                 break;
+        }
+
+        // handle case of types of tokens that are encoded with just one char
+        // handles : Assign, Delimiters, Operators, Dot
+        if (SINGLE_CHAR_TOKEN_MAPPINGS.containsKey(c)) {
+            return new Token(SINGLE_CHAR_TOKEN_MAPPINGS.get(c), line, column);
         }
 
         // handles: Literals, Keywords, Types
