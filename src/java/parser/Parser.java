@@ -21,6 +21,10 @@ public class Parser  extends CompilerPass {
 
     private final Tokeniser tokeniser;
 
+    private static final Category FIRST_TYPE[] = {Category.INT, Category.CHAR, Category.STRUCT, Category.VOID};
+    private static final Category FIRST_EXP_PRIME[] = {Category.ASSIGN, Category.GT, Category.LT, Category.GE, Category.LE, Category.NE, Category.EQ, Category.PLUS, Category.MINUS, Category.DIV, Category.ASTERISK, Category.REM, Category.LOGOR, Category.LOGAND, Category.LSBR, Category.DOT};
+    private static final Category FIRST_EXP[] = {Category.MINUS, Category.PLUS, Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.ASTERISK, Category.AND, Category.SIZEOF, Category.LPAR, Category.IDENTIFIER, Category.INT_LITERAL};
+
 
 
     public Parser(Tokeniser tokeniser) {
@@ -120,7 +124,7 @@ public class Parser  extends CompilerPass {
     private void parseProgram() {
         parseIncludes();
 
-        while (accept(Category.STRUCT, Category.INT, Category.CHAR, Category.VOID)) {
+        while (accept(FIRST_TYPE)) {
             if (token.category == Category.STRUCT &&
                     lookAhead(1).category == Category.IDENTIFIER &&
                     lookAhead(2).category == Category.LBRA) {
@@ -164,13 +168,15 @@ public class Parser  extends CompilerPass {
     }
 
     private void parseType(){
-        if (accept(Category.INT, Category.CHAR, Category.VOID)){
-            nextToken();
-        } else if (accept(Category.STRUCT)){
-            nextToken();
-            expect(Category.IDENTIFIER);
+        if (accept(FIRST_TYPE)){
+            if (accept(Category.STRUCT)) {
+                nextToken();
+                expect(Category.IDENTIFIER);
+            } else {
+                nextToken();
+            }
         } else {
-            error(Category.INT, Category.CHAR, Category.VOID, Category.STRUCT);
+            error(FIRST_TYPE);
         }
 
         while (accept(Category.ASTERISK)){
@@ -179,7 +185,7 @@ public class Parser  extends CompilerPass {
     }
 
     private void parseParam(){
-        while (accept(Category.INT, Category.CHAR, Category.STRUCT, Category.VOID)) {
+        while (accept(FIRST_TYPE)){
             parseType();
             expect(Category.IDENTIFIER);
             while (accept(Category.LSBR)) {
@@ -225,7 +231,7 @@ public class Parser  extends CompilerPass {
     }
 
     private void parseExpPrime(){
-        if (accept(Category.ASSIGN, Category.GT, Category.LT, Category.GE, Category.LE, Category.NE, Category.EQ, Category.PLUS, Category.MINUS, Category.DIV, Category.ASTERISK, Category.REM, Category.LOGOR, Category.LOGAND, Category.LSBR, Category.DOT)) {
+        if (accept(FIRST_EXP_PRIME)) {
             if (accept(Category.ASSIGN)) {
                 nextToken();
                 parseExp();
@@ -260,7 +266,7 @@ public class Parser  extends CompilerPass {
             expect(Category.RPAR);
         } else if (accept(Category.LPAR)) {
             nextToken();
-            if (accept(Category.INT, Category.CHAR, Category.STRUCT, Category.VOID)) {
+            if (accept(FIRST_TYPE)) {
                 parseType();
                 expect(Category.RPAR);
                 parseExp();
@@ -283,7 +289,7 @@ public class Parser  extends CompilerPass {
                 expect(Category.RPAR);
             }
         } else {
-            error(Category.LPAR, Category.IDENTIFIER, Category.INT_LITERAL, Category.PLUS, Category.MINUS, Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.ASTERISK, Category.AND, Category.SIZEOF);
+            error(FIRST_EXP);
         }
         parseExpPrime();
     }
@@ -324,7 +330,7 @@ public class Parser  extends CompilerPass {
 
     private void parseBlock(){
         expect(Category.LBRA);
-        while (accept(Category.INT, Category.CHAR, Category.STRUCT, Category.VOID)) {
+        while (accept(FIRST_TYPE)) {
             // parse vardecl
             parseType();
             expect(Category.IDENTIFIER);

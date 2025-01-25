@@ -9,6 +9,18 @@ program    ::= (include)* (structdecl | vardecl | fundecl | fundef)* EOF
 
 include    ::= "#include" STRING_LITERAL
 
+structdecl ::= structtype "{" (vardecl)+ "}" ";"    # structure declaration
+
+vardecl    ::= type IDENT ("[" INT_LITERAL "]")* ";" # variable declaration, (e.g. int a;), or multi-dimensional array declaration, (e.g. int a[2][5];)
+
+fundef    ::= type IDENT "(" params ")" block       # function definition
+
+fundecl   ::= type IDENT "(" params ")" ";"         # function declaration
+
+type       ::= ("int" | "char" | "void" | structtype) ("*")*
+structtype ::= "struct" IDENT
+
+params     ::= [ type IDENT ("[" INT_LITERAL "]")* ("," type IDENT ("[" INT_LITERAL "]")*)* ]
 
 
 
