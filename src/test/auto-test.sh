@@ -26,6 +26,9 @@ GREEN='\e[32m' YELLOW='\e[33m'
 BLUE='\e[34m'
 RESET='\e[0m'
 
+# Other CONST
+DEFAULT_TIMEOUT=5
+
 
 # Functions
 print_test_name(){
@@ -43,6 +46,7 @@ run_test_lexer() {
     # Local names
     local filename="$1"
     local expected_exit_code="$2"
+    local timelimit="$3"
     local c_file_path="$CFILES_DIR/$filename.c"
     local expected_path="$EXPECTED_DIR/$filename.txt"
     local output_path="$OUTPUT_DIR/$filename.txt"
@@ -51,8 +55,14 @@ run_test_lexer() {
     echo "$ARROW $filename"
 
     # Execute the program and redirect output
-    java -cp bin Main1 -lexer "$c_file_path" > "$output_path"
+    gtimeout "$timelimit" java -cp bin Main1 -lexer "$c_file_path" > "$output_path"
     local exit_code=$?  # Capture the program's exit code
+
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program timed out"
+        return
+    fi
 
     #if right exit code then compare the output
     local comparison="Uninitialized"
@@ -81,6 +91,7 @@ run_test_parser() {
     # Local names
     local filename="$1"
     local expected_exit_code="$2"
+    local timelimit="$3"
     local c_file_path="$CFILES_DIR/$filename.c"
     local expected_path="$EXPECTED_DIR/$filename.txt"
     local output_path="$OUTPUT_DIR/$filename.txt"
@@ -89,8 +100,14 @@ run_test_parser() {
     echo "$ARROW $filename"
 
     # Execute the program
-    java -cp bin Main1 -lexer "$c_file_path" > /dev/null
+    gtimeout "$timelimit" java -cp bin Main1 -parser "$c_file_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
+
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program timed out"
+        return
+    fi
 
     # Check if program exit code is non-zero
     if [ $exit_code -ne $expected_exit_code ]; then
@@ -115,20 +132,23 @@ rm -rf "$OUTPUT_DIR"/*
 
 # lexer tests
 print_test_name "lexer tests"
-run_test_lexer nested_comments "$PASS"
-run_test_lexer nested_comments1 "$PASS"
-run_test_lexer empty "$PASS"
-run_test_lexer escaped_char "$PASS"
-run_test_lexer multiple_characters_in_single_quotes "$LEXER_FAIL"
-run_test_lexer single_comment "$PASS"
-run_test_lexer int "$PASS"
-run_test_lexer no_main "$PASS"
+run_test_lexer nested_comments "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer nested_comments1 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer empty "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer escaped_char "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer multiple_characters_in_single_quotes "$LEXER_FAIL" "$DEFAULT_TIMEOUT"
+run_test_lexer single_comment "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer int "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer no_main "$PASS" "$DEFAULT_TIMEOUT"
 
 # parser tests
 print_test_name "parser tests"
-run_test_parser empty "$PASS"
-run_test_parser fibonacci "$PASS"
-run_test_parser tictactoe "$PASS"
+run_test_parser empty "$PASS" "$DEFAULT_TIMEOUT"
+run_test_parser fibonacci "$PASS" "$DEFAULT_TIMEOUT"
+run_test_parser tictactoe "$PASS" "$DEFAULT_TIMEOUT"
+run_test_parser double_reference "$PASS" "$DEFAULT_TIMEOUT"
+run_test_parser reserved_keyword_as_identifier "$PARSER_FAIL" "$DEFAULT_TIMEOUT"
+
 
 
 
