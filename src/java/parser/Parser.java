@@ -24,7 +24,7 @@ public class Parser  extends CompilerPass {
     private static final Category FIRST_TYPE[] = {Category.INT, Category.CHAR, Category.STRUCT, Category.VOID};
     private static final Category FIRST_EXP_PRIME[] = {Category.ASSIGN, Category.GT, Category.LT, Category.GE, Category.LE, Category.NE, Category.EQ, Category.PLUS, Category.MINUS, Category.DIV, Category.ASTERISK, Category.REM, Category.LOGOR, Category.LOGAND, Category.LSBR, Category.DOT};
     private static final Category FIRST_EXP[] = {Category.MINUS, Category.PLUS, Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.ASTERISK, Category.AND, Category.SIZEOF, Category.LPAR, Category.IDENTIFIER, Category.INT_LITERAL};
-    private static final Category FIRST_STMT[] = combine(FIRST_EXP, Category.WHILE, Category.IF, Category.RETURN, Category.CONTINUE, Category.BREAK);
+    private static final Category FIRST_STMT[] = combine(FIRST_EXP, Category.LBRA, Category.WHILE, Category.IF, Category.RETURN, Category.CONTINUE, Category.BREAK);
     private static final Category FIRST_BLOCK[] = {Category.LBRA};
 
 
@@ -257,7 +257,7 @@ public class Parser  extends CompilerPass {
         if (accept(Category.MINUS, Category.PLUS)) {
             nextToken();
             parseExp();
-        } else if (accept(Category.CHAR_LITERAL, Category.STRING_LITERAL)) {
+        } else if (accept(Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.INT_LITERAL)) {
             nextToken();
         } else if (accept(Category.ASTERISK, Category.AND)) {
             nextToken();
@@ -277,10 +277,9 @@ public class Parser  extends CompilerPass {
                 parseExp();
                 expect(Category.RPAR);
             }
-        } else if (accept(Category.IDENTIFIER, Category.INT_LITERAL)) {
-            boolean wasIdentifier = accept(Category.IDENTIFIER);
+        } else if (accept(Category.IDENTIFIER)) {
             nextToken();
-            if (wasIdentifier && accept(Category.LPAR)) {
+            if (accept(Category.LPAR)) {
                 nextToken();
                 if (accept(FIRST_EXP)) {
                     parseExp();
@@ -299,7 +298,7 @@ public class Parser  extends CompilerPass {
     }
 
     private void parseStmt(){
-        if (accept(Category.LBRA)) {
+        if (accept(FIRST_BLOCK)) {
             parseBlock();
         } else if (accept(Category.WHILE)) {
             nextToken();
