@@ -411,7 +411,7 @@ class ParserTest {
         String programContent = generateProgram();
 
         // save program into a file
-        String path = Paths.get(System.getProperty("user.dir"), "src", "test")+ STR."/C-files/parser-generated\{seed}.txt";
+        String path = Paths.get(System.getProperty("user.dir"), "src", "test")+ STR."/C-files/parser-generated\{seed}.c";
         File file = new File(path);
         file.getParentFile().mkdirs();
         try(FileWriter fw = new FileWriter(file)){

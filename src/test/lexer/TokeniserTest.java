@@ -289,7 +289,7 @@ class TokeniserTest {
         }
         buffer.add(newToken(Token.Category.EOF, ""));
 
-        String path = Paths.get(System.getProperty("user.dir"), "src", "test")+ STR."/C-files/lexer-generated\{seed}.txt";
+        String path = Paths.get(System.getProperty("user.dir"), "src", "test")+ STR."/C-files/lexer-generated\{seed}.c";
         File file = new File(path);
         file.getParentFile().mkdirs();
         try(FileWriter fw = new FileWriter(file)){
