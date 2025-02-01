@@ -1,23 +1,28 @@
 package parser;
 
 
+import ast.Decl;
+import ast.Program;
+import ast.StructTypeDecl;
 import lexer.Token;
 import lexer.Token.Category;
 import lexer.Tokeniser;
 import util.CompilerPass;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 
 /**
  * @author cdubach
  */
-public class Parser  extends CompilerPass {
+public class Parser extends CompilerPass {
 
     private Token token;
 
-    private final Queue<Token> buffer = new LinkedList<>();
+    private Queue<Token> buffer = new LinkedList<>();
 
     private final Tokeniser tokeniser;
 
@@ -33,10 +38,11 @@ public class Parser  extends CompilerPass {
         this.tokeniser = tokeniser;
     }
 
-    public void parse() {
+    public Program parse() {
         // get the first token
         nextToken();
-        parseProgram();
+
+        return parseProgram();
     }
 
 
@@ -123,15 +129,17 @@ public class Parser  extends CompilerPass {
     }
 
 
-    private void parseProgram() {
+    private Program parseProgram() {
         parseIncludes();
+
+        List<Decl> decls = new ArrayList<>();
 
         while (accept(FIRST_TYPE)) {
             if (token.category == Category.STRUCT &&
                     lookAhead(1).category == Category.IDENTIFIER &&
                     lookAhead(2).category == Category.LBRA) {
                 // parse as (structdecl)
-                parseStructDecl();
+                decls.add(parseStructDecl());
             }
             else {
                 // parse as (fundecl | fundef | vardecl)
@@ -160,6 +168,7 @@ public class Parser  extends CompilerPass {
         }
 
         expect(Category.EOF);
+        return new Program(decls);
     }
 
     // includes are ignored, so does not need to return an AST node
@@ -218,9 +227,9 @@ public class Parser  extends CompilerPass {
         expect(Category.SC);
     }
 
-    private void parseStructDecl(){
+    private StructTypeDecl parseStructDecl(){
         expect(Category.STRUCT);
-        expect(Category.IDENTIFIER);
+        Token id = expect(Category.IDENTIFIER);
         expect(Category.LBRA);
 
         do {
@@ -231,6 +240,7 @@ public class Parser  extends CompilerPass {
 
         expect(Category.RBRA);
         expect(Category.SC);
+        return null; // to be changed
     }
 
     private void parseExpPrime(){
