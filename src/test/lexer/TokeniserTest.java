@@ -242,10 +242,10 @@ class TokeniserTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9})
     void correctlyLexingGeneratedProgramGivenSeed(int seed) {
+        RANDOM.setSeed(seed);
         //flush the buffer
         buffer = new ArrayList<>();
         // generate program
-        RANDOM = new Random(seed);
         StringBuilder sb = new StringBuilder();
         sb.append(generateInclude());
         sb.append('\n');
@@ -339,7 +339,7 @@ class TokeniserTest {
         }
         return result;
     }
-    private static char[] appendToCharArray(char[] base, char... extra){
+    public static char[] appendToCharArray(char[] base, char... extra){
         char[] combined = new char[base.length + extra.length];
         System.arraycopy(base, 0, combined, 0, base.length);
         System.arraycopy(extra, 0, combined, base.length, extra.length); // Copy extraElements
