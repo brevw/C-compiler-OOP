@@ -140,6 +140,15 @@ run_test_lexer multiple_characters_in_single_quotes "$LEXER_FAIL" "$DEFAULT_TIME
 run_test_lexer single_comment "$PASS" "$DEFAULT_TIMEOUT"
 run_test_lexer int "$PASS" "$DEFAULT_TIMEOUT"
 run_test_lexer no_main "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated1 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated2 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated3 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated4 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated5 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated6 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated7 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated8 "$PASS" "$DEFAULT_TIMEOUT"
+run_test_lexer lexer-generated9 "$PASS" "$DEFAULT_TIMEOUT"
 
 # parser tests
 print_test_name "parser tests"
@@ -157,3 +166,6 @@ run_test_parser parser-generated6 "$PASS" "$DEFAULT_TIMEOUT"
 run_test_parser parser-generated7 "$PASS" "$DEFAULT_TIMEOUT"
 run_test_parser parser-generated8 "$PASS" "$DEFAULT_TIMEOUT"
 run_test_parser parser-generated9 "$PASS" "$DEFAULT_TIMEOUT"
+
+# AST tests
+print_test_name "AST tests"
