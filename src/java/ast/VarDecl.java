@@ -1,6 +1,5 @@
 package ast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class VarDecl extends Decl {
@@ -11,9 +10,7 @@ public final class VarDecl extends Decl {
     }
 
     public List<ASTNode> children() {
-        List<ASTNode> children = new ArrayList<>();
-        children.add(type);
-        return children;
+        return List.of(type);
     }
 
 }
