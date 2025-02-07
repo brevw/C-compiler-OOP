@@ -147,7 +147,7 @@ public class Parser extends CompilerPass {
 
 
     private Program parseProgram() {
-        parseIncludes();
+        parseIncludes(); // don't care about includes
 
         List<Decl> decls = new ArrayList<>();
 
@@ -204,9 +204,7 @@ public class Parser extends CompilerPass {
             if (accept(Category.STRUCT)) {
                 nextToken();
                 Token id = expect(Category.IDENTIFIER);
-                if (id.category == Category.IDENTIFIER){
-                    type = new StructType(id.data);
-                }
+                type = new StructType(id.data);
             } else {
                 switch (token.category) {
                     case Category.INT:
@@ -237,6 +235,7 @@ public class Parser extends CompilerPass {
     private void parseParam(List<VarDecl> argsList){
         Type type;
         Token id;
+        ArrayList<Integer> stack = new ArrayList<>();
         if (accept(FIRST_TYPE)){
             type = parseType();
             id = expect(Category.IDENTIFIER);
@@ -244,13 +243,19 @@ public class Parser extends CompilerPass {
                 nextToken();
                 Token size = expect(Category.INT_LITERAL);
                 if (size.category == Category.INT_LITERAL) {
-                    type = new ArrayType(type, Integer.parseInt(size.data));
+                    stack.add(Integer.parseInt(size.data));
+                } else {
+                    type = BaseType.UNKNOWN;
+                    stack.clear();
                 }
                 expect(Category.RSBR);
             }
-            if (id.category == Category.IDENTIFIER){
-                argsList.add(new VarDecl(type, id.data));
+            for (int i = stack.size() - 1; i >= 0; --i) {
+                type = new ArrayType(type, stack.get(i));
             }
+            argsList.add(new VarDecl(type, id.data));
+            stack.clear();
+
             while (accept(Category.COMMA)) {
                 nextToken();
                 type = parseType();
@@ -259,25 +264,36 @@ public class Parser extends CompilerPass {
                     nextToken();
                     Token size = expect(Category.INT_LITERAL);
                     if (size.category == Category.INT_LITERAL) {
-                        type = new ArrayType(type, Integer.parseInt(size.data));
+                        stack.add(Integer.parseInt(size.data));
+                    } else {
+                        type = BaseType.UNKNOWN;
+                        stack.clear();
                     }
                     expect(Category.RSBR);
                 }
-                if (id.category == Category.IDENTIFIER){
-                    argsList.add(new VarDecl(type, id.data));
+                for (int i = stack.size() - 1; i >= 0; --i) {
+                    type = new ArrayType(type, stack.get(i));
                 }
+                argsList.add(new VarDecl(type, id.data));
             }
         }
     }
 
     private VarDecl parseVarDeclWithoutTypeIdent(Type type, Token id){
+        ArrayList<Integer> stack = new ArrayList<>();
         while (accept(Category.LSBR)) {
             nextToken();
             Token size = expect(Category.INT_LITERAL);
             if (size.category == Category.INT) {
-                type = new ArrayType(type, Integer.parseInt(size.data));
+                stack.add(Integer.parseInt(size.data));
+            } else {
+                type = BaseType.UNKNOWN;
+                stack.clear();
             }
             expect(Category.RSBR);
+        }
+        for (int i = stack.size() - 1; i >= 0; --i) {
+            type = new ArrayType(type, stack.get(i));
         }
         expect(Category.SC);
         return new VarDecl(type, id.data);
@@ -292,9 +308,7 @@ public class Parser extends CompilerPass {
         do {
             Type type = parseType();
             Token paramId = expect(Category.IDENTIFIER);
-            if (paramId.category == Category.IDENTIFIER){
-                varDecls.add(parseVarDeclWithoutTypeIdent(type, paramId));
-            }
+            varDecls.add(parseVarDeclWithoutTypeIdent(type, paramId));
         } while (accept(FIRST_TYPE));
 
         expect(Category.RBRA);
