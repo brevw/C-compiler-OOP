@@ -117,6 +117,44 @@ run_test_parser() {
     fi
 }
 
+run_test_ast() {
+    # Local names
+    local filename="$1"
+    local timelimit="$2"
+    local c_file_path="$CFILES_DIR/$filename.c"
+    local expected_path="$EXPECTED_DIR/$filename.c-ast-dump"
+    local output_path="$OUTPUT_DIR/$filename.c-ast-dump"
+
+    # Print test name
+    echo "$ARROW $filename"
+    echo "java -cp bin Main2 -ast $c_file_path $output_path"
+
+
+    # Execute the program
+    gtimeout "$timelimit" java -cp bin Main2 -ast "$c_file_path" "$output_path"
+    local exit_code=$?  # Capture the program's exit code
+
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program timed out"
+        return
+    fi
+
+    # Check if program exit code is non-zero
+    if [ $exit_code -ne 0 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program exited with code $exit_code (expected $expected_exit_code)"
+    else
+        tr -d '[:space:]' < "$output_path" > temp.txt && mv temp.txt "$output_path"
+        diff "$output_path" "$expected_path"
+        exit_code=$?
+        if [ $exit_code -ne 0 ]; then
+            echo -e "Test ${RED}Failed${RESET}: Output does not match expected"
+        else
+            echo -e "Test ${GREEN}Passed${RESET}"
+        fi
+    fi
+}
+
 # Compile Code using ant apache
 echo -e "${BLUE}$DASHED_LINES Compiling Code $DASHED_LINES${RESET}"
 ant build
@@ -169,3 +207,4 @@ run_test_parser parser-generated9 "$PASS" "$DEFAULT_TIMEOUT"
 
 # AST tests
 print_test_name "AST tests"
+run_test_ast fibonacci "$DEFAULT_TIMEOUT"
