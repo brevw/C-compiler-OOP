@@ -20,7 +20,7 @@ import ast.FunDef;
 import ast.If;
 import ast.IntLiteral;
 import ast.Op;
-import ast.PoInterType;
+import ast.PointerType;
 import ast.Program;
 import ast.Return;
 import ast.SizeOfExpr;
@@ -238,7 +238,7 @@ public class Parser extends CompilerPass {
         }
 
         while (accept(Category.ASTERISK)){
-            type = new PoInterType(type);
+            type = new PointerType(type);
             nextToken();
         }
 

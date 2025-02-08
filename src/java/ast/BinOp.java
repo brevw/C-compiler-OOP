@@ -15,7 +15,7 @@ public final class BinOp extends Expr {
     }
 
     public List<ASTNode> children(){
-        return List.of(lhs, rhs);
+        return List.of(lhs, op, rhs);
     }
 
 }

@@ -2,11 +2,11 @@ package ast;
 
 import java.util.List;
 
-public final class PoInterType implements Type{
+public final class PointerType implements Type{
 
     public final Type type;
 
-    public PoInterType(Type type){
+    public PointerType(Type type){
         this.type = type;
     }
 
