@@ -10,14 +10,15 @@ public final class StructTypeDecl extends Decl {
     public StructTypeDecl(String name, List<VarDecl> varDecls){
 
         this.varDecls = varDecls;
-        this.type = BaseType.NONE;
+        this.type = new StructType("");
         this.name = name;
     }
 
 
     public List<ASTNode> children() {
-        var children = new ArrayList<ASTNode>(varDecls);
+        var children = new ArrayList<ASTNode>();
         children.add(type);
+        children.addAll(varDecls);
         return  children;
     }
 

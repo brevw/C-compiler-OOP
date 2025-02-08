@@ -2,7 +2,7 @@ package ast;
 
 import java.util.List;
 
-public final class IntLiteral implements ASTNode{
+public final class IntLiteral extends Expr{
     public final int intValue;
 
     public IntLiteral(int intValue){

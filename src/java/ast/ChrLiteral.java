@@ -2,7 +2,7 @@ package ast;
 
 import java.util.List;
 
-public final class ChrLiteral implements ASTNode{
+public final class ChrLiteral extends Expr{
     public final char charValue;
 
     public ChrLiteral(char charValue){

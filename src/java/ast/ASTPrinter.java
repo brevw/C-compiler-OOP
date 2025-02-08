@@ -13,10 +13,14 @@ public class ASTPrinter {
     public void visit(ASTNode node) {
         if (node == null)
             throw new IllegalStateException("Unexpected null value");
-        writer.print(node.getClass().getSimpleName()+"(");
+        boolean printClassName = !(node instanceof Op || node instanceof BaseType);
+        if (printClassName) {
+            writer.print(node.getClass().getSimpleName()+"(");
+        }
 
         switch(node) {
 
+            // Decl
             case FunDef fd -> {
                 visit(fd.type);
                 writer.print(","+fd.name);
@@ -43,11 +47,63 @@ public class ASTPrinter {
                 writer.print(","+vd.name);
             }
 
+            case StructTypeDecl std -> {
+                writer.print(std.name);
+                for (VarDecl vd : std.varDecls) {
+                    writer.print(",");
+                    visit(vd);
+                }
+            }
+
+            // Expr
             case VarExpr v -> {
                 writer.print(v.name);
             }
 
-            // to complete ...
+            case IntLiteral i -> {
+                writer.print(i.intValue);
+            }
+
+            case ChrLiteral c -> {
+                writer.print(c.charValue);
+            }
+
+            case StrLiteral s -> {
+                writer.print(s.strValue);
+            }
+
+            case FunCallExpr f -> {
+                writer.print(f.name);
+                for (Expr e : f.argsList) {
+                    writer.print(",");
+                    visit(e);
+                }
+            }
+
+            // Type
+            case BaseType bt -> {
+                writer.print(bt.name());
+            }
+
+            case ArrayType at -> {
+                visit(at.type);
+                writer.print(","+at.nbrElements);
+            }
+
+            case StructType st -> {
+                writer.print(st.name);
+            }
+
+            // Op
+            case Op op -> {
+                writer.print(op.name());
+            }
+
+
+
+
+
+
 
             default -> {
                 String delimiter = "";
@@ -59,7 +115,9 @@ public class ASTPrinter {
             }
         }
 
-        writer.print(")");
+        if (printClassName){
+            writer.print(")");
+        }
 
         switch(node) {
             case Program ignored -> {
@@ -71,5 +129,5 @@ public class ASTPrinter {
     }
 
 
-    
+
 }

@@ -2,7 +2,7 @@ package ast;
 
 import java.util.List;
 
-public final class BinOp implements ASTNode{
+public final class BinOp extends Expr {
 
     public final Expr lhs;
     public final Op op;

@@ -35,18 +35,28 @@ stmt       ::= block
 
 block      ::= "{" (vardecl)* (stmt)* "}"
 
-exp        ::= exp1
-exp1       ::= exp2 "="  exp | exp2                                            # assign (right to left)
-exp2       ::= exp3 ("||" exp)*                                                # logor (left to right)
-exp3       ::= exp4 ("&&" exp)*                                                # logand (left to right)
-exp4       ::= exp5 (("=="|"!=") exp)*                                         # eq, neq (left to right)
-exp5       ::= exp6 (("<"|"<="|">"|">=") exp)*                                 # comparaisons (left to right)
-exp6       ::= exp7 (("+"|"-") exp)*                                           # add, sub (left to right)
-exp7       ::= exp8 (("*"|"/"|"%") exp)*                                       # mult, div, rem (left to right)
-exp8       ::= exp9 ("&"|"*"|"+"|"-"|"(" type ")") exp9 | exp9                 # address of, dereference, cast, plus, minus (right to left)
-exp9       ::= "(" exp ")" | exp10 ("." IDENT)* | exp10 ("[" exp "]")*         # func call, array subscripting (left to right)
-                --> look ahead first exp or not
-exp10      ::= IDENT | INT_LITERAL | CHAR_LITERAL                              # primary
-                | STRING_LITERAL | "sizeof" "(" type ")"
-                | IDENT "(" [exp ("," exp)* ] ")"
+expr        ::= expr1
+expr1       ::= expr2 "="  expr1 | expr2                                           # assign (right to left)
+expr2       ::= expr3 ("||" expr3)*                                               # logor (left to right)
+expr3       ::= expr4 ("&&" expr4)*                                               # logand (left to right)
+expr4       ::= expr5 (("=="|"!=") expr5)*                                        # eq, neq (left to right)
+expr5       ::= expr6 (("<"|"<="|">"|">=") expr6)*                                # comparaisons (left to right)
+expr6       ::= expr7 (("+"|"-") expr7)*                                          # add, sub (left to right)
+expr7       ::= expr8 (("*"|"/"|"%") expr8)*                                      # mult, div, rem (left to right)
+expr8       ::= ("&"|"*"|"+"|"-"|"(" type ")") expr8 | expr9                      # address of, dereference, cast, plus, minus (right to left)
+funcall     ::= IDENT "(" [expr ("," expr)* ] ")"
+expr9       ::=( funcall
+                 | IDENT
+                 | INT_LITERAL
+                 | CHAR_LITERAL                                # primary
+                 | STRING_LITERAL
+                 | "sizeof" "(" type ")"
+                 | "(" expr ")" ) expr9_prime
+
+expr9_prime ::=(
+                |(("." IDENT) |
+                  ("[" expr "]"))*
+                | epsilon
+
+
                 --> look ahead if LPAR

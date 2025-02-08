@@ -1,25 +1,38 @@
 package parser;
 
 
+import ast.AddressOfExpr;
+import ast.ArrayAccessExpr;
 import ast.ArrayType;
+import ast.Assign;
 import ast.BaseType;
+import ast.BinOp;
 import ast.Block;
 import ast.Break;
 import ast.Continue;
 import ast.Decl;
 import ast.Expr;
 import ast.ExprStmt;
+import ast.FieldAccessExpr;
+import ast.FunCallExpr;
 import ast.FunDecl;
 import ast.FunDef;
 import ast.If;
+import ast.IntLiteral;
+import ast.Op;
 import ast.PoInterType;
 import ast.Program;
 import ast.Return;
+import ast.SizeOfExpr;
 import ast.Stmt;
+import ast.StrLiteral;
 import ast.StructType;
 import ast.StructTypeDecl;
 import ast.Type;
+import ast.TypecastExpr;
+import ast.ValueAtExpr;
 import ast.VarDecl;
+import ast.VarExpr;
 import ast.While;
 import lexer.Token;
 import lexer.Token.Category;
@@ -316,69 +329,194 @@ public class Parser extends CompilerPass {
         return new StructTypeDecl(id.data, varDecls);
     }
 
-    private void parseExpPrime(){
-        if (accept(FIRST_EXP_PRIME)) {
-            if (accept(Category.ASSIGN)) {
-                nextToken();
-                parseExp();
-            } else if (accept(Category.LSBR)) {
-                nextToken();
-                parseExp();
-                expect(Category.RSBR);
-            } else if (accept(Category.DOT)) {
-                nextToken();
-                expect(Category.IDENTIFIER);
-            } else {
-                nextToken();
-                parseExp();
-            }
-            parseExpPrime();
+    private Expr parseExpr(){
+        return parseExprOne();
+    }
+
+    private Expr parseExprOne(){
+        Expr lhs = parseExprTwo();
+        if (accept(Category.ASSIGN)) {
+            nextToken();
+            return new Assign(lhs, parseExprOne());
+        } else {
+            return lhs;
         }
     }
 
-    private Expr parseExp(){
-        if (accept(Category.MINUS, Category.PLUS)) {
+    private Expr parseExprTwo(){
+        Expr lhs = parseExprThree();
+        while (accept(Category.LOGOR)) {
             nextToken();
-            parseExp();
-        } else if (accept(Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.INT_LITERAL)) {
+            lhs = new BinOp(lhs, Op.OR, parseExprThree());
+        }
+        return lhs;
+    }
+
+    private Expr parseExprThree(){
+        Expr lhs = parseExprFour();
+        while (accept(Category.LOGAND)) {
             nextToken();
-        } else if (accept(Category.ASTERISK, Category.AND)) {
-            nextToken();
-            parseExp();
-        } else if (accept(Category.SIZEOF)) {
-            nextToken();
-            expect(Category.LPAR);
-            parseType();
-            expect(Category.RPAR);
-        } else if (accept(Category.LPAR)) {
-            nextToken();
-            if (accept(FIRST_TYPE)) {
-                parseType();
-                expect(Category.RPAR);
-                parseExp();
+            lhs = new BinOp(lhs, Op.AND, parseExprFour());
+        }
+        return lhs;
+    }
+
+    private Expr parseExprFour(){
+        Expr lhs = parseExprFive();
+        while (accept(Category.EQ, Category.NE)) {
+            if (accept(Category.EQ)) {
+                nextToken();
+                lhs = new BinOp(lhs, Op.EQ, parseExprFive());
             } else {
-                parseExp();
-                expect(Category.RPAR);
+                nextToken();
+                lhs = new BinOp(lhs, Op.NE, parseExprFive());
             }
+        }
+        return lhs;
+    }
+
+    private Expr parseExprFive(){
+        Expr lhs = parseExprSix();
+        while (accept(Category.LE, Category.LT, Category.GE, Category.GT)) {
+            if (accept(Category.LE)) {
+                nextToken();
+                lhs = new BinOp(lhs, Op.LE, parseExprSix());
+            } else if (accept(Category.LT)) {
+                nextToken();
+                lhs = new BinOp(lhs, Op.LT, parseExprSix());
+            } else if (accept(Category.GE)) {
+                nextToken();
+                lhs = new BinOp(lhs, Op.GE, parseExprSix());
+            } else {
+                nextToken();
+                lhs = new BinOp(lhs, Op.GT, parseExprSix());
+            }
+        }
+        return lhs;
+    }
+
+    private Expr parseExprSix(){
+        Expr lhs = parseExprSeven();
+        while (accept(Category.PLUS, Category.MINUS)) {
+            if (accept(Category.PLUS)) {
+                nextToken();
+                lhs = new BinOp(lhs, Op.ADD, parseExprSeven());
+            } else {
+                nextToken();
+                lhs = new BinOp(lhs, Op.SUB, parseExprSeven());
+            }
+        }
+        return lhs;
+    }
+
+    private Expr parseExprSeven(){
+        Expr lhs = parseExprEight();
+        while (accept(Category.ASTERISK, Category.DIV, Category.REM)) {
+            if (accept(Category.ASTERISK)) {
+                nextToken();
+                lhs = new BinOp(lhs, Op.MUL, parseExprEight());
+            } else if (accept(Category.DIV)) {
+                nextToken();
+                lhs = new BinOp(lhs, Op.DIV, parseExprEight());
+            } else {
+                nextToken();
+                lhs = new BinOp(lhs, Op.MOD, parseExprEight());
+            }
+        }
+        return lhs;
+    }
+
+    private Expr parseExprEight(){
+        var temp = lookAhead(1).category;
+        boolean lookAheadType =  temp == Category.INT || temp == Category.CHAR || temp == Category.STRUCT || temp == Category.VOID;
+
+        if (accept(Category.AND)) {
+            nextToken();
+            return new AddressOfExpr(parseExprNine());
+        } else if (accept(Category.ASTERISK)) {
+            nextToken();
+            return new ValueAtExpr(parseExprNine());
+        } else if (accept(Category.PLUS)) {
+            nextToken();
+            return new BinOp(new IntLiteral(0), Op.ADD, parseExprNine());
+        } else if (accept(Category.MINUS)) {
+            nextToken();
+            return new BinOp(new IntLiteral(0), Op.SUB, parseExprNine());
+        } else if (accept(Category.LPAR) && lookAheadType) {
+            nextToken();
+            Type type = parseType();
+            expect(Category.RPAR);
+            return new TypecastExpr(type, parseExprEight());
+        } else {
+            return parseExprNine();
+        }
+    }
+
+    private Expr parseExprNine(){
+        Expr tempExpr = null;
+        if (accept(Category.INT_LITERAL)) {
+            int value = Integer.parseInt(token.data);
+            nextToken();
+            tempExpr = new IntLiteral(value);
+        } else if (accept(Category.CHAR_LITERAL)) {
+            char value = token.data.charAt(0);
+            nextToken();
+            tempExpr = new IntLiteral(value);
+        } else if (accept(Category.STRING_LITERAL)) {
+            String value = token.data;
+            nextToken();
+            tempExpr = new StrLiteral(value);
         } else if (accept(Category.IDENTIFIER)) {
+            String id = token.data;
             nextToken();
             if (accept(Category.LPAR)) {
                 nextToken();
+                var args = new ArrayList<Expr>();
                 if (accept(FIRST_EXP)) {
-                    parseExp();
+                    args.add(parseExpr());
                     while (accept(Category.COMMA)) {
                         nextToken();
-                        parseExp();
+                        args.add(parseExpr());
                     }
                 }
                 expect(Category.RPAR);
+                tempExpr = new FunCallExpr(id, args);
+            } else {
+                tempExpr = new VarExpr(id);
+            }
+        } else if (accept(Category.LPAR)) {
+            nextToken();
+            Expr expr = parseExpr();
+            expect(Category.RPAR);
+            tempExpr = expr;
+        } else if (accept(Category.SIZEOF)) {
+            nextToken();
+            expect(Category.LPAR);
+            Type type = parseType();
+            expect(Category.RPAR);
+            tempExpr = new SizeOfExpr(type);
+        }
+
+        if (tempExpr != null) {
+            while (accept(Category.LSBR, Category.DOT)) {
+                if (accept(Category.LSBR)) {
+                    nextToken();
+                    tempExpr = new ArrayAccessExpr(tempExpr, parseExpr());
+                    expect(Category.RSBR);
+                } else {
+                    nextToken();
+                    tempExpr = new FieldAccessExpr(tempExpr, expect(Category.IDENTIFIER).data);
+                }
             }
         } else {
             error(FIRST_EXP);
-            return null;
+            tempExpr = new IntLiteral(0);
         }
-        parseExpPrime();
+
+        return tempExpr;
     }
+
+
 
     private Stmt parseStmt(){
         if (accept(FIRST_BLOCK)) {
@@ -386,14 +524,14 @@ public class Parser extends CompilerPass {
         } else if (accept(Category.WHILE)) {
             nextToken();
             expect(Category.LPAR);
-            Expr expr = parseExp();
+            Expr expr = parseExpr();
             expect(Category.RPAR);
             Stmt stmt = parseStmt();
             return stmt == null ? null : new While(expr, stmt);
         } else if (accept(Category.IF)) {
             nextToken();
             expect(Category.LPAR);
-            Expr expr = parseExp();
+            Expr expr = parseExpr();
             expect(Category.RPAR);
             Stmt stmt1 = parseStmt();
             Stmt stmt2 = null;
@@ -406,7 +544,7 @@ public class Parser extends CompilerPass {
             nextToken();
             Expr expr = null;
             if (accept(FIRST_EXP)) {
-                expr = parseExp();
+                expr = parseExpr();
             }
             expect(Category.SC);
             return new Return(expr);
@@ -419,12 +557,12 @@ public class Parser extends CompilerPass {
             expect(Category.SC);
             return new Break();
         } else if (accept(FIRST_EXP)) {
-            Expr expr = parseExp();
+            Expr expr = parseExpr();
             expect(Category.SC);
             return new ExprStmt(expr);
         } else {
             error(FIRST_STMT);
-            return null;
+            return new Block(new ArrayList<>(), new ArrayList<>());
         }
     }
 

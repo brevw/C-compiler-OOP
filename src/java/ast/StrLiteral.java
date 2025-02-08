@@ -2,7 +2,7 @@ package ast;
 
 import java.util.List;
 
-public final class StrLiteral implements ASTNode{
+public final class StrLiteral extends Expr {
     public final String strValue;
 
     public StrLiteral(String strValue){
