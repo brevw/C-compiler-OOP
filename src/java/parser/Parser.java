@@ -433,16 +433,16 @@ public class Parser extends CompilerPass {
 
         if (accept(Category.AND)) {
             nextToken();
-            return new AddressOfExpr(parseExprNine());
+            return new AddressOfExpr(parseExprEight());
         } else if (accept(Category.ASTERISK)) {
             nextToken();
-            return new ValueAtExpr(parseExprNine());
+            return new ValueAtExpr(parseExprEight());
         } else if (accept(Category.PLUS)) {
             nextToken();
-            return new BinOp(new IntLiteral(0), Op.ADD, parseExprNine());
+            return new BinOp(new IntLiteral(0), Op.ADD, parseExprEight());
         } else if (accept(Category.MINUS)) {
             nextToken();
-            return new BinOp(new IntLiteral(0), Op.SUB, parseExprNine());
+            return new BinOp(new IntLiteral(0), Op.SUB, parseExprEight());
         } else if (accept(Category.LPAR) && lookAheadType) {
             nextToken();
             Type type = parseType();

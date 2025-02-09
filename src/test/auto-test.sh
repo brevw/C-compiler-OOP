@@ -127,8 +127,6 @@ run_test_ast() {
 
     # Print test name
     echo "$ARROW $filename"
-    echo "java -cp bin Main2 -ast $c_file_path $output_path"
-
 
     # Execute the program
     gtimeout "$timelimit" java -cp bin Main2 -ast "$c_file_path" "$output_path"
