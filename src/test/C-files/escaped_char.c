@@ -1,7 +1,10 @@
 #include "minic-stdlib.h"
 
 int main() {
-    int a = 1;
-    char b = '\t';
+    int a;
+    char b;
+
+    a = 1;
+    b = '\t';
     return a;
 }

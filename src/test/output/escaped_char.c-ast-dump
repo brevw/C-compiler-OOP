@@ -1,0 +1,1 @@
+Program(FunDef(INT,main,Block(VarDecl(INT,a),VarDecl(CHAR,b),ExprStmt(Assign(VarExpr(a),IntLiteral(1))),ExprStmt(Assign(VarExpr(b),ChrLiteral(	))),Return(VarExpr(a)))))

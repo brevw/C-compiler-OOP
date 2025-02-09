@@ -9,6 +9,7 @@ import ast.BaseType;
 import ast.BinOp;
 import ast.Block;
 import ast.Break;
+import ast.ChrLiteral;
 import ast.Continue;
 import ast.Decl;
 import ast.Expr;
@@ -461,7 +462,7 @@ public class Parser extends CompilerPass {
         } else if (accept(Category.CHAR_LITERAL)) {
             char value = token.data.charAt(0);
             nextToken();
-            tempExpr = new IntLiteral(value);
+            tempExpr = new ChrLiteral(value);
         } else if (accept(Category.STRING_LITERAL)) {
             String value = token.data;
             nextToken();
