@@ -13,6 +13,7 @@ public class ASTPrinter {
     public void visit(ASTNode node) {
         if (node == null)
             throw new IllegalStateException("Unexpected null value");
+
         boolean printClassName = !(node instanceof Op || node instanceof BaseType);
         if (printClassName) {
             writer.print(node.getClass().getSimpleName()+"(");
@@ -47,13 +48,6 @@ public class ASTPrinter {
                 writer.print(","+vd.name);
             }
 
-            case StructTypeDecl std -> {
-                writer.print(std.name);
-                for (VarDecl vd : std.varDecls) {
-                    writer.print(",");
-                    visit(vd);
-                }
-            }
 
             // Expr
             case VarExpr v -> {
