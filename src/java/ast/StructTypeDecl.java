@@ -10,7 +10,7 @@ public final class StructTypeDecl extends Decl {
     public StructTypeDecl(String name, List<VarDecl> varDecls){
 
         this.varDecls = varDecls;
-        this.type = new StructType("");
+        this.type = new StructType(name);
         this.name = name;
     }
 

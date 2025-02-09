@@ -562,7 +562,7 @@ public class Parser extends CompilerPass {
             return new ExprStmt(expr);
         } else {
             error(FIRST_STMT);
-            return new Block(new ArrayList<>(), new ArrayList<>());
+            return new Block(new ArrayList<>(), new ArrayList<>()); // dummy block
         }
     }
 

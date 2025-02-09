@@ -11,6 +11,7 @@ public final class Return extends Stmt{
     }
 
     public List<ASTNode> children(){
+        if (expr == null) return List.of();
         return List.of(expr);
     }
 }
