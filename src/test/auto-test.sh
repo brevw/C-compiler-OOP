@@ -129,7 +129,7 @@ run_test_ast() {
     echo "$ARROW $filename"
 
     # Execute the program
-    gtimeout "$timelimit" java -cp bin Main2 -ast "$c_file_path" "$output_path"
+    gtimeout "$timelimit" java -cp bin Main2 -ast "$c_file_path" "$output_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
 
     # Check if program timeouts
