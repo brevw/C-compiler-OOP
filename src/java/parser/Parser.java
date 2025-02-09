@@ -527,7 +527,7 @@ public class Parser extends CompilerPass {
             Expr expr = parseExpr();
             expect(Category.RPAR);
             Stmt stmt = parseStmt();
-            return stmt == null ? null : new While(expr, stmt);
+            return new While(expr, stmt);
         } else if (accept(Category.IF)) {
             nextToken();
             expect(Category.LPAR);
@@ -539,7 +539,7 @@ public class Parser extends CompilerPass {
                 nextToken();
                 stmt2 = parseStmt();
             }
-            return stmt1 == null ? null : new If(expr, stmt1, stmt2);
+            return new If(expr, stmt1, stmt2);
         } else if (accept(Category.RETURN)) {
             nextToken();
             Expr expr = null;
@@ -579,9 +579,7 @@ public class Parser extends CompilerPass {
         while (accept(FIRST_STMT)) {
             // parse stmt
             Stmt stmt = parseStmt();
-            if (stmt != null) {
-                stmts.add(stmt);
-            }
+            stmts.add(stmt);
         }
 
         expect(Category.RBRA);

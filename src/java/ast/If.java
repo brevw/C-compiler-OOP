@@ -15,6 +15,9 @@ public final class If extends Stmt{
     }
 
     public List<ASTNode> children(){
-        return List.of(expr, stmt1, stmt2);
+        if (stmt2 == null)
+            return List.of(expr, stmt1);
+        else
+            return List.of(expr, stmt1, stmt2);
     }
 }

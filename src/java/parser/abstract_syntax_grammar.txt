@@ -53,10 +53,7 @@ expr9       ::=( funcall
                  | "sizeof" "(" type ")"
                  | "(" expr ")" ) expr9_prime
 
-expr9_prime ::=(
-                |(("." IDENT) |
-                  ("[" expr "]"))*
-                | epsilon
+expr9_prime ::= (("." IDENT) | ("[" expr "]"))*   | epsilon
 
 
                 --> look ahead if LPAR
