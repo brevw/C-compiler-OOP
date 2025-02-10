@@ -8,7 +8,7 @@ Decl       ::= StructTypeDecl | VarDecl | FunDecl | FunDef
 Type        ::= BaseType | PointerType | StructType | ArrayType
 
 BaseType    ::= INT | CHAR | VOID | NONE | UNKNOWN  // NONE should be used mostly for statements and UNKNOWN in case where no type can be inferred
-PoInterType ::= Type              // use to represent pointers to other types
+PointerType ::= Type              // use to represent pointers to other types
 StructType  ::= String            // represents a struct type (the String is the name of the declared struct type)
 ArrayType   ::= Type Int          // Type represents the element type, Int represents the number of elements in the declared array
 
