@@ -7,7 +7,7 @@ import ast.*;
 
 public class NameAnalyzer extends BaseSemanticAnalyzer {
     private static final String UNKNOWN = "Unknown symbol type";
-    private static final HashSet<String> STRUCT_NAME_SPACE = new HashSet();
+    private static final HashSet<String> STRUCT_NAME_SPACE = new HashSet<>();
 
     private Scope scope;
 
@@ -35,8 +35,8 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 Optional<Symbol> sym = scope.lookup(name);
                 if (sym.isPresent()) {
                     switch (sym.get()) {
-                        case VarSymbol _ -> error(name + " was previously declared as a variable");
-                        case FunSymbol _ -> error("Function " + name + " is already declared in the current scope");
+                        case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
+                        case FunSymbol fs -> error("Function " + fs.name + " is already declared in the current scope");
                         default -> error(UNKNOWN);
                     }
                 } else {
@@ -50,7 +50,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 Optional<Symbol> sym = scope.lookup(name);
                 if (sym.isPresent()) {
                     switch (sym.get()) {
-                        case VarSymbol _ -> error(name + " was previously declared as a variable");
+                        case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
                         case FunSymbol fs -> {
                             FunDecl decl = fs.fd;
                             if (decl.params.size() != fd.params.size()) {
@@ -96,7 +96,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                         case VarSymbol vs -> {
                             v.vd = vs.vd;
                         }
-                        case FunSymbol _ -> error(v.name + " was previously declared as a function");
+                        case FunSymbol fs -> error(fs.name + " was previously declared as a function");
                         default -> error(UNKNOWN);
                     }
                 } else {
@@ -119,14 +119,24 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 
 			case Type t -> {
                 switch (t) {
-                    case ArrayType _, BaseType _, PointerType _ -> {
-                        for (var n: t.children()) {
-                            visit(n);
-                        }
-                    }
                     case StructType st -> {
                         if (!STRUCT_NAME_SPACE.contains(st.name)) {
                             error("Struct " + st.name + " was not declared");
+                        }
+                    }
+                    case ArrayType at -> {
+                        for (var n: at.children()) {
+                            visit(n);
+                        }
+                    }
+                    case BaseType bt -> {
+                        for (var n: bt.children()) {
+                            visit(n);
+                        }
+                    }
+                    case PointerType pt -> {
+                        for (var n: pt.children()) {
+                            visit(n);
                         }
                     }
                     default -> error(UNKNOWN);
@@ -138,7 +148,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 Optional<Symbol> sym = scope.lookup(name);
                 if (sym.isPresent()) {
                     switch (sym.get()) {
-                        case VarSymbol _ -> error(name + " was previously declared as a variable");
+                        case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
                         case FunSymbol fs -> {
                             fc.fd = fs.fd;
                         }

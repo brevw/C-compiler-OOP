@@ -92,6 +92,14 @@ public class DotPrinter {
                 }
             }
 
+            case FieldAccessExpr fae -> {
+                addNewNode(node.getClass().getSimpleName(), parentId);
+                int eId = visitHelper(fae.structExpr);
+                linkNodes(parentId, eId);
+                addNewNode("NAME("+fae.fieldName+")", ++nodeCounter);
+                linkNodes(parentId, nodeCounter);
+            }
+
             // Type
             case BaseType bt -> {
                 addNewNode(bt.name(), parentId);
