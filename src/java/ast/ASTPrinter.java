@@ -74,6 +74,11 @@ public class ASTPrinter {
                 }
             }
 
+            case FieldAccessExpr fa -> {
+                visit(fa.structExpr);
+                writer.print(","+fa.fieldName);
+            }
+
             // Type
             case BaseType bt -> {
                 writer.print(bt.name());
@@ -92,11 +97,6 @@ public class ASTPrinter {
             case Op op -> {
                 writer.print(op.name());
             }
-
-
-
-
-
 
 
             default -> {
