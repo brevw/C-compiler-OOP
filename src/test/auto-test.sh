@@ -18,6 +18,7 @@ IO_EXCEPTION=3;
 MODE_FAIL=254;
 LEXER_FAIL=250;
 PARSER_FAIL=245;
+SEM_FAIL=240;
 PASS=0;
 
 # Color CONST
@@ -153,6 +154,34 @@ run_test_ast() {
     fi
 }
 
+run_test_sem() {
+    # Local names
+    local filename="$1"
+    local expected_exit_code="$2"
+    local timelimit="$3"
+    local c_file_path="$CFILES_DIR/$filename.c"
+
+    # Print test name
+    echo "$ARROW $filename"
+
+    # Execute the program
+    gtimeout "$timelimit" java -cp bin Main2 -sem "$c_file_path" > /dev/null
+    local exit_code=$?  # Capture the program's exit code
+
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program timed out"
+        return
+    fi
+
+    # Check if program exit code is non-zero
+    if [ $exit_code -ne $expected_exit_code ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program exited with code $exit_code (expected $expected_exit_code)"
+    else
+        echo -e "Test ${GREEN}Passed${RESET}"
+    fi
+}
+
 # Compile Code using ant apache
 echo -e "${BLUE}$DASHED_LINES Compiling Code $DASHED_LINES${RESET}"
 ant build
@@ -206,3 +235,14 @@ run_test_parser parser-generated9 "$PASS" "$DEFAULT_TIMEOUT"
 # AST tests
 print_test_name "AST tests"
 run_test_ast fibonacci "$DEFAULT_TIMEOUT"
+
+
+# SEM tests
+print_test_name "SEM tests"
+# -> for name analysis
+run_test_sem decl_glob_twice "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem shadowing "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem decl_var_twice_same_scope "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem fun_decl_without_def "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem use_of_undeclared_struct "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem fun_decl_then_def_with_wrong_types "$SEM_FAIL" "$DEFAULT_TIMEOUT"

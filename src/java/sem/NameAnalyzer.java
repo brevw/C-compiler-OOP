@@ -14,7 +14,6 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 
     private Scope scope;
 
-    // TODO: check if every decl has a def: to implement in block and program
 	public void visit(ASTNode node) {
 		switch(node) {
 			case null -> {
@@ -31,6 +30,12 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case FunDecl fd -> {
+                // check types
+                visit(fd.type);
+                for (var p: fd.params) {
+                    visit(p.type);
+                }
+
                 String name = fd.name;
                 Optional<Symbol> sym = scope.lookup(name);
                 if (sym.isPresent()) {
@@ -47,6 +52,12 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case FunDef fd -> {
+                // check types
+                visit(fd.type);
+                for (var p: fd.params) {
+                    visit(p.type);
+                }
+
                 String name = fd.name;
                 Optional<Symbol> sym = scope.lookup(name);
                 if (sym.isPresent()) {
@@ -57,7 +68,9 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                                 error("Function " + name + " was previously defined");
                             } else {
                                 FunDecl decl = fs.fd;
-                                if (decl.params.size() != fd.params.size()) {
+                                if (!decl.type.equals(fd.type)) {
+                                    error("Function " + name + " has a different return type in the declaration and definition");
+                                } else if (decl.params.size() != fd.params.size()) {
                                     error("Function " + name + " was declared with different number of parameters");
                                 } else {
                                     for (int i = 0; i < decl.params.size(); i++) {
@@ -78,15 +91,15 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 }
 
                 // go inside the function, also params are inside the block scope
-                visit(fd.type);
                 Scope oldScope = scope;
                 scope = new Scope(oldScope);
                 var children = new ArrayList<ASTNode>();
                 children.addAll(fd.params);
                 children.addAll(fd.block.children());
-                for (var c: fd.children()) {
+                for (var c: children) {
                     visit(c);
                 }
+                scope = oldScope;
 			}
 
 			case Program p -> {
@@ -111,11 +124,14 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case VarDecl vd -> {
+                // check types
+                visit(vd.type);
+
                 String name = vd.name;
                 Optional<Symbol> sym = scope.lookupCurrent(name);
                 if (sym.isPresent()) {
                     switch (sym.get()) {
-                        case  VarSymbol vs -> error("Variable " + vs.name + " is already declard in the current scope");
+                        case  VarSymbol vs -> error("Variable " + vs.name + " is already declared in the current scope");
                         case FunSymbol fs -> error(fs.name + " was previously declared as a function");
                         default -> error(UNKNOWN);
                     }
