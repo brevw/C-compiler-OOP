@@ -1,3 +1,4 @@
+:
 # #  comment
 # () grouping
 # [] optional
@@ -34,22 +35,21 @@ stmt       ::= block
 
 block      ::= "{" (vardecl)* (stmt)* "}"
 
-exp        ::=
-           (  (IDENT | INT_LITERAL)
-             | IDENT "(" [ exp ("," exp)* ] ")"
-             | ("-" | "+") exp
-             | CHAR_LITERAL
-             | STRING_LITERAL
-             | ("*" | "&") exp
-             | "sizeof" "(" type ")"
-             | "(" exp ")"
-             | "(" type ")" exp   ) exp'
+expr        ::= expr1
+expr1       ::= expr2 "="  expr1 | expr2                                          # assign (right to left)
+expr2       ::= expr3 ("||" expr3)*                                               # logor (left to right)
+expr3       ::= expr4 ("&&" expr4)*                                               # logand (left to right)
+expr4       ::= expr5 (("=="|"!=") expr5)*                                        # eq, neq (left to right)
+expr5       ::= expr6 (("<"|"<="|">"|">=") expr6)*                                # comparaisons (left to right)
+expr6       ::= expr7 (("+"|"-") expr7)*                                          # add, sub (left to right)
+expr7       ::= expr8 (("*"|"/"|"%") expr8)*                                      # mult, div, rem (left to right)
+expr8       ::= ("&"|"*"|"+"|"-"|"(" type ")") expr8 | expr9                      # address of, dereference, cast, plus, minus (right to left)
+expr9       ::=( IDENT "(" [expr ("," expr)* ] ")"
+                 | IDENT
+                 | INT_LITERAL
+                 | CHAR_LITERAL                                # primary
+                 | STRING_LITERAL
+                 | "sizeof" "(" type ")"
+                 | "(" expr ")" ) expr9_prime
 
-
-exp'       ::=
-            (  "=" exp
-             | (">" | "<" | ">=" | "<=" | "!=" | "==" | "+" | "-" | "/" | "*" | "%" | "||" | "&&") exp
-             | "[" exp "]"
-             | "." IDENT   ) exp'
-
-             | epsilson
+expr9_prime ::= (("." IDENT) | ("[" expr "]"))*   | epsilon
