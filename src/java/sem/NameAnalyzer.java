@@ -152,9 +152,6 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 
-			case Type t -> {
-                // Do Nothing
-            }
 
             case FunCallExpr fc -> {
                 String name = fc.name;
