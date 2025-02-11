@@ -298,16 +298,17 @@ public class Parser extends CompilerPass {
         while (accept(Category.LSBR)) {
             nextToken();
             Token size = expect(Category.INT_LITERAL);
-            if (size.category == Category.INT) {
+            if (size.category == Category.INT_LITERAL) {
                 stack.add(Integer.parseInt(size.data));
             } else {
                 type = BaseType.UNKNOWN;
-                stack.clear();
             }
             expect(Category.RSBR);
         }
-        for (int i = stack.size() - 1; i >= 0; --i) {
-            type = new ArrayType(type, stack.get(i));
+        if (type != BaseType.UNKNOWN) {
+            for (int i = stack.size() - 1; i >= 0; --i) {
+                type = new ArrayType(type, stack.get(i));
+            }
         }
         expect(Category.SC);
         return new VarDecl(type, id.data);
