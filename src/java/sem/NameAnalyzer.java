@@ -9,7 +9,6 @@ import ast.*;
 
 public class NameAnalyzer extends BaseSemanticAnalyzer {
     private static final String UNKNOWN = "Unknown symbol type";
-    private final HashSet<String> structNameSpace = new HashSet<>();
     private final HashSet<String> undefinedFunctions = new HashSet<>();
 
     private Scope scope;
@@ -52,12 +51,6 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case FunDef fd -> {
-                // check types
-                visit(fd.type);
-                for (var p: fd.params) {
-                    visit(p.type);
-                }
-
                 String name = fd.name;
                 Optional<Symbol> sym = scope.lookup(name);
                 if (sym.isPresent()) {
@@ -124,9 +117,6 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case VarDecl vd -> {
-                // check types
-                visit(vd.type);
-
                 String name = vd.name;
                 Optional<Symbol> sym = scope.lookupCurrent(name);
                 if (sym.isPresent()) {
@@ -156,46 +146,14 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case StructTypeDecl std -> {
-                String name = std.name;
-                if (structNameSpace.contains(name)) {
-                    error("Struct " + std.name + ", duplicate declaration of a struct");
-                } else {
-                    if (std.varDecls.stream().map(vd -> vd.name).distinct().count() != std.varDecls.size()) {
-                        error("Struct " + std.name + ", duplicate variable names in the declaration");
-                    }
-                    // check if the struct type is already declared
-                    for (var t: std.varDecls.stream().map(vd -> vd.type).toList()) {
-                        visit(t);
-                    }
-                    structNameSpace.add(name);
+                if (std.varDecls.stream().map(vd -> vd.name).distinct().count() != std.varDecls.size()) {
+                    error("Struct " + std.name + ", duplicate variable names in the declaration");
                 }
 			}
 
 
 			case Type t -> {
-                switch (t) {
-                    case StructType st -> {
-                        if (!structNameSpace.contains(st.name)) {
-                            error("Struct " + st.name + " was not declared");
-                        }
-                    }
-                    case ArrayType at -> {
-                        for (var n: at.children()) {
-                            visit(n);
-                        }
-                    }
-                    case BaseType bt -> {
-                        for (var n: bt.children()) {
-                            visit(n);
-                        }
-                    }
-                    case PointerType pt -> {
-                        for (var n: pt.children()) {
-                            visit(n);
-                        }
-                    }
-                    default -> error(UNKNOWN);
-                }
+                // Do Nothing
             }
 
             case FunCallExpr fc -> {
@@ -206,6 +164,9 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                         case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
                         case FunSymbol fs -> {
                             fc.fd = fs.fd;
+                            for (var a: fc.argsList) {
+                                visit(a);
+                            }
                         }
                         default -> error(UNKNOWN);
                     }
@@ -213,6 +174,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                     error("Function " + name + " is not declared or defined in the current scope");
                 }
             }
+
             default -> {
                 for (var n: node.children()) {
                     visit(n);
