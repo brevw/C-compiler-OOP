@@ -11,6 +11,6 @@ public final class SizeOfExpr extends Expr{
     }
 
     public List<ASTNode> children(){
-        return List.of(type);
+        return List.of(ofType);
     }
 }
