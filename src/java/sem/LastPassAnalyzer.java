@@ -88,7 +88,9 @@ public class LastPassAnalyzer extends BaseSemanticAnalyzer {
             }
 
 
-            default -> throw new IllegalStateException("Unexpected value: " + node);
+            default -> {
+                return false;
+            }
         }
     }
 }
