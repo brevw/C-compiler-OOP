@@ -305,16 +305,25 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
             }
 
             case Return r -> {
-                Type expectedReturnType = currentFunDef.type;
-                if (r.expr != null) {
-                    Type exprType = visit(r.expr);
-                    if (!expectedReturnType.equals(exprType)) {
-                        error("Return type mismatch");
+                if (currentFunDef != null) {
+                    Type expectedReturnType = currentFunDef.type;
+                    if (expectedReturnType.equals(BaseType.VOID)) {
+                        if (r.expr != null) {
+                            error("Void function cannot return a value");
+                        }
+                    } else {
+                        if (r.expr == null) {
+                            error("Function must return a value");
+                        } else {
+                            Type exprType = visit(r.expr);
+                            if (!expectedReturnType.equals(exprType)) {
+                                error("Return type mismatch");
+                            }
+                        }
                     }
-                } else { // expected void function
-                    if (!expectedReturnType.equals(BaseType.VOID)) {
-                        error("Return type mismatch");
-                    }
+
+                } else {
+                    error("Return statement outside of function");
                 }
                 yield BaseType.NONE;
             }
