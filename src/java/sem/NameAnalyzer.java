@@ -10,6 +10,7 @@ import ast.*;
 public class NameAnalyzer extends BaseSemanticAnalyzer {
     private static final String UNKNOWN = "Unknown symbol type";
     private final HashSet<String> undefinedFunctions = new HashSet<>();
+    private final HashSet<String> funDefBeforeDeclNoDecl = new HashSet<>();
 
     private Scope scope;
 
@@ -40,7 +41,27 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 if (sym.isPresent()) {
                     switch (sym.get()) {
                         case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
-                        case FunSymbol fs -> error("Function " + fs.name + " has already been declared");
+                        case FunSymbol fs -> {
+                            if (!funDefBeforeDeclNoDecl.contains(name)){
+                                error("Function " + fs.name + " has already been declared");
+                            } else {
+                                // case decl after def
+                                if (!fs.fd.type.equals(fd.type)) {
+                                    // check same return type
+                                    error("Function " + name + " has a different return type in the declaration and definition");
+                                } else if (fs.fd.params.size() != fd.params.size()) {
+                                    // check same number of params
+                                    error("Function " + name + " was declared with different number of parameters");
+                                } else {
+                                    // check same types of params
+                                    for (int i = 0; i < fs.fd.params.size(); i++) {
+                                        if (!fs.fd.params.get(i).type.equals(fd.params.get(i).type)) {
+                                            error("Function " + name + " has a different types in parameter " + (i + 1) + " in the declaration and definition");
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         default -> error(UNKNOWN);
                     }
                 } else {
@@ -80,6 +101,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 
                 } else {
                     FunDecl decl = new FunDecl(fd.type, fd.name, fd.params);
+                    funDefBeforeDeclNoDecl.add(name);
                     scope.put(new FunSymbol(name, decl));
                 }
 
@@ -121,7 +143,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 Optional<Symbol> sym = scope.lookupCurrent(name);
                 if (sym.isPresent()) {
                     switch (sym.get()) {
-                        case  VarSymbol vs -> error("Variable " + vs.name + " is already declared in the current scope");
+                        case VarSymbol vs -> error("Variable " + vs.name + " is already declared in the current scope");
                         case FunSymbol fs -> error(fs.name + " was previously declared as a function");
                         default -> error(UNKNOWN);
                     }

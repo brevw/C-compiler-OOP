@@ -248,5 +248,11 @@ run_test_sem fun_decl_twice "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 run_test_sem fun_decl_then_def_with_wrong_types "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 run_test_sem recognize_build_in_functions "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem undeclared_parameter "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem fun_def_then_decl "$PASS" "$DEFAULT_TIMEOUT"
 # -> type analysis
 run_test_sem use_of_undeclared_struct "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem struct_recursive_def_rejected "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem struct_recursive_def_accepted "$PASS" "$DEFAULT_TIMEOUT"
+# -> last pass analysis
+run_test_sem struct_recursive_def_accepted "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem break_outside_loop "$SEM_FAIL" "$DEFAULT_TIMEOUT"

@@ -31,6 +31,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 
             // Decl
 			case FunDecl fd -> {
+                visit(fd.type);
                 for (var n : fd.params) {
                     visit(n);
                 }
@@ -38,6 +39,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case FunDef fd -> {
+                visit(fd.type);
                 for (var n : fd.params) {
                     visit(n);
                 }
@@ -46,7 +48,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 			}
 
 			case VarDecl vd -> {
-                Type type = vd.type;
+                Type type = visit(vd.type);
                 switch (type) {
                     case BaseType bt -> {
                         if (bt == BaseType.VOID) {
@@ -65,16 +67,9 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     error("Struct " + std.name + ", duplicate declaration of a struct");
                 } else {
                     // check types
-                    for (Type t: std.varDecls.stream().map(vd -> visit(vd)).toList()) {
-                        switch (t) {
-                            case StructType st -> {
-                                // TODO: check if equality is done this way
-                                if (st.name.equals(name)) {
-                                    error("Struct " + st.name + " is self-referential");
-                                    yield BaseType.UNKNOWN;
-                                }
-                            }
-                            default -> {}
+                    for (VarDecl vd: std.varDecls) {
+                        if (!isPointerOfStruct(vd.type, name)) {
+                            visit(vd);
                         }
                     }
                     structNameSpace.put(name, std);
@@ -92,6 +87,9 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                         }
                     }
                     default -> {}
+                }
+                for (ASTNode c : t.children()){
+                    visit(c);
                 }
 				yield t;
 			}
@@ -119,6 +117,10 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 
             case FunCallExpr fce -> {
                 fce.type = fce.fd.type;
+                if (fce.argsList.size() != fce.fd.params.size()) {
+                    error("Function " + fce.name + " expects " + fce.fd.params.size() + " arguments but got " + fce.argsList.size());
+                    yield BaseType.UNKNOWN;
+                }
                 for (int i = 0; i < fce.argsList.size(); i++) {
                     Type expected = fce.fd.params.get(i).type;
                     Type actual = visit(fce.argsList.get(i));
@@ -139,16 +141,15 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                             bo.type = BaseType.INT;
                         } else {
                             error("Addition is only allowed for integers");
-                            yield BaseType.UNKNOWN;
+                            bo.type = BaseType.UNKNOWN;
                         }
                     }
                     case NE, EQ -> {
-                        // TODO: To ask professor if we should cond for left and right
                         if (!(left instanceof BaseType && left == BaseType.VOID) && !(left instanceof StructType) && !(left instanceof ArrayType) && left.equals(right)) {
                            bo.type = BaseType.INT;
                         } else {
                             error("In/equality is only allowed for non-void, non-struct, non-array types in left side");
-                            yield BaseType.UNKNOWN;
+                            bo.type = BaseType.UNKNOWN;
                         }
                     } default -> {
                         throw new IllegalStateException("Unexpected value");
@@ -165,7 +166,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     case BaseType bt -> {
                         if (bt != BaseType.INT) {
                             error("Array index must be an integer");
-                            yield BaseType.UNKNOWN;
+                            aae.type = BaseType.UNKNOWN;
                         }
                     }
                     default -> {}
@@ -180,7 +181,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     }
                     default -> {
                         error("Array access is only allowed for arrays or pointers");
-                        yield BaseType.UNKNOWN;
+                        aae.type = BaseType.UNKNOWN;
                     }
 
                 }
@@ -328,5 +329,15 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 
 	}
 
+    private static boolean isPointerOfStruct(Type type, String structName) {
+        do {
+            if (type instanceof PointerType pt) {
+                type = pt.type;
+            } else {
+                return false;
+            }
+        } while (type instanceof PointerType);
+        return type instanceof StructType st && st.name.equals(structName);
+    }
 
 }

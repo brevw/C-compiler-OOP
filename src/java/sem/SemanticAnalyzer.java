@@ -3,7 +3,7 @@ package sem;
 import util.CompilerPass;
 
 public class SemanticAnalyzer extends CompilerPass {
-	
+
 	public void analyze(ast.Program prog) {
 
 		NameAnalyzer na = new NameAnalyzer();
@@ -13,6 +13,9 @@ public class SemanticAnalyzer extends CompilerPass {
 		TypeAnalyzer tc = new TypeAnalyzer();
 		tc.visit(prog);
 		this.numErrors += tc.getNumErrors();
-		// To complete
+
+        LastPassAnalyzer lpa = new LastPassAnalyzer();
+        lpa.visit(prog);
+        this.numErrors += lpa.getNumErrors();
 	}
 }
