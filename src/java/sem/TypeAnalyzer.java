@@ -152,7 +152,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                         }
                     }
                     case NE, EQ -> {
-                        if (!(left instanceof BaseType && left == BaseType.VOID) && !(left instanceof StructType) && !(left instanceof ArrayType) && left.equals(right)) {
+                        if (!BaseType.VOID.equals(left) && !(left instanceof StructType) && !(left instanceof ArrayType) && left.equals(right)) {
                            bo.type = BaseType.INT;
                         } else {
                             error("In/equality is only allowed for non-void, non-struct, non-array types in left side");
