@@ -12,5 +12,3 @@ int main() {
     print_i(b);
     return 0;
 }
-
-

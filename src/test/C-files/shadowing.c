@@ -12,9 +12,8 @@ int foo() {
     int a;
     int b;
     a = 1;
-    b = a;
     bar = 'a';
-    return bar;
+    return (int)bar;
 }
 
 int main() {

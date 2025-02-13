@@ -10,6 +10,14 @@ public final class PointerType implements Type{
         this.type = type;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (obj instanceof PointerType other){
+            return type.equals(other.type);
+        }
+        return false;
+    }
+
     public List<ASTNode> children(){
         return List.of(type);
     }

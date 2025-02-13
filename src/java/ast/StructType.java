@@ -10,6 +10,14 @@ public final class StructType implements Type{
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (obj instanceof StructType other){
+            return name.equals(other.name);
+        }
+        return false;
+    }
+
     public List<ASTNode> children(){
         return List.of();
     }

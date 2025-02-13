@@ -43,7 +43,10 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                 for (var n : fd.params) {
                     visit(n);
                 }
+                var oldCurrentFunDef = currentFunDef;
                 currentFunDef = fd;
+                visit(fd.block);
+                currentFunDef = oldCurrentFunDef;
 				yield fd.type;
 			}
 
@@ -111,22 +114,26 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
             }
 
             case VarExpr ve -> {
-                ve.type = ve.vd.type;
+                ve.type = ve.vd == null ? BaseType.UNKNOWN : ve.vd.type;
                 yield ve.type;
             }
 
             case FunCallExpr fce -> {
-                fce.type = fce.fd.type;
-                if (fce.argsList.size() != fce.fd.params.size()) {
-                    error("Function " + fce.name + " expects " + fce.fd.params.size() + " arguments but got " + fce.argsList.size());
-                    yield BaseType.UNKNOWN;
-                }
-                for (int i = 0; i < fce.argsList.size(); i++) {
-                    Type expected = fce.fd.params.get(i).type;
-                    Type actual = visit(fce.argsList.get(i));
-                    if (!expected.equals(actual)) {
-                        error("Function " + fce.name + " expects " + expected + " but got " + actual);
+                if (fce.fd == null) {
+                    fce.type = BaseType.UNKNOWN;
+                } else {
+                    fce.type = fce.fd.type;
+                    if (fce.argsList.size() != fce.fd.params.size()) {
+                        error("Function " + fce.name + " expects " + fce.fd.params.size() + " arguments but got " + fce.argsList.size());
                         yield BaseType.UNKNOWN;
+                    }
+                    for (int i = 0; i < fce.argsList.size(); i++) {
+                        Type expected = fce.fd.params.get(i).type;
+                        Type actual = visit(fce.argsList.get(i));
+                        if (!expected.equals(actual)) {
+                            error("Function " + fce.name + " expects " + expected + " but got " + actual);
+                            yield BaseType.UNKNOWN;
+                        }
                     }
                 }
                 yield fce.type;

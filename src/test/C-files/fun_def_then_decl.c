@@ -3,7 +3,7 @@
 int a;
 
 int foo(char c) {
-    return c;
+    return 0;
 }
 
 int main() {
