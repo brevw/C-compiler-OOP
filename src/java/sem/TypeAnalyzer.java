@@ -89,10 +89,18 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                             yield BaseType.UNKNOWN;
                         }
                     }
-                    default -> {}
-                }
-                for (ASTNode c : t.children()){
-                    visit(c);
+                    case ArrayType at -> {
+                        Type type = visit(at.type);
+                        if (type instanceof BaseType bt && bt == BaseType.VOID) {
+                            error("Array cannot have type void");
+                            yield BaseType.UNKNOWN;
+                        }
+                    }
+                    default -> {
+                        for (ASTNode c : t.children()){
+                            visit(c);
+                        }
+                    }
                 }
 				yield t;
 			}

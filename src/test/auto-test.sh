@@ -256,6 +256,7 @@ run_test_sem struct_recursive_def_rejected "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 run_test_sem struct_recursive_def_accepted "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem void_variable "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 run_test_sem wrong_return_type "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem array_of_type_void "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 # -> last pass analysis
 run_test_sem struct_recursive_def_accepted "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem break_outside_loop "$SEM_FAIL" "$DEFAULT_TIMEOUT"
