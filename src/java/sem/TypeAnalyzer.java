@@ -71,7 +71,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                 } else {
                     // check types
                     for (VarDecl vd: std.varDecls) {
-                        if (!isPointerOfStruct(vd.type, name)) {
+                        if (!hasFixedSizeTypeAndRecusivelyDefined(vd.type, name)) {
                             visit(vd);
                         }
                     }
@@ -353,15 +353,19 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 
 	}
 
-    private static boolean isPointerOfStruct(Type type, String structName) {
-        do {
-            if (type instanceof PointerType pt) {
-                type = pt.type;
-            } else {
-                return false;
+    private static boolean hasFixedSizeTypeAndRecusivelyDefined(Type type, String structName) {
+        switch (type) {
+            case PointerType pt -> {
+                Type innerType = pt.type;
+                if (innerType instanceof StructType st) {
+                    return st.name.equals(structName);
+                } else {
+                    return hasFixedSizeTypeAndRecusivelyDefined(innerType, structName);
+                }
             }
-        } while (type instanceof PointerType);
-        return type instanceof StructType st && st.name.equals(structName);
+            case ArrayType at -> {return hasFixedSizeTypeAndRecusivelyDefined(at.type, structName);}
+            default -> {return false;}
+        }
     }
 
 }
