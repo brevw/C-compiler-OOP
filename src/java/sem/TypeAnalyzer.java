@@ -87,6 +87,8 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                         if (!structNameSpace.containsKey(st.name)) {
                             error("Struct " + st.name + " is not defined");
                             yield BaseType.UNKNOWN;
+                        } else {
+                            st.decl = structNameSpace.get(st.name);
                         }
                     }
                     case ArrayType at -> {

@@ -3,6 +3,7 @@ package ast;
 import java.util.List;
 
 public final class PointerType implements Type{
+    private final static int POINTER_SIZE = 4;
 
     public final Type type;
 
@@ -20,6 +21,11 @@ public final class PointerType implements Type{
 
     public List<ASTNode> children(){
         return List.of(type);
+    }
+
+    @Override
+    public int getSize(){
+        return POINTER_SIZE;
     }
 
 }

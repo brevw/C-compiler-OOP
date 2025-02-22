@@ -1,8 +1,10 @@
 package ast;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class ArrayType implements Type{
+    private Integer size = null;
 
     public final Type type;
     public final int nbrElements;
@@ -22,6 +24,12 @@ public final class ArrayType implements Type{
 
     public List<ASTNode> children(){
         return List.of(type);
+    }
+
+    @Override
+    public int getSize(){
+        // only compute once and cache the result
+        return Objects.requireNonNullElseGet(size, () -> {size = type.getSize() * nbrElements; return size;});
     }
 
 }
