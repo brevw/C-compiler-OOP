@@ -30,10 +30,7 @@ public class FunCodeGen extends CodeGen {
 
         // 1) emit the prolog
         // set function name
-        funSection.emit(new Directive("set nomacro"));
-        funSection.emit(new Directive("set noreorder"));
-        funSection.emit(new Directive("global " + fd.name));
-        funSection.emit(new Directive("ent " + fd.name));
+        funSection.emit(new Directive("globl " + fd.name));
         funSection.emit(Label.get(fd.name));
 
         // save the frame pointer and init it
