@@ -260,3 +260,6 @@ run_test_sem array_of_type_void "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 # -> last pass analysis
 run_test_sem struct_recursive_def_accepted "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem break_outside_loop "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+
+# CodeGen tests
+print_test_name "CodeGen tests"

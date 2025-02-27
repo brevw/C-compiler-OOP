@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import util.Utils;
 
 public final class StructType implements Type{
 
@@ -57,6 +58,7 @@ public final class StructType implements Type{
     }
 
     // Compute the size of the struct and the offset of each field
+    // (always positive)
     private void computeOffsetsAndSize(){
         size = 0;
         offsets = new HashMap<>();
@@ -64,17 +66,15 @@ public final class StructType implements Type{
         for (VarDecl vd : decl.varDecls){
             int fieldSize = vd.type.getSize();
             int alignment = (vd.type instanceof StructType st) ? st.getLargestAlignment() : fieldSize;
-            int offsetToCorrectAlignment = size % alignment;
-            offsetToCorrectAlignment = (offsetToCorrectAlignment == 0) ? 0 : alignment - offsetToCorrectAlignment;
-            size += fieldSize + offsetToCorrectAlignment;
+            int offsetToCorrectAlignment = Utils.computeAlignmentOffset(size, alignment);
+            // allign before computing the offset
+            size += offsetToCorrectAlignment;
             offsets.put(vd.name, size);
+            size += fieldSize;
         }
-        decl.varDecls.forEach(vd -> offsets.put(vd.name, size - offsets.get(vd.name)));
 
         // pad so that the size of the struct is a multiple of the largest alignment
-        int offsetToCorrectAlignment = size % largestAlignment;
-        offsetToCorrectAlignment = (offsetToCorrectAlignment == 0) ? 0 : largestAlignment - offsetToCorrectAlignment;
-        size += offsetToCorrectAlignment;
+        size += Utils.computeAlignmentOffset(size, largestAlignment);
     }
 
 
