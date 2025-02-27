@@ -128,9 +128,9 @@ struct S3 {
   struct S1 s;
   char c2; 
 }
-struct S2 {
+struct S4 {
   char c1;
-  struct S1 s;
+  struct S2 s;
   char c2; 
 }
 ```
@@ -188,7 +188,7 @@ A new package has been added under `gen/`. This package should be used to store 
 
  * The `gen.CodeGenerator` is the only class which `Main.java` directly interfaces with.
  * The `gen.*Gen` classes are the main classes that you will use to produce code (you can add more if you wish of course).
- * The class `gen.Test` shows you an example on how to emit instructions.
+ * The class `gen.asm.Test` shows you an example on how to emit instructions.
 
 Another new package has been added under `gen/asm`.
 This package defines the components of assembly programs:
