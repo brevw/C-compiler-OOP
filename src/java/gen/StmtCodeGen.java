@@ -13,13 +13,12 @@ public class StmtCodeGen extends CodeGen {
     public StmtCodeGen(AssemblyProgram asmProg) {
         this.asmProg = asmProg;
     }
-    private final ExprValCodeGen evcd = new ExprValCodeGen(asmProg);
-
     // save the label of the current loop
     private Label next = null;
     private Label postTest = null;
 
     void visit(Stmt s) {
+        ExprValCodeGen evcd = new ExprValCodeGen(asmProg);
         switch (s) {
             case Block b -> {
                 // no need to do anything with varDecl (memory allocator takes care of them)

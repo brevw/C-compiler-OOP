@@ -51,6 +51,7 @@ public class MemAllocCodeGen extends CodeGen {
                 }
             }
             case FunDef fd -> {
+                this.fpOffset = 0;
                 int returnSize = fd.type.getSize();
                 int argumentsOffset = Utils.WORD_SIZE + returnSize + Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
                 for (VarDecl vd : fd.params.reversed()) {

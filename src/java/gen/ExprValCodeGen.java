@@ -32,9 +32,9 @@ public class ExprValCodeGen extends CodeGen {
     public ExprValCodeGen(AssemblyProgram asmProg) {
         this.asmProg = asmProg;
     }
-    private ExprAddrCodeGen addrCodeGen = new ExprAddrCodeGen(asmProg);
 
     public Register visit(Expr e) {
+        ExprAddrCodeGen addrCodeGen = new ExprAddrCodeGen(asmProg);
         TextSection currentSection = asmProg.getCurrentTextSection();
         return switch (e) {
             case VarExpr ve -> {
