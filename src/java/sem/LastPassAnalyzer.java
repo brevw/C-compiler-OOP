@@ -1,6 +1,7 @@
 package sem;
 
 import ast.*;
+import util.Utils;
 
 public class LastPassAnalyzer extends BaseSemanticAnalyzer {
 
@@ -43,7 +44,7 @@ public class LastPassAnalyzer extends BaseSemanticAnalyzer {
             }
 
             case AddressOfExpr a -> {
-                if (!isLValue(a.expr)) {
+                if (!Utils.isLValue(a.expr)) {
                     error("Address-of operator must be applied to an lvalue");
                 }
 
@@ -53,7 +54,7 @@ public class LastPassAnalyzer extends BaseSemanticAnalyzer {
             }
 
             case Assign a -> {
-                if (!isLValue(a.lhs)) {
+                if (!Utils.isLValue(a.lhs)) {
                     error("Left side of assignment must be an lvalue");
                 }
 
@@ -72,25 +73,4 @@ public class LastPassAnalyzer extends BaseSemanticAnalyzer {
     }
 
 
-    private static boolean isLValue(ASTNode node) {
-        switch (node) {
-            case VarExpr v -> {
-                return true;
-            }
-            case ArrayAccessExpr a -> {
-                return isLValue(a.arrayExpr);
-            }
-            case FieldAccessExpr f -> {
-                return isLValue(f.structExpr);
-            }
-            case ValueAtExpr v -> {
-                return isLValue(v.expr);
-            }
-
-
-            default -> {
-                return false;
-            }
-        }
-    }
 }

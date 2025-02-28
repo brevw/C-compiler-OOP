@@ -5,7 +5,6 @@ import ast.VarExpr;
 import ast.FieldAccessExpr;
 import ast.ArrayAccessExpr;
 import ast.ValueAtExpr;
-import ast.BaseType;
 
 import ast.AddressOfExpr;
 import ast.SizeOfExpr;
@@ -14,12 +13,14 @@ import ast.Assign;
 import ast.BinOp;
 import ast.IntLiteral;
 import ast.StrLiteral;
+import ast.Type;
 import ast.ChrLiteral;
 import ast.FunCallExpr;
 import gen.asm.AssemblyProgram;
 import gen.asm.AssemblyProgram.TextSection;
 import gen.asm.Register;
 import gen.asm.Register.*;
+import util.Utils;
 import gen.asm.OpCode;
 import gen.asm.Label;
 
@@ -28,30 +29,39 @@ import gen.asm.Label;
  * Generates code to evaluate an expression and return the result in a register.
  */
 public class ExprValCodeGen extends CodeGen {
-    private static final int WORD_SIZE = 4;
-
     public ExprValCodeGen(AssemblyProgram asmProg) {
         this.asmProg = asmProg;
     }
+    private ExprAddrCodeGen addrCodeGen = new ExprAddrCodeGen(asmProg);
 
     public Register visit(Expr e) {
         TextSection currentSection = asmProg.getCurrentTextSection();
         return switch (e) {
             case VarExpr ve -> {
                 Register reg = Register.Virtual.create();
-                //TODO: implement
+                boolean isGlobal = ve.vd.fpOffset != null;
+                if (isGlobal) {
+                    currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
+                } else {
+                    currentSection.emit(OpCode.ADDI, reg, Arch.fp, ve.vd.fpOffset);
+                    reg = Utils.addrToValue(currentSection, reg, ve.vd.type);
+                }
                 yield reg;
             }
             case FunCallExpr fce -> {
                 Register returnReg = null;
                 // precall
-                // push arguments (in reverse order)
-                int argsSize = fce.argsList.reversed().stream().mapToInt(arg -> {
-                    int size = arg.type.getSize();
-                    // TODO: pass arguments on the stack
-
-                    return size;
-                }).sum();
+                // push arguments
+                int argsSize = 0;
+                for (Expr arg : fce.argsList) {
+                    Register argReg = visit(arg);
+                    int argSize = arg.type.getSize();
+                    int offsetToAlignment = Utils.computeAlignmentOffset(argSize, Utils.WORD_SIZE);
+                    argsSize += argSize + offsetToAlignment;
+                    Register alignedArgAddr = Register.Virtual.create();
+                    currentSection.emit(OpCode.ADDIU, alignedArgAddr, Arch.sp, - (argSize + offsetToAlignment));
+                    Utils.copyToAddr(currentSection, alignedArgAddr, argReg, arg.type);
+                }
 
                 // reserve space for return value
                 int returnSize = fce.type.getSize();
@@ -63,26 +73,45 @@ public class ExprValCodeGen extends CodeGen {
                 currentSection.emit(OpCode.JAL, Label.get(fce.name));
 
                 // postreturn
-                // TODO: read the return value from stack
+                // read the return value from stack
+                Register returnAddr = Register.Virtual.create();
+                currentSection.emit(OpCode.ADDI, returnAddr, Arch.sp, 0);
 
                 // reset stack
                 currentSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, argsSize + returnSize);
-
-
-
                 yield returnReg;
             }
-            case ArrayAccessExpr aae -> null;
-            case FieldAccessExpr fae -> null;
-            case ValueAtExpr vae -> null;
-            case AddressOfExpr aoe -> null;
+            case ArrayAccessExpr aae -> {
+                Register addr = addrCodeGen.visit(aae);
+                yield Utils.addrToValue(currentSection, addr, aae.type);
+            }
+            case FieldAccessExpr fae -> {
+                Register addr = visit(fae);
+                yield Utils.addrToValue(currentSection, addr, fae.type);
+            }
+            case ValueAtExpr vae -> {
+                Register addr = visit(vae.expr);
+                yield Utils.addrToValue(currentSection, addr, vae.type);
+            }
+            case AddressOfExpr aoe -> {
+                yield addrCodeGen.visit(aoe.expr);
+            }
             case SizeOfExpr soe -> {
                 Register reg = Register.Virtual.create();
-                currentSection.emit(OpCode.LI, reg, e.type.getSize());
+                currentSection.emit(OpCode.LI, reg, soe.type.getSize());
                 yield reg;
             }
-            case TypecastExpr tce -> null;
-            case Assign a -> null;
+            case TypecastExpr tce -> {
+                // we only support the following cast (char -> int)
+                // both are unsigned so do nothing
+                yield visit(tce.expr);
+            }
+            case Assign a -> {
+                Register lhsReg = addrCodeGen.visit(a.lhs);
+                Register rhsReg = visit(a.rhs);
+                Type type = a.lhs.type;
+                yield Utils.copyToAddr(currentSection, lhsReg, rhsReg, type);
+            }
             case BinOp bo -> {
                 switch (bo.op) {
                     case ADD -> {
@@ -218,10 +247,14 @@ public class ExprValCodeGen extends CodeGen {
                 currentSection.emit(OpCode.LI, reg, il.intValue);
                 yield reg;
             }
-            case StrLiteral sl -> null;
+            case StrLiteral sl -> {
+                Register reg = Register.Virtual.create();
+                currentSection.emit(OpCode.LA, reg, MemAllocCodeGen.getStrLabel(sl.strValue));
+                yield reg;
+            }
             case ChrLiteral cl -> {
                 Register reg = Register.Virtual.create();
-                currentSection.emit(OpCode.LI, reg, cl.charValue);
+                currentSection.emit(OpCode.LI, reg, Utils.charToUnicode(cl.charValue));
                 yield reg;
             }
             default -> throw new RuntimeException("Unknown expression type: " + e);

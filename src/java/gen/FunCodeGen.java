@@ -9,8 +9,10 @@ import gen.asm.AssemblyProgram;
 import gen.asm.Directive;
 import gen.asm.Label;
 import gen.asm.OpCode;
+import gen.asm.Register;
 import gen.asm.AssemblyProgram.TextSection;
 import gen.asm.Register.Arch;
+import util.Utils;
 
 /**
  * A visitor that produces code for a single function declaration
@@ -30,8 +32,16 @@ public class FunCodeGen extends CodeGen {
 
         // 1) emit the prolog
         // set function name
-        funSection.emit(new Directive("globl " + fd.name));
+        funSection.emit(new Directive(Utils.GLOBAL_DIRECTIVE + fd.name));
         funSection.emit(Label.get(fd.name));
+
+        // handle case of main function
+        if (fd.name.equals("main")) {
+            (new StmtCodeGen(asmProg)).visit(fd.block);
+            funSection.emit(OpCode.LI, Arch.v0, EXIT_CODE);
+            funSection.emit(OpCode.SYSCALL);
+            return;
+        }
 
         // save the frame pointer and init it
         funSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, -4);
@@ -48,7 +58,7 @@ public class FunCodeGen extends CodeGen {
         // allocate space for local variables
         fd.block.vds.forEach(vd -> {
             int size = vd.type.getSize();
-            funSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, -size);
+            funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, - (size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE)));
         });
 
         // push saved registers
@@ -105,18 +115,13 @@ public class FunCodeGen extends CodeGen {
         }
 
         // restore the stack pointer
-        funSection.emit(OpCode.ADDI, Arch.sp, Arch.fp, 4);
+        funSection.emit(OpCode.ADDIU, Arch.sp, Arch.fp, 4);
 
         // restore the frame pointer
         funSection.emit(OpCode.LW, Arch.fp, Arch.fp, 0);
 
-        // at the end of the main function, exit the program
-        if (fd.name.equals("main")) {
-            funSection.emit(OpCode.LI, Arch.v0, EXIT_CODE);
-            funSection.emit(OpCode.SYSCALL);
-        } else {
-            funSection.emit(OpCode.JR, Arch.ra);
-        }
+        // return
+        funSection.emit(OpCode.JR, Arch.ra);
 
 
     }
