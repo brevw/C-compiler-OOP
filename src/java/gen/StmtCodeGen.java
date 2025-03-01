@@ -61,18 +61,14 @@ public class StmtCodeGen extends CodeGen {
                 this.postTest = oldPostTest;
             }
             case If i -> {
-                Label elseLabel = Label.create(Utils.ELSE_SUFFIX);
                 boolean hasElse = i.stmt2 != null;
-                Label endLabel = !hasElse ? Label.create(Utils.END_SUFFIX) : null;
+                Label elseLabel = hasElse ? Label.create(Utils.ELSE_SUFFIX) : null;
+                Label endLabel = Label.create(Utils.END_SUFFIX);
                 Register test = evcd.visit(i.expr);
-                if (hasElse) {
-                    asmProg.getCurrentTextSection().emit(OpCode.BEQZ, test, elseLabel);
-                } else {
-                    asmProg.getCurrentTextSection().emit(OpCode.BEQZ, test, endLabel);
-                }
+                asmProg.getCurrentTextSection().emit(OpCode.BEQZ, test, hasElse ? elseLabel : endLabel);
                 visit(i.stmt1);
-                asmProg.getCurrentTextSection().emit(OpCode.J, endLabel);
                 if (hasElse) {
+                    asmProg.getCurrentTextSection().emit(OpCode.J, endLabel); // escape the else after first block
                     asmProg.getCurrentTextSection().emit(elseLabel);
                     visit(i.stmt2);
                 }
