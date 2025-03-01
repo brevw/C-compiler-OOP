@@ -44,8 +44,8 @@ public class ExprValCodeGen extends CodeGen {
                     currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
                 } else {
                     currentSection.emit(OpCode.ADDI, reg, Arch.fp, ve.vd.fpOffset);
-                    reg = Utils.addrToValue(currentSection, reg, ve.vd.type);
                 }
+                reg = Utils.addrToValue(currentSection, reg, ve.vd.type);
                 yield reg;
             }
             case FunCallExpr fce -> {

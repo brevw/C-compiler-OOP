@@ -142,13 +142,26 @@ public class Utils {
     }
 
     public static boolean hasCall(FunDef fd) {
-        return fd.block.stmts.stream().filter(stmt -> stmt instanceof ExprStmt).map(exprStmt -> ((ExprStmt)exprStmt).expr).anyMatch(e -> containsFunCall(e));
+        return containsFunCallStmt(fd.block);
     }
 
-    public static boolean containsFunCall(Expr e) {
+    private static boolean containsFunCallStmt(Stmt s) {
+        if (s == null) {
+            return false;
+        }
+        return switch (s) {
+            case ExprStmt es -> containsFunCallExpr(es.expr);
+            case While w -> containsFunCallExpr(w.expr) || containsFunCallStmt(w.stmt);
+            case If i -> containsFunCallExpr(i.expr) || containsFunCallStmt(i.stmt1) || containsFunCallStmt(i.stmt2);
+            case Return r -> containsFunCallExpr(r.expr);
+            case Block b -> b.stmts.stream().anyMatch(Utils::containsFunCallStmt);
+            default -> false; // null, Break, Continue
+        };
+    }
+    private static boolean containsFunCallExpr(Expr e) {
         return switch (e) {
             case FunCallExpr fce -> true;
-            default -> e.children().stream().filter(e_ -> e_ instanceof Expr).anyMatch(e_ -> containsFunCall((Expr) e_));
+            default -> e.children().stream().filter(e_ -> e_ instanceof Expr).anyMatch(e_ -> containsFunCallExpr((Expr) e_));
         };
     }
 

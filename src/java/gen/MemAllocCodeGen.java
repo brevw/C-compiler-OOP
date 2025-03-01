@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ast.ASTNode;
-import ast.ExprStmt;
 import ast.FunDecl;
 import ast.FunDef;
 import ast.StrLiteral;
@@ -42,9 +41,7 @@ public class MemAllocCodeGen extends CodeGen {
                     Label l = Label.get(vd.name);
                     asmProg.dataSection.emit(l);
                     asmProg.dataSection.emit(new Directive(Utils.SPACE_DIRECTIVE + size));
-                    if (size % Utils.WORD_SIZE != 0){
-                        asmProg.dataSection.emit(new Directive(Utils.ALIGN_DIRECTIVE + Utils.WORD_ALIGNMENT_CONST));
-                    }
+                    asmProg.dataSection.emit(new Directive(Utils.ALIGN_DIRECTIVE + Utils.WORD_ALIGNMENT_CONST));
                 } else {
                     // allocate on the stack
                     fpOffset -= size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
@@ -67,7 +64,7 @@ public class MemAllocCodeGen extends CodeGen {
                     if (hasCall) {
                         this.fpOffset -= Utils.WORD_SIZE;
                     }
-                }
+                } // else do nothing as fp is init to 0x000
                 this.global = false;
                 visit(fd.block);
                 this.global = true;

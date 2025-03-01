@@ -1,15 +1,11 @@
 package gen;
 
 
-import ast.Expr;
-import ast.ExprStmt;
-import ast.FunCallExpr;
 import ast.FunDef;
 import gen.asm.AssemblyProgram;
 import gen.asm.Directive;
 import gen.asm.Label;
 import gen.asm.OpCode;
-import gen.asm.Register;
 import gen.asm.AssemblyProgram.TextSection;
 import gen.asm.Register.Arch;
 import util.Utils;
@@ -32,7 +28,9 @@ public class FunCodeGen extends CodeGen {
 
         // 1) emit the prolog
         // set function name
-        funSection.emit(new Directive(Utils.GLOBAL_DIRECTIVE + fd.name));
+        if (fd.name.equals(Utils.MAIN_FUNCTION)) {
+            funSection.emit(new Directive(Utils.GLOBAL_DIRECTIVE + fd.name));
+        }
         funSection.emit(Label.get(fd.name));
 
         // handle case of main function
