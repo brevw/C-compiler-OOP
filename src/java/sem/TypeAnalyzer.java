@@ -140,6 +140,13 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     for (int i = 0; i < fce.argsList.size(); i++) {
                         Type expected = fce.fd.params.get(i).type;
                         Type actual = visit(fce.argsList.get(i));
+                        // array to pointer decay
+                        if (expected instanceof ArrayType) {
+                            expected = new PointerType(((ArrayType) expected).type);
+                        }
+                        if (actual instanceof ArrayType) {
+                            actual = new PointerType(((ArrayType) actual).type);
+                        }
                         if (!expected.equals(actual)) {
                             error("Function " + fce.name + " expects " + expected + " but got " + actual);
                             yield BaseType.UNKNOWN;
