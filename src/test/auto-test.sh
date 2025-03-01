@@ -342,3 +342,4 @@ run_test_codegen isPrime "$PASS" "$DEFAULT_TIMEOUT" "7"
 #run_test_codegen tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3"
 # -> struct
 run_test_codegen struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
+run_test_codegen rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
