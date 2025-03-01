@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ast.ASTNode;
+import ast.ExprStmt;
 import ast.FunDecl;
 import ast.FunDef;
 import ast.StrLiteral;
@@ -52,15 +53,21 @@ public class MemAllocCodeGen extends CodeGen {
             }
             case FunDef fd -> {
                 this.fpOffset = 0;
-                int returnSize = fd.type.getSize();
-                int argumentsOffset = Utils.WORD_SIZE + returnSize + Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
-                for (VarDecl vd : fd.params.reversed()) {
-                    int size = vd.type.getSize();
-                    vd.fpOffset = argumentsOffset;
-                    argumentsOffset += size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
-                }
+                if (!fd.name.equals(Utils.MAIN_FUNCTION)) {
+                    int returnSize = fd.type.getSize();
+                    int argumentsOffset = Utils.WORD_SIZE + returnSize + Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
+                    for (VarDecl vd : fd.params.reversed()) {
+                        int size = vd.type.getSize();
+                        vd.fpOffset = argumentsOffset;
+                        argumentsOffset += size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
+                    }
 
-                this.fpOffset -= Utils.WORD_SIZE;
+                    // check if we need to skip the return address
+                    boolean hasCall = Utils.hasCall(fd);
+                    if (hasCall) {
+                        this.fpOffset -= Utils.WORD_SIZE;
+                    }
+                }
                 this.global = false;
                 visit(fd.block);
                 this.global = true;

@@ -35,6 +35,7 @@ public class ExprAddrCodeGen extends CodeGen {
                 } else {
                     currentSection.emit(OpCode.ADDI, reg, Arch.fp, ve.vd.fpOffset);
                 }
+                return reg;
             }
             case FieldAccessExpr fae -> {
                 Register reg = Register.Virtual.create();
@@ -58,8 +59,6 @@ public class ExprAddrCodeGen extends CodeGen {
             }
             default -> throw new RuntimeException("Not an LValue");
         }
-
-        return null;
     }
 
 }

@@ -39,7 +39,7 @@ public class ExprValCodeGen extends CodeGen {
         return switch (e) {
             case VarExpr ve -> {
                 Register reg = Register.Virtual.create();
-                boolean isGlobal = ve.vd.fpOffset != null;
+                boolean isGlobal = Utils.isGlobalVar(ve.vd);
                 if (isGlobal) {
                     currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
                 } else {
@@ -62,20 +62,26 @@ public class ExprValCodeGen extends CodeGen {
                     currentSection.emit(OpCode.ADDIU, alignedArgAddr, Arch.sp, - (argSize + offsetToAlignment));
                     Utils.copyToAddr(currentSection, alignedArgAddr, argReg, arg.type);
                 }
+                if (argsSize > 0) {
+                    currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -argsSize);
+                }
 
                 // reserve space for return value
-                int returnSize = fce.type.getSize();
+                int returnSize = fce.type.getSize() + Utils.computeAlignmentOffset(fce.type.getSize(), Utils.WORD_SIZE);
                 if (returnSize > 0) {
-                    currentSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, -returnSize);
+                    currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -returnSize);
                 }
 
                 // call function
                 currentSection.emit(OpCode.JAL, Label.get(fce.name));
 
                 // postreturn
-                // read the return value from stack
-                Register returnAddr = Register.Virtual.create();
-                currentSection.emit(OpCode.ADDI, returnAddr, Arch.sp, 0);
+                // read the return value from stack (if there is one, it is pointed by $sp)
+                if (returnSize > 0) {
+                    returnReg = Utils.addrToValue(currentSection, Arch.sp, fce.type);
+                } else {
+                    returnReg = Arch.sp; // return value is in $sp as it won't be used
+                }
 
                 // reset stack
                 currentSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, argsSize + returnSize);
@@ -90,7 +96,7 @@ public class ExprValCodeGen extends CodeGen {
                 yield Utils.addrToValue(currentSection, addr, fae.type);
             }
             case ValueAtExpr vae -> {
-                Register addr = visit(vae.expr);
+                Register addr = addrCodeGen.visit(vae.expr);
                 yield Utils.addrToValue(currentSection, addr, vae.type);
             }
             case AddressOfExpr aoe -> {
@@ -102,8 +108,9 @@ public class ExprValCodeGen extends CodeGen {
                 yield reg;
             }
             case TypecastExpr tce -> {
-                // we only support the following cast (char -> int)
-                // both are unsigned so do nothing
+                // for the cast (char -> int) do nothing (both are unsigned)
+                // for the cast (pointer -> pointer) do nothing (value is the same pointer address)
+                // for the cast (array -> pointer) do nothing (value is the same address)
                 yield visit(tce.expr);
             }
             case Assign a -> {

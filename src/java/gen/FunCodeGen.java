@@ -36,7 +36,7 @@ public class FunCodeGen extends CodeGen {
         funSection.emit(Label.get(fd.name));
 
         // handle case of main function
-        if (fd.name.equals("main")) {
+        if (fd.name.equals(Utils.MAIN_FUNCTION)) {
             (new StmtCodeGen(asmProg)).visit(fd.block);
             funSection.emit(OpCode.LI, Arch.v0, EXIT_CODE);
             funSection.emit(OpCode.SYSCALL);
@@ -49,7 +49,7 @@ public class FunCodeGen extends CodeGen {
         funSection.emit(OpCode.ADDI, Arch.fp, Arch.sp, 0);
 
         // save the return address (if there is a call inside the function)
-        boolean hasCall = fd.block.stmts.stream().filter(stmt -> stmt instanceof ExprStmt).map(exprStmt -> ((ExprStmt)exprStmt).expr).anyMatch(e -> containsFunCall(e));
+        boolean hasCall = Utils.hasCall(fd);
         if (hasCall) {
             funSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, -4);
             funSection.emit(OpCode.SW, Arch.ra, Arch.sp, 0);
@@ -126,12 +126,6 @@ public class FunCodeGen extends CodeGen {
 
     }
 
-    private static boolean containsFunCall(Expr e) {
-        return switch (e) {
-            case FunCallExpr fce -> true;
-            default -> e.children().stream().filter(e_ -> e_ instanceof Expr).anyMatch(e_ -> containsFunCall((Expr) e_));
-        };
-    }
 
 
 }

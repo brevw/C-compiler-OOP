@@ -28,6 +28,9 @@ public class Utils {
     public static final String ALIGN_DIRECTIVE = "align ";
     public static final String GLOBAL_DIRECTIVE = "globl ";
 
+    //main function name
+    public static final String MAIN_FUNCTION = "main";
+
 
     public static int computeAlignmentOffset(int size, int alignment) {
         int offsetToCorrectAlignment = size % alignment;
@@ -135,6 +138,17 @@ public class Utils {
             default -> throw new RuntimeException("not a leftvalue type: " + type);
         }
         return value;
+    }
+
+    public static boolean hasCall(FunDef fd) {
+        return fd.block.stmts.stream().filter(stmt -> stmt instanceof ExprStmt).map(exprStmt -> ((ExprStmt)exprStmt).expr).anyMatch(e -> containsFunCall(e));
+    }
+
+    public static boolean containsFunCall(Expr e) {
+        return switch (e) {
+            case FunCallExpr fce -> true;
+            default -> e.children().stream().filter(e_ -> e_ instanceof Expr).anyMatch(e_ -> containsFunCall((Expr) e_));
+        };
     }
 
     public static boolean isLValue(ASTNode node) {

@@ -29,6 +29,8 @@ RESET='\e[0m'
 
 # Other CONST
 DEFAULT_TIMEOUT=5
+MARS_SIM_PATH="$CURR_DIR/description/part3/Mars4_5.jar"
+EMPTY_STDIN=""
 
 
 # Functions
@@ -182,6 +184,64 @@ run_test_sem() {
     fi
 }
 
+run_test_codegen() {
+    local filename="$1"
+    local expected_exit_code="$2"
+    local timelimit="$3"
+    local stdin="$4"
+    local c_file_path="$CFILES_DIR/$filename.c"
+    local executable_file_path="$OUTPUT_DIR/$filename"
+    local asm_file_path="$OUTPUT_DIR/$filename.asm"
+    local gcc_exec_output="$OUTPUT_DIR/$filename.txt"
+    local mars_output="$OUTPUT_DIR/$filename-mars.txt"
+
+    # Print test name
+    echo "$ARROW $filename"
+
+    # compile the C file with gcc
+    gcc -o "$executable_file_path" "$c_file_path" > /dev/null 2>&1
+    local exit_code=$?  # Capture the program's exit code
+    if [ $exit_code -ne 0 ]; then
+        echo -e "Test ${RED}Failed${RESET}: gcc exited with code $exit_code"
+        return
+    fi
+    echo "$stdin" | "$executable_file_path" > "$gcc_exec_output"
+
+    # Execute the program
+    gtimeout "$timelimit" java -cp bin Main3 -gen "$c_file_path" "$asm_file_path" > /dev/null
+    local exit_code=$?  # Capture the program's exit code
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program timed out"
+        return
+    fi
+    # Check if program exit code is non-zero
+    if [ $exit_code -ne $expected_exit_code ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program exited with code $exit_code (expected $expected_exit_code)"
+        return
+    fi
+
+
+    # Run the generated assembly code with Mars Mips Simulator and redirect stderr to trash
+    echo "$stdin" | gtimeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
+    local exit_code=$?  # Capture the program's exit code
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Mars Mips Simulator timed out"
+        return
+    fi
+
+    # Compare the output of the executable and the mars simulator
+    diff "$gcc_exec_output" "$mars_output"
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Output does not match expected file"
+    else
+        echo -e "Test ${GREEN}Passed${RESET}"
+    fi
+
+}
+
 # Compile Code using ant apache
 echo -e "${BLUE}$DASHED_LINES Compiling Code $DASHED_LINES${RESET}"
 ant build
@@ -263,3 +323,10 @@ run_test_sem break_outside_loop "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 
 # CodeGen tests
 print_test_name "CodeGen tests"
+# -> build-in functions
+run_test_codegen print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
+run_test_codegen print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
+run_test_codegen print_s_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
+run_test_codegen read_c_main "$PASS" "$DEFAULT_TIMEOUT" "a"
+run_test_codegen read_i_main "$PASS" "$DEFAULT_TIMEOUT" "1"
+run_test_codegen mcmalloc_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
