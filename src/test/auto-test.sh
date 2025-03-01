@@ -330,3 +330,5 @@ run_test_codegen print_s_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
 run_test_codegen read_c_main "$PASS" "$DEFAULT_TIMEOUT" "a"
 run_test_codegen read_i_main "$PASS" "$DEFAULT_TIMEOUT" "1"
 run_test_codegen mcmalloc_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
+# -> simple programs
+run_test_codegen nested_whiles "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"

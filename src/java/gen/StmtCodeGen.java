@@ -63,7 +63,7 @@ public class StmtCodeGen extends CodeGen {
             case If i -> {
                 Label elseLabel = Label.create(Utils.ELSE_SUFFIX);
                 boolean hasElse = i.stmt2 != null;
-                Label endLabel = hasElse ? Label.create(Utils.END_SUFFIX) : null;
+                Label endLabel = !hasElse ? Label.create(Utils.END_SUFFIX) : null;
                 Register test = evcd.visit(i.expr);
                 if (hasElse) {
                     asmProg.getCurrentTextSection().emit(OpCode.BEQZ, test, elseLabel);
