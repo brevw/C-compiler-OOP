@@ -38,6 +38,8 @@ public class FunCodeGen extends CodeGen {
         // handle case of main function
         if (fd.name.equals(Utils.MAIN_FUNCTION)) {
             (new StmtCodeGen(asmProg)).visit(fd.block);
+            Label epilog = Label.get(fd.name + Utils.EPILOGUE_OF_FUNCTION); // early exit of the main function
+            funSection.emit(epilog);
             funSection.emit(OpCode.LI, Arch.v0, EXIT_CODE);
             funSection.emit(OpCode.SYSCALL);
             return;
@@ -105,7 +107,9 @@ public class FunCodeGen extends CodeGen {
             }
         }
 
-        // 3) emit the epilog
+        // 3) emit the epilog (in case of no return statement)
+        Label epilog = Label.get(fd.name + Utils.EPILOGUE_OF_FUNCTION);
+        funSection.emit(epilog);
         // restore saved registers
         funSection.emit(OpCode.POP_REGISTERS);
 

@@ -1,8 +1,8 @@
 .data
 # Allocated labels for virtual registers
-label_9_v0:
+label_17_v1:
 .space 4
-label_10_v1:
+label_16_v0:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers
@@ -16,16 +16,16 @@ label_10_v1:
 main:
 # Original instruction: li v0,10
 li $t5,10
-la $t0,label_9_v0
+la $t0,label_16_v0
 sw $t5,0($t0)
 # Original instruction: addiu v1,$sp,-4
 addiu $t5,$sp,-4
-la $t0,label_10_v1
+la $t0,label_17_v1
 sw $t5,0($t0)
 # Original instruction: sw v0,0(v1)
-la $t5,label_9_v0
+la $t5,label_16_v0
 lw $t5,0($t5)
-la $t4,label_10_v1
+la $t4,label_17_v1
 lw $t4,0($t4)
 sw $t5,0($t4)
 # Original instruction: addiu $sp,$sp,-4
@@ -34,6 +34,7 @@ addiu $sp,$sp,-4
 jal print_i
 # Original instruction: addi $sp,$sp,4
 addi $sp,$sp,4
+main_epilogue:
 # Original instruction: li $v0,10
 li $v0,10
 # Original instruction: syscall
@@ -55,6 +56,7 @@ lw $a0,4($fp)
 li $v0,4
 # Original instruction: syscall
 syscall
+print_s_epilogue:
 # Original instruction: popRegisters
 # Original instruction: addiu $sp,$fp,4
 addiu $sp,$fp,4
@@ -79,6 +81,7 @@ lw $a0,4($fp)
 li $v0,1
 # Original instruction: syscall
 syscall
+print_i_epilogue:
 # Original instruction: popRegisters
 # Original instruction: addiu $sp,$fp,4
 addiu $sp,$fp,4
@@ -103,6 +106,7 @@ lw $a0,4($fp)
 li $v0,11
 # Original instruction: syscall
 syscall
+print_c_epilogue:
 # Original instruction: popRegisters
 # Original instruction: addiu $sp,$fp,4
 addiu $sp,$fp,4
@@ -127,6 +131,7 @@ li $v0,12
 syscall
 # Original instruction: sw $v0,4($fp)
 sw $v0,4($fp)
+read_c_epilogue:
 # Original instruction: popRegisters
 # Original instruction: addiu $sp,$fp,4
 addiu $sp,$fp,4
@@ -151,6 +156,7 @@ li $v0,5
 syscall
 # Original instruction: sw $v0,4($fp)
 sw $v0,4($fp)
+read_i_epilogue:
 # Original instruction: popRegisters
 # Original instruction: addiu $sp,$fp,4
 addiu $sp,$fp,4
@@ -177,6 +183,7 @@ li $v0,9
 syscall
 # Original instruction: sw $v0,4($fp)
 sw $v0,4($fp)
+mcmalloc_epilogue:
 # Original instruction: popRegisters
 # Original instruction: addiu $sp,$fp,4
 addiu $sp,$fp,4

@@ -14,6 +14,7 @@ import gen.asm.AssemblyProgram;
  * This visitor should produce a program.
  */
 public class ProgramCodeGen extends CodeGen {
+    public static FunDef currentFunction = null;
 
     public ProgramCodeGen(AssemblyProgram asmProg) {
         this.asmProg = asmProg;
@@ -36,6 +37,7 @@ public class ProgramCodeGen extends CodeGen {
         p.decls.forEach((d) -> {
             switch(d) {
                 case FunDef fd -> {
+                    currentFunction = fd;
                     FunCodeGen fcg = new FunCodeGen(asmProg);
                     fcg.visit(fd);
                 }
