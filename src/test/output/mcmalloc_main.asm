@@ -1,22 +1,22 @@
 .data
 # Allocated labels for virtual registers
-label_24_v5:
+label_21_v0:
 .space 4
 label_27_v6:
 .space 4
-label_17_v1:
+label_30_v7:
 .space 4
 label_18_v2:
 .space 4
-label_25_v4:
-.space 4
-label_31_v8:
-.space 4
 label_20_v3:
 .space 4
-label_21_v0:
+label_24_v5:
 .space 4
-label_30_v7:
+label_25_v4:
+.space 4
+label_17_v1:
+.space 4
+label_31_v8:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers
@@ -111,7 +111,6 @@ li $v0,10
 syscall
 
 .text
-.globl print_s
 print_s:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -136,7 +135,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_i
 print_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -161,7 +159,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_c
 print_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -186,7 +183,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_c
 read_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -211,7 +207,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_i
 read_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -236,7 +231,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl mcmalloc
 mcmalloc:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4

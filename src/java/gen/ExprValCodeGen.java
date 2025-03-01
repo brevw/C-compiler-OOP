@@ -92,7 +92,7 @@ public class ExprValCodeGen extends CodeGen {
                 yield Utils.addrToValue(currentSection, addr, aae.type);
             }
             case FieldAccessExpr fae -> {
-                Register addr = visit(fae);
+                Register addr = addrCodeGen.visit(fae);
                 yield Utils.addrToValue(currentSection, addr, fae.type);
             }
             case ValueAtExpr vae -> {

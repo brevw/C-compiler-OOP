@@ -9,83 +9,83 @@ label_2_str:
 .asciiz "\n"
 .align 2
 # Allocated labels for virtual registers
+label_72_v25:
+.space 4
+label_47_v13:
+.space 4
 label_79_v24:
 .space 4
 label_44_v12:
 .space 4
-label_68_v23:
-.space 4
-label_45_v11:
-.space 4
-label_91_v33:
-.space 4
-label_65_v20:
-.space 4
-label_100_v37:
-.space 4
-label_33_v6:
-.space 4
-label_76_v27:
-.space 4
-label_50_v15:
-.space 4
-label_69_v18:
-.space 4
-label_27_v2:
-.space 4
-label_72_v25:
-.space 4
-label_84_v31:
-.space 4
-label_87_v30:
-.space 4
-label_36_v7:
-.space 4
-label_53_v14:
-.space 4
 label_93_v34:
-.space 4
-label_97_v36:
-.space 4
-label_26_v3:
-.space 4
-label_40_v9:
-.space 4
-label_66_v22:
-.space 4
-label_57_v17:
-.space 4
-label_96_v35:
 .space 4
 label_63_v21:
 .space 4
-label_23_v0:
+label_101_v38:
 .space 4
-label_37_v8:
+label_36_v7:
+.space 4
+label_78_v28:
 .space 4
 label_52_v16:
 .space 4
-label_81_v29:
+label_60_v19:
 .space 4
-label_30_v4:
-.space 4
-label_47_v13:
+label_26_v3:
 .space 4
 label_75_v26:
 .space 4
 label_86_v32:
 .space 4
+label_84_v31:
+.space 4
+label_37_v8:
+.space 4
+label_50_v15:
+.space 4
+label_96_v35:
+.space 4
+label_100_v37:
+.space 4
+label_30_v4:
+.space 4
+label_41_v10:
+.space 4
+label_68_v23:
+.space 4
+label_69_v18:
+.space 4
+label_97_v36:
+.space 4
+label_66_v22:
+.space 4
 label_22_v1:
+.space 4
+label_40_v9:
+.space 4
+label_57_v17:
+.space 4
+label_87_v30:
+.space 4
+label_23_v0:
 .space 4
 label_31_v5:
 .space 4
-label_60_v19:
+label_53_v14:
 .space 4
-label_101_v38:
+label_76_v27:
 .space 4
-label_78_v28:
+label_91_v33:
 .space 4
-label_41_v10:
+label_27_v2:
+.space 4
+label_33_v6:
+.space 4
+label_65_v20:
+.space 4
+label_81_v29:
+.space 4
+label_45_v11:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers
@@ -413,7 +413,6 @@ li $v0,10
 syscall
 
 .text
-.globl print_s
 print_s:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -438,7 +437,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_i
 print_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -463,7 +461,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_c
 print_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -488,7 +485,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_c
 read_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -513,7 +509,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_i
 read_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -538,7 +533,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl mcmalloc
 mcmalloc:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4

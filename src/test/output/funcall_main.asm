@@ -6,66 +6,66 @@ label_1_str:
 .asciiz " is: "
 .align 2
 # Allocated labels for virtual registers
-label_32_v5:
-.space 4
-label_46_v12:
+label_29_v3:
 .space 4
 label_42_v10:
 .space 4
-label_41_v9:
-.space 4
-label_24_v1:
+label_38_v8:
 .space 4
 label_48_v7:
 .space 4
-label_52_v15:
-.space 4
-label_35_v6:
-.space 4
-label_53_v14:
-.space 4
-label_25_v2:
-.space 4
-label_45_v11:
-.space 4
-label_33_v4:
-.space 4
-label_29_v3:
+label_33_v5:
 .space 4
 label_49_v13:
 .space 4
+label_32_v4:
+.space 4
+label_46_v12:
+.space 4
 label_21_v0:
 .space 4
-label_38_v8:
+label_41_v9:
+.space 4
+label_25_v2:
+.space 4
+label_24_v1:
+.space 4
+label_53_v15:
+.space 4
+label_45_v11:
+.space 4
+label_52_v14:
+.space 4
+label_35_v6:
 .space 4
 # Allocated labels for virtual registers
-label_76_v26:
-.space 4
 label_71_v24:
+.space 4
+label_67_v22:
+.space 4
+label_81_v29:
 .space 4
 label_57_v16:
 .space 4
 label_60_v18:
 .space 4
-label_63_v20:
-.space 4
-label_73_v25:
-.space 4
-label_80_v28:
-.space 4
 label_70_v23:
 .space 4
-label_67_v22:
+label_76_v26:
 .space 4
 label_66_v21:
+.space 4
+label_63_v20:
+.space 4
+label_80_v28:
 .space 4
 label_61_v19:
 .space 4
 label_56_v17:
 .space 4
-label_77_v27:
+label_73_v25:
 .space 4
-label_81_v29:
+label_77_v27:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers
@@ -75,7 +75,6 @@ label_81_v29:
 # Allocated labels for virtual registers
 
 .text
-.globl factorial
 factorial:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -83,12 +82,12 @@ addi $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
-# Original instruction: pushRegisters
-la $t0,label_32_v5
-lw $t0,0($t0)
+# Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_46_v12
+# Original instruction: sw $ra,0($sp)
+sw $ra,0($sp)
+# Original instruction: pushRegisters
+la $t0,label_29_v3
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
@@ -96,11 +95,7 @@ la $t0,label_42_v10
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_41_v9
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_24_v1
+la $t0,label_38_v8
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
@@ -108,31 +103,7 @@ la $t0,label_48_v7
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_52_v15
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_35_v6
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_53_v14
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_25_v2
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_45_v11
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_33_v4
-lw $t0,0($t0)
-addi $sp,$sp,-4
-sw $t0,0($sp)
-la $t0,label_29_v3
+la $t0,label_33_v5
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
@@ -140,11 +111,43 @@ la $t0,label_49_v13
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
+la $t0,label_32_v4
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
+la $t0,label_46_v12
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
 la $t0,label_21_v0
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_38_v8
+la $t0,label_41_v9
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
+la $t0,label_25_v2
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
+la $t0,label_24_v1
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
+la $t0,label_53_v15
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
+la $t0,label_45_v11
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
+la $t0,label_52_v14
+lw $t0,0($t0)
+addi $sp,$sp,-4
+sw $t0,0($sp)
+la $t0,label_35_v6
 lw $t0,0($t0)
 addi $sp,$sp,-4
 sw $t0,0($sp)
@@ -182,16 +185,16 @@ lw $t5,0($t5)
 beqz $t5,label_3_ELSE
 # Original instruction: li v4,1
 li $t5,1
-la $t0,label_33_v4
+la $t0,label_32_v4
 sw $t5,0($t0)
 # Original instruction: addi v5,$fp,4
 addi $t5,$fp,4
-la $t0,label_32_v5
+la $t0,label_33_v5
 sw $t5,0($t0)
-# Original instruction: sw v5,0(v4)
-la $t5,label_32_v5
+# Original instruction: sw v4,0(v5)
+la $t5,label_32_v4
 lw $t5,0($t5)
-la $t4,label_33_v4
+la $t4,label_33_v5
 lw $t4,0($t4)
 sw $t5,0($t4)
 # Original instruction: j factorial_epilogue
@@ -259,16 +262,16 @@ lw $t5,0($t5)
 la $t4,label_49_v13
 lw $t4,0($t4)
 mul $t3,$t5,$t4
-la $t0,label_53_v14
+la $t0,label_52_v14
 sw $t3,0($t0)
 # Original instruction: addi v15,$fp,4
 addi $t5,$fp,4
-la $t0,label_52_v15
+la $t0,label_53_v15
 sw $t5,0($t0)
-# Original instruction: sw v15,0(v14)
-la $t5,label_52_v15
+# Original instruction: sw v14,0(v15)
+la $t5,label_52_v14
 lw $t5,0($t5)
-la $t4,label_53_v14
+la $t4,label_53_v15
 lw $t4,0($t4)
 sw $t5,0($t4)
 # Original instruction: j factorial_epilogue
@@ -278,23 +281,11 @@ factorial_epilogue:
 # Original instruction: popRegisters
 lw $t0,0($sp)
 addi $sp,$sp,4
-la $t1,label_38_v8
+la $t1,label_35_v6
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
-la $t1,label_21_v0
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_49_v13
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_29_v3
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_33_v4
+la $t1,label_52_v14
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
@@ -302,23 +293,7 @@ la $t1,label_45_v11
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
-la $t1,label_25_v2
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_53_v14
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_35_v6
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_52_v15
-sw $t0,0($t1)
-lw $t0,0($sp)
-addi $sp,$sp,4
-la $t1,label_48_v7
+la $t1,label_53_v15
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
@@ -326,11 +301,15 @@ la $t1,label_24_v1
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
+la $t1,label_25_v2
+sw $t0,0($t1)
+lw $t0,0($sp)
+addi $sp,$sp,4
 la $t1,label_41_v9
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
-la $t1,label_42_v10
+la $t1,label_21_v0
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
@@ -338,8 +317,34 @@ la $t1,label_46_v12
 sw $t0,0($t1)
 lw $t0,0($sp)
 addi $sp,$sp,4
-la $t1,label_32_v5
+la $t1,label_32_v4
 sw $t0,0($t1)
+lw $t0,0($sp)
+addi $sp,$sp,4
+la $t1,label_49_v13
+sw $t0,0($t1)
+lw $t0,0($sp)
+addi $sp,$sp,4
+la $t1,label_33_v5
+sw $t0,0($t1)
+lw $t0,0($sp)
+addi $sp,$sp,4
+la $t1,label_48_v7
+sw $t0,0($t1)
+lw $t0,0($sp)
+addi $sp,$sp,4
+la $t1,label_38_v8
+sw $t0,0($t1)
+lw $t0,0($sp)
+addi $sp,$sp,4
+la $t1,label_42_v10
+sw $t0,0($t1)
+lw $t0,0($sp)
+addi $sp,$sp,4
+la $t1,label_29_v3
+sw $t0,0($t1)
+# Original instruction: lw $ra,-4($fp)
+lw $ra,-4($fp)
 # Original instruction: addiu $sp,$fp,4
 addiu $sp,$fp,4
 # Original instruction: lw $fp,0($fp)
@@ -491,7 +496,6 @@ li $v0,10
 syscall
 
 .text
-.globl print_s
 print_s:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -516,7 +520,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_i
 print_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -541,7 +544,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_c
 print_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -566,7 +568,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_c
 read_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -591,7 +592,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_i
 read_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -616,7 +616,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl mcmalloc
 mcmalloc:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4

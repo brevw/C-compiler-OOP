@@ -9,113 +9,113 @@ label_2_str:
 .asciiz " "
 .align 2
 # Allocated labels for virtual registers
-label_110_v42:
-.space 4
-label_46_v11:
-.space 4
-label_88_v32:
-.space 4
 label_111_v43:
-.space 4
-label_129_v52:
-.space 4
-label_103_v39:
-.space 4
-label_117_v46:
-.space 4
-label_114_v45:
-.space 4
-label_76_v26:
-.space 4
-label_36_v6:
-.space 4
-label_51_v13:
-.space 4
-label_100_v38:
-.space 4
-label_95_v33:
-.space 4
-label_29_v2:
-.space 4
-label_92_v34:
-.space 4
-label_63_v20:
-.space 4
-label_121_v44:
-.space 4
-label_37_v7:
-.space 4
-label_53_v15:
 .space 4
 label_47_v12:
 .space 4
-label_33_v4:
+label_95_v33:
 .space 4
-label_98_v37:
-.space 4
-label_42_v9:
-.space 4
-label_106_v40:
-.space 4
-label_71_v23:
-.space 4
-label_66_v22:
-.space 4
-label_43_v10:
+label_121_v44:
 .space 4
 label_131_v53:
 .space 4
-label_126_v51:
-.space 4
-label_61_v19:
-.space 4
-label_101_v36:
-.space 4
-label_32_v5:
-.space 4
-label_50_v14:
-.space 4
-label_56_v17:
-.space 4
-label_24_v1:
-.space 4
-label_77_v24:
-.space 4
-label_128_v50:
-.space 4
-label_83_v30:
-.space 4
-label_85_v29:
-.space 4
-label_94_v35:
-.space 4
-label_120_v48:
-.space 4
-label_39_v8:
-.space 4
-label_67_v21:
-.space 4
-label_58_v16:
-.space 4
-label_80_v28:
-.space 4
-label_28_v3:
-.space 4
-label_123_v49:
-.space 4
-label_74_v25:
-.space 4
-label_86_v31:
-.space 4
-label_25_v0:
-.space 4
-label_59_v18:
+label_106_v40:
 .space 4
 label_118_v47:
 .space 4
+label_117_v46:
+.space 4
 label_89_v27:
 .space 4
+label_37_v7:
+.space 4
+label_50_v14:
+.space 4
+label_103_v39:
+.space 4
+label_92_v34:
+.space 4
+label_28_v3:
+.space 4
+label_94_v35:
+.space 4
+label_67_v21:
+.space 4
+label_114_v45:
+.space 4
+label_39_v8:
+.space 4
+label_58_v16:
+.space 4
+label_51_v13:
+.space 4
+label_32_v5:
+.space 4
+label_100_v38:
+.space 4
+label_43_v10:
+.space 4
 label_107_v41:
+.space 4
+label_77_v24:
+.space 4
+label_71_v23:
+.space 4
+label_46_v11:
+.space 4
+label_129_v52:
+.space 4
+label_63_v20:
+.space 4
+label_98_v37:
+.space 4
+label_36_v6:
+.space 4
+label_53_v15:
+.space 4
+label_59_v18:
+.space 4
+label_29_v2:
+.space 4
+label_74_v25:
+.space 4
+label_126_v51:
+.space 4
+label_86_v31:
+.space 4
+label_83_v30:
+.space 4
+label_101_v36:
+.space 4
+label_123_v49:
+.space 4
+label_42_v9:
+.space 4
+label_66_v22:
+.space 4
+label_56_v17:
+.space 4
+label_25_v0:
+.space 4
+label_85_v29:
+.space 4
+label_33_v4:
+.space 4
+label_128_v50:
+.space 4
+label_76_v26:
+.space 4
+label_88_v32:
+.space 4
+label_24_v1:
+.space 4
+label_61_v19:
+.space 4
+label_120_v48:
+.space 4
+label_80_v28:
+.space 4
+label_110_v42:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers
@@ -541,7 +541,6 @@ li $v0,10
 syscall
 
 .text
-.globl print_s
 print_s:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -566,7 +565,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_i
 print_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -591,7 +589,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl print_c
 print_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -616,7 +613,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_c
 read_c:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -641,7 +637,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl read_i
 read_i:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4
@@ -666,7 +661,6 @@ lw $fp,0($fp)
 jr $ra
 
 .text
-.globl mcmalloc
 mcmalloc:
 # Original instruction: addi $sp,$sp,-4
 addi $sp,$sp,-4

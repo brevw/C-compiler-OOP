@@ -22,15 +22,18 @@ public class Utils {
     public static final String ELSE_SUFFIX = "ELSE";
     public static final String END_SUFFIX = "END";
 
-    // used for global static data
+    // directives
     public static final String ASCIIZ_DIRECTIVE = "asciiz ";
     public static final String SPACE_DIRECTIVE = "space ";
     public static final String ALIGN_DIRECTIVE = "align ";
     public static final String GLOBAL_DIRECTIVE = "globl ";
+    public static final String SET_DIRECTIVE = "set ";
 
     // for functions
     public static final String MAIN_FUNCTION = "main";
     public static final String EPILOGUE_OF_FUNCTION = "_epilogue";
+    public static final String NOREORDER = "noreorder";
+    public static final String NOMACRO = "nomacro";
 
 
     public static int computeAlignmentOffset(int size, int alignment) {
