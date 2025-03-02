@@ -183,13 +183,9 @@ public class Utils {
         };
     }
     private static boolean containsFunCallExpr(Expr e) {
-        // TODO: delete
-        if (e == null) {
-            System.out.println("null");
-        }
         return switch (e) {
             case FunCallExpr fce -> true;
-            case null -> false;
+            case null -> false; // for empty return
             default -> e.children().stream().filter(e_ -> e_ instanceof Expr).anyMatch(e_ -> containsFunCallExpr((Expr) e_));
         };
     }
