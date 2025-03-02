@@ -31,6 +31,8 @@ RESET='\e[0m'
 DEFAULT_TIMEOUT=5
 MARS_SIM_PATH="$CURR_DIR/description/part3/Mars4_5.jar"
 EMPTY_STDIN=""
+MARS_FORMAT_STDIN_TRUE=1
+MARS_FORMAT_STDIN_FALSE=0
 
 
 # Functions
@@ -189,11 +191,22 @@ run_test_codegen() {
     local expected_exit_code="$2"
     local timelimit="$3"
     local stdin="$4"
+    local mars_format_stdin="$5"
     local c_file_path="$CFILES_DIR/$filename.c"
     local executable_file_path="$OUTPUT_DIR/$filename"
     local asm_file_path="$OUTPUT_DIR/$filename.asm"
     local gcc_exec_output="$OUTPUT_DIR/$filename.txt"
     local mars_output="$OUTPUT_DIR/$filename-mars.txt"
+
+    # Convert stdin to a format that can be passed to Mars Mips Simulator
+    local stdin_mars=""
+    if [ $mars_format_stdin -eq 0 ]; then
+        stdin_mars="${stdin}\n"
+    else
+        for (( i=0; i<${#stdin}; i++ )); do
+            stdin_mars+="${stdin:$i:1}\n"
+        done
+    fi
 
     # Print test name
     echo "$ARROW $filename"
@@ -223,7 +236,7 @@ run_test_codegen() {
 
 
     # Run the generated assembly code with Mars Mips Simulator and redirect stderr to trash
-    echo "$stdin" | gtimeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
+    echo -e "$stdin_mars" | gtimeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
     local exit_code=$?  # Capture the program's exit code
     # Check if program timeouts
     if [ $exit_code -eq 124 ]; then
@@ -324,22 +337,24 @@ run_test_sem break_outside_loop "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 # CodeGen tests
 print_test_name "CodeGen tests"
 # -> build-in functions
-run_test_codegen print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen print_s_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen read_c_main "$PASS" "$DEFAULT_TIMEOUT" "a"
-run_test_codegen read_i_main "$PASS" "$DEFAULT_TIMEOUT" "1"
-run_test_codegen mcmalloc_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
+run_test_codegen print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen print_s_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen read_c_main "$PASS" "$DEFAULT_TIMEOUT" "a" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen read_i_main "$PASS" "$DEFAULT_TIMEOUT" "1" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen mcmalloc_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 # -> simple programs
-run_test_codegen nested_whiles "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen arithmetics "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen fibonacci "$PASS" "$DEFAULT_TIMEOUT" "10"
-run_test_codegen factorial "$PASS" "$DEFAULT_TIMEOUT" "5"
-run_test_codegen early_exit_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen funcall_main "$PASS" "$DEFAULT_TIMEOUT" "4"
-run_test_codegen global_decl_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen isPrime "$PASS" "$DEFAULT_TIMEOUT" "7"
-#run_test_codegen tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3"
-# -> struct
-run_test_codegen struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
-run_test_codegen rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN"
+run_test_codegen nested_whiles "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen arithmetics "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen fibonacci "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen factorial "$PASS" "$DEFAULT_TIMEOUT" "5" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen early_exit_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen funcall_main "$PASS" "$DEFAULT_TIMEOUT" "4" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen global_decl_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen isPrime "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3n" "$MARS_FORMAT_STDIN_TRUE"
+# -> struct, arrays
+run_test_codegen struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen funcall_struct "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen print_matrix "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"

@@ -33,8 +33,12 @@ public class FunCodeGen extends CodeGen {
         }
         funSection.emit(Label.get(fd.name));
 
+        int localVarSize = fd.block.vds.stream().mapToInt(vd -> vd.type.getSize() + Utils.computeAlignmentOffset(vd.type.getSize(), Utils.WORD_SIZE)).sum();
         // handle case of main function
         if (fd.name.equals(Utils.MAIN_FUNCTION)) {
+            // allocate space for local variables
+            funSection.emit(OpCode.ADDIU, Arch.fp, Arch.sp, 0);
+            funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -localVarSize);
             (new StmtCodeGen(asmProg)).visit(fd.block);
             Label epilog = Label.get(fd.name + Utils.EPILOGUE_OF_FUNCTION); // early exit of the main function
             funSection.emit(epilog);
@@ -44,22 +48,19 @@ public class FunCodeGen extends CodeGen {
         }
 
         // save the frame pointer and init it
-        funSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, -4);
+        funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -4);
         funSection.emit(OpCode.SW, Arch.fp, Arch.sp, 0);
         funSection.emit(OpCode.ADDI, Arch.fp, Arch.sp, 0);
 
         // save the return address (if there is a call inside the function)
         boolean hasCall = Utils.hasCall(fd);
         if (hasCall) {
-            funSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, -4);
+            funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -4);
             funSection.emit(OpCode.SW, Arch.ra, Arch.sp, 0);
         }
 
         // allocate space for local variables
-        fd.block.vds.forEach(vd -> {
-            int size = vd.type.getSize();
-            funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, - (size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE)));
-        });
+        funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -localVarSize);
 
         // push saved registers
         funSection.emit(OpCode.PUSH_REGISTERS);

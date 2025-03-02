@@ -33,7 +33,7 @@ public class ExprAddrCodeGen extends CodeGen {
                 if (isGlobalVar) {
                     currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
                 } else {
-                    currentSection.emit(OpCode.ADDI, reg, Arch.fp, ve.vd.fpOffset);
+                    currentSection.emit(OpCode.ADDIU, reg, Arch.fp, ve.vd.fpOffset);
                 }
                 return reg;
             }
@@ -47,7 +47,7 @@ public class ExprAddrCodeGen extends CodeGen {
             case ArrayAccessExpr aae -> {
                 Register reg = Register.Virtual.create();
                 Register base = visit(aae.arrayExpr);
-                Register index = visit(aae.indexExpr);
+                Register index = (new ExprValCodeGen(asmProg)).visit(aae.indexExpr);
                 Register size = Register.Virtual.create();
                 currentSection.emit(OpCode.LI, size, aae.type.getSize());
                 currentSection.emit(OpCode.MUL, index, index, size);

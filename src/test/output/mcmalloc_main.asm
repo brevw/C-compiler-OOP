@@ -1,22 +1,24 @@
 .data
 # Allocated labels for virtual registers
-label_21_v0:
-.space 4
-label_27_v6:
-.space 4
-label_30_v7:
-.space 4
-label_18_v2:
-.space 4
-label_20_v3:
-.space 4
-label_24_v5:
-.space 4
-label_25_v4:
+label_23_v0:
 .space 4
 label_17_v1:
 .space 4
-label_31_v8:
+label_33_v9:
+.space 4
+label_26_v6:
+.space 4
+label_27_v5:
+.space 4
+label_32_v8:
+.space 4
+label_20_v3:
+.space 4
+label_29_v7:
+.space 4
+label_18_v2:
+.space 4
+label_22_v4:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers
@@ -28,9 +30,13 @@ label_31_v8:
 .text
 .globl main
 main:
-# Original instruction: addi v0,$fp,-4
-addi $t5,$fp,-4
-la $t0,label_21_v0
+# Original instruction: addiu $fp,$sp,0
+addiu $fp,$sp,0
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
+# Original instruction: addiu v0,$fp,-4
+addiu $t5,$fp,-4
+la $t0,label_23_v0
 sw $t5,0($t0)
 # Original instruction: li v1,4
 li $t5,4
@@ -52,58 +58,64 @@ addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 # Original instruction: jal mcmalloc
 jal mcmalloc
-# Original instruction: lw v3,0($sp)
-lw $t5,0($sp)
+# Original instruction: addi v3,$sp,0
+addi $t5,$sp,0
 la $t0,label_20_v3
 sw $t5,0($t0)
-# Original instruction: addi $sp,$sp,8
-addi $sp,$sp,8
-# Original instruction: sw v3,0(v0)
+# Original instruction: lw v4,0(v3)
 la $t5,label_20_v3
 lw $t5,0($t5)
-la $t4,label_21_v0
-lw $t4,0($t4)
-sw $t5,0($t4)
-# Original instruction: addi v4,$fp,-4
-addi $t5,$fp,-4
-la $t0,label_25_v4
-sw $t5,0($t0)
-# Original instruction: li v5,2
-li $t5,2
-la $t0,label_24_v5
-sw $t5,0($t0)
-# Original instruction: sw v5,0(v4)
-la $t5,label_24_v5
+lw $t4,0($t5)
+la $t0,label_22_v4
+sw $t4,0($t0)
+# Original instruction: addiu $sp,$sp,8
+addiu $sp,$sp,8
+# Original instruction: sw v4,0(v0)
+la $t5,label_22_v4
 lw $t5,0($t5)
-la $t4,label_25_v4
+la $t4,label_23_v0
 lw $t4,0($t4)
 sw $t5,0($t4)
-# Original instruction: addi v6,$fp,-4
-addi $t5,$fp,-4
-la $t0,label_27_v6
+# Original instruction: addiu v5,$fp,-4
+addiu $t5,$fp,-4
+la $t0,label_27_v5
 sw $t5,0($t0)
-# Original instruction: lw v7,0(v6)
-la $t5,label_27_v6
+# Original instruction: li v6,2
+li $t5,2
+la $t0,label_26_v6
+sw $t5,0($t0)
+# Original instruction: sw v6,0(v5)
+la $t5,label_26_v6
+lw $t5,0($t5)
+la $t4,label_27_v5
+lw $t4,0($t4)
+sw $t5,0($t4)
+# Original instruction: addiu v7,$fp,-4
+addiu $t5,$fp,-4
+la $t0,label_29_v7
+sw $t5,0($t0)
+# Original instruction: lw v8,0(v7)
+la $t5,label_29_v7
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_30_v7
+la $t0,label_32_v8
 sw $t4,0($t0)
-# Original instruction: addiu v8,$sp,-4
+# Original instruction: addiu v9,$sp,-4
 addiu $t5,$sp,-4
-la $t0,label_31_v8
+la $t0,label_33_v9
 sw $t5,0($t0)
-# Original instruction: sw v7,0(v8)
-la $t5,label_30_v7
+# Original instruction: sw v8,0(v9)
+la $t5,label_32_v8
 lw $t5,0($t5)
-la $t4,label_31_v8
+la $t4,label_33_v9
 lw $t4,0($t4)
 sw $t5,0($t4)
 # Original instruction: addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 # Original instruction: jal print_i
 jal print_i
-# Original instruction: addi $sp,$sp,4
-addi $sp,$sp,4
+# Original instruction: addiu $sp,$sp,4
+addiu $sp,$sp,4
 main_epilogue:
 # Original instruction: li $v0,10
 li $v0,10
@@ -112,12 +124,14 @@ syscall
 
 .text
 print_s:
-# Original instruction: addi $sp,$sp,-4
-addi $sp,$sp,-4
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
 # Original instruction: sw $fp,0($sp)
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,4($fp)
 lw $a0,4($fp)
@@ -136,12 +150,14 @@ jr $ra
 
 .text
 print_i:
-# Original instruction: addi $sp,$sp,-4
-addi $sp,$sp,-4
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
 # Original instruction: sw $fp,0($sp)
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,4($fp)
 lw $a0,4($fp)
@@ -160,12 +176,14 @@ jr $ra
 
 .text
 print_c:
-# Original instruction: addi $sp,$sp,-4
-addi $sp,$sp,-4
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
 # Original instruction: sw $fp,0($sp)
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,4($fp)
 lw $a0,4($fp)
@@ -184,12 +202,14 @@ jr $ra
 
 .text
 read_c:
-# Original instruction: addi $sp,$sp,-4
-addi $sp,$sp,-4
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
 # Original instruction: sw $fp,0($sp)
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: li $v0,12
 li $v0,12
@@ -208,12 +228,14 @@ jr $ra
 
 .text
 read_i:
-# Original instruction: addi $sp,$sp,-4
-addi $sp,$sp,-4
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
 # Original instruction: sw $fp,0($sp)
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: li $v0,5
 li $v0,5
@@ -232,12 +254,14 @@ jr $ra
 
 .text
 mcmalloc:
-# Original instruction: addi $sp,$sp,-4
-addi $sp,$sp,-4
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
 # Original instruction: sw $fp,0($sp)
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,4($fp)
 lw $a0,4($fp)

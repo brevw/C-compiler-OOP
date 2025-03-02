@@ -139,7 +139,22 @@ public class Utils {
                     currentSection.emit(OpCode.SB, tmpReg, addr, i);
                 }
             }
-            default -> throw new RuntimeException("not a leftvalue type: " + type);
+            case ArrayType at -> {
+                // in this case left and right side are pointers
+                // copy the array
+                int size = at.getSize();
+                Register tmpReg = Register.Virtual.create();
+                int i;
+                for (i = 0; i < size; i += 4) {
+                    currentSection.emit(OpCode.LW, tmpReg, value, i);
+                    currentSection.emit(OpCode.SW, tmpReg, addr, i);
+                }
+                for (; i < size; ++i) {
+                    currentSection.emit(OpCode.LB, tmpReg, value, i);
+                    currentSection.emit(OpCode.SB, tmpReg, addr, i);
+                }
+            }
+            default -> throw new RuntimeException("Unexpected Value" + type);
         }
         return value;
     }

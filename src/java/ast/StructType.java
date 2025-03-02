@@ -70,6 +70,7 @@ public final class StructType implements Type{
             // allign before computing the offset
             size += offsetToCorrectAlignment;
             offsets.put(vd.name, size);
+            vd.fpOffset = size; // redundant, but useful for debugging
             size += fieldSize;
         }
 

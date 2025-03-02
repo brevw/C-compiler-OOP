@@ -43,7 +43,7 @@ public class ExprValCodeGen extends CodeGen {
                 if (isGlobal) {
                     currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
                 } else {
-                    currentSection.emit(OpCode.ADDI, reg, Arch.fp, ve.vd.fpOffset);
+                    currentSection.emit(OpCode.ADDIU, reg, Arch.fp, ve.vd.fpOffset);
                 }
                 reg = Utils.addrToValue(currentSection, reg, ve.vd.type);
                 yield reg;
@@ -59,7 +59,7 @@ public class ExprValCodeGen extends CodeGen {
                     int offsetToAlignment = Utils.computeAlignmentOffset(argSize, Utils.WORD_SIZE);
                     argsSize += argSize + offsetToAlignment;
                     Register alignedArgAddr = Register.Virtual.create();
-                    currentSection.emit(OpCode.ADDIU, alignedArgAddr, Arch.sp, - (argSize + offsetToAlignment));
+                    currentSection.emit(OpCode.ADDIU, alignedArgAddr, Arch.sp, - argsSize);
                     Utils.copyToAddr(currentSection, alignedArgAddr, argReg, arg.type);
                 }
                 if (argsSize > 0) {
@@ -78,13 +78,15 @@ public class ExprValCodeGen extends CodeGen {
                 // postreturn
                 // read the return value from stack (if there is one, it is pointed by $sp)
                 if (returnSize > 0) {
-                    returnReg = Utils.addrToValue(currentSection, Arch.sp, fce.type);
+                    returnReg = Register.Virtual.create();
+                    currentSection.emit(OpCode.ADDI, returnReg, Arch.sp, 0);
+                    returnReg = Utils.addrToValue(currentSection, returnReg, fce.type);
                 } else {
                     returnReg = Arch.sp; // return value is in $sp as it won't be used
                 }
 
                 // reset stack
-                currentSection.emit(OpCode.ADDI, Arch.sp, Arch.sp, argsSize + returnSize);
+                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, argsSize + returnSize);
                 yield returnReg;
             }
             case ArrayAccessExpr aae -> {
