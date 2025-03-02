@@ -25,6 +25,7 @@ public class ExprAddrCodeGen extends CodeGen {
 
     public Register visit(Expr e) {
         TextSection currentSection = asmProg.getCurrentTextSection();
+        ExprValCodeGen evcg = new ExprValCodeGen(asmProg);
         // switch over the LValues
         switch (e) {
             case VarExpr ve -> {
@@ -39,15 +40,15 @@ public class ExprAddrCodeGen extends CodeGen {
             }
             case FieldAccessExpr fae -> {
                 Register reg = Register.Virtual.create();
-                Register base = visit(fae.structExpr);
+                Register base = evcg.visit(fae.structExpr);
                 int offset = ((StructType)(fae.structExpr.type)).getOffset(fae.fieldName);
                 currentSection.emit(OpCode.ADDI, reg, base, offset);
                 return reg;
             }
             case ArrayAccessExpr aae -> {
                 Register reg = Register.Virtual.create();
-                Register base = visit(aae.arrayExpr);
-                Register index = (new ExprValCodeGen(asmProg)).visit(aae.indexExpr);
+                Register base = evcg.visit(aae.arrayExpr);
+                Register index = evcg.visit(aae.indexExpr);
                 Register size = Register.Virtual.create();
                 currentSection.emit(OpCode.LI, size, aae.type.getSize());
                 currentSection.emit(OpCode.MUL, index, index, size);

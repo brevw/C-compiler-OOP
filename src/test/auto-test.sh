@@ -266,7 +266,9 @@ fi
 # Run test suite
 echo -e "${BLUE}$DASHED_LINES Running Tests $DASHED_LINES${RESET}"
 # clean output dir
-rm -rf "$OUTPUT_DIR"/*
+if [ -n "$(ls -A "$OUTPUT_DIR" 2>/dev/null)" ]; then
+    rm -rf "$OUTPUT_DIR"/*
+fi
 
 # lexer tests
 print_test_name "lexer tests"
@@ -353,8 +355,10 @@ run_test_codegen funcall_main "$PASS" "$DEFAULT_TIMEOUT" "4" "$MARS_FORMAT_STDIN
 run_test_codegen global_decl_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen isPrime "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3n" "$MARS_FORMAT_STDIN_TRUE"
+run_test_codegen pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 # -> struct, arrays
 run_test_codegen struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen funcall_struct "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen print_matrix "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen big_program "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"

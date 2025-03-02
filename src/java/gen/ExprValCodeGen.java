@@ -38,13 +38,7 @@ public class ExprValCodeGen extends CodeGen {
         TextSection currentSection = asmProg.getCurrentTextSection();
         return switch (e) {
             case VarExpr ve -> {
-                Register reg = Register.Virtual.create();
-                boolean isGlobal = Utils.isGlobalVar(ve.vd);
-                if (isGlobal) {
-                    currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
-                } else {
-                    currentSection.emit(OpCode.ADDIU, reg, Arch.fp, ve.vd.fpOffset);
-                }
+                Register reg = addrCodeGen.visit(ve);
                 reg = Utils.addrToValue(currentSection, reg, ve.vd.type);
                 yield reg;
             }

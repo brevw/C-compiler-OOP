@@ -14,8 +14,6 @@ import util.Utils;
  * A visitor that produces code for a single function declaration
  */
 public class FunCodeGen extends CodeGen {
-    private final static int EXIT_CODE = 10;
-
 
     public FunCodeGen(AssemblyProgram asmProg) {
         this.asmProg = asmProg;
@@ -42,7 +40,7 @@ public class FunCodeGen extends CodeGen {
             (new StmtCodeGen(asmProg)).visit(fd.block);
             Label epilog = Label.get(fd.name + Utils.EPILOGUE_OF_FUNCTION); // early exit of the main function
             funSection.emit(epilog);
-            funSection.emit(OpCode.LI, Arch.v0, EXIT_CODE);
+            funSection.emit(OpCode.LI, Arch.v0, Utils.EXIT_CODE);
             funSection.emit(OpCode.SYSCALL);
             return;
         }
@@ -71,35 +69,35 @@ public class FunCodeGen extends CodeGen {
         // define body of function (if build in function, emit syscall else visit block)
         switch (fd.name) {
             case "print_s" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, 4);
-                funSection.emit(OpCode.LI, Arch.v0, 4);
+                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
+                funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_STRING_CODE);
                 funSection.emit(OpCode.SYSCALL);
             }
             case "print_i" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, 4);
-                funSection.emit(OpCode.LI, Arch.v0, 1);
+                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
+                funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_INT_CODE);
                 funSection.emit(OpCode.SYSCALL);
             }
             case "print_c" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, 4);
-                funSection.emit(OpCode.LI, Arch.v0, 11);
+                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
+                funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_CHAR_CODE);
                 funSection.emit(OpCode.SYSCALL);
             }
             case "read_c" -> {
-                funSection.emit(OpCode.LI, Arch.v0, 12);
+                funSection.emit(OpCode.LI, Arch.v0, Utils.READ_CHAR_CODE);
                 funSection.emit(OpCode.SYSCALL);
-                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, 4);
+                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
             }
             case "read_i" -> {
-                funSection.emit(OpCode.LI, Arch.v0, 5);
+                funSection.emit(OpCode.LI, Arch.v0, Utils.READ_INT_CODE);
                 funSection.emit(OpCode.SYSCALL);
-                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, 4);
+                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
             }
             case "mcmalloc" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, 4);
-                funSection.emit(OpCode.LI, Arch.v0, 9);
+                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, 2 * Utils.WORD_SIZE);
+                funSection.emit(OpCode.LI, Arch.v0, Utils.MALLOC_CODE);
                 funSection.emit(OpCode.SYSCALL);
-                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, 4);
+                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
             }
             default -> {
                     scd.visit(fd.block);

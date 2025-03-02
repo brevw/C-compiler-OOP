@@ -693,8 +693,8 @@ addi $fp,$sp,0
 # Original instruction: addiu $sp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
-# Original instruction: lw $a0,4($fp)
-lw $a0,4($fp)
+# Original instruction: lw $a0,8($fp)
+lw $a0,8($fp)
 # Original instruction: li $v0,9
 li $v0,9
 # Original instruction: syscall

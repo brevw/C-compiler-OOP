@@ -35,6 +35,15 @@ public class Utils {
     public static final String NOREORDER = "noreorder";
     public static final String NOMACRO = "nomacro";
 
+    // syscall codes
+    public static final int EXIT_CODE = 10;
+    public static final int MALLOC_CODE = 9;
+    public static final int READ_INT_CODE = 5;
+    public static final int READ_CHAR_CODE = 12;
+    public static final int PRINT_INT_CODE = 1;
+    public static final int PRINT_CHAR_CODE = 11;
+    public static final int PRINT_STRING_CODE = 4;
+
 
     public static int computeAlignmentOffset(int size, int alignment) {
         int offsetToCorrectAlignment = size % alignment;
@@ -164,21 +173,23 @@ public class Utils {
     }
 
     private static boolean containsFunCallStmt(Stmt s) {
-        if (s == null) {
-            return false;
-        }
         return switch (s) {
             case ExprStmt es -> containsFunCallExpr(es.expr);
             case While w -> containsFunCallExpr(w.expr) || containsFunCallStmt(w.stmt);
             case If i -> containsFunCallExpr(i.expr) || containsFunCallStmt(i.stmt1) || containsFunCallStmt(i.stmt2);
             case Return r -> containsFunCallExpr(r.expr);
             case Block b -> b.stmts.stream().anyMatch(Utils::containsFunCallStmt);
-            default -> false; // null, Break, Continue
+            case null, default -> false; // null, Break, Continue
         };
     }
     private static boolean containsFunCallExpr(Expr e) {
+        // TODO: delete
+        if (e == null) {
+            System.out.println("null");
+        }
         return switch (e) {
             case FunCallExpr fce -> true;
+            case null -> false;
             default -> e.children().stream().filter(e_ -> e_ instanceof Expr).anyMatch(e_ -> containsFunCallExpr((Expr) e_));
         };
     }
