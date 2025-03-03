@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ast.ASTNode;
+import ast.Block;
 import ast.FunDecl;
 import ast.FunDef;
 import ast.StrLiteral;
@@ -79,6 +80,7 @@ public class MemAllocCodeGen extends CodeGen {
                 asmProg.dataSection.emit(new Directive(Utils.ALIGN_DIRECTIVE + Utils.WORD_ALIGNMENT_CONST));
                 strToLabels.put(st.strValue, l);
             }
+
             default -> {
                 if (!(n instanceof StructTypeDecl || n instanceof FunDecl)) {
                     n.children().forEach(this::visit);

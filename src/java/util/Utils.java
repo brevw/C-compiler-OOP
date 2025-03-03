@@ -1,5 +1,8 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ast.*;
 import ast.VarDecl;
 import gen.asm.OpCode;
@@ -208,5 +211,18 @@ public class Utils {
                 return false;
             }
         }
+    }
+
+    public static List<VarDecl> funDefToLocalVars(FunDef fd) {
+        List<Block> blocks = new ArrayList<>();
+        List<VarDecl> localVars = new ArrayList<>();
+
+        blocks.add(fd.block);
+        while (!blocks.isEmpty()) {
+            Block b = blocks.remove(0);
+            blocks.addAll(b.stmts.stream().filter(s -> s instanceof Block).map(s -> (Block) s).toList());
+            localVars.addAll(b.vds);
+        }
+        return localVars;
     }
 }
