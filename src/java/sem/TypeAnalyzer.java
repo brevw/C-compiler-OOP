@@ -212,18 +212,23 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     case StructType st -> {
                         String fieldName = fae.fieldName;
                         StructTypeDecl std = structNameSpace.get(st.name);
-                        boolean foundField = false;
-                        for (VarDecl vd : std.varDecls) {
-                            if (vd.name.equals(fieldName)) {
-                                fae.type = vd.type;
-                                foundField = true;
-                                break;
-                            }
-                        }
-
-                        if (!foundField) {
-                            error("Field (" + fieldName + ") not found in struct " + st.name);
+                        if (std == null) {
+                            error("Struct " + st.name + " is not defined");
                             fae.type = BaseType.UNKNOWN;
+                        } else {
+                            boolean foundField = false;
+                            for (VarDecl vd : std.varDecls) {
+                                if (vd.name.equals(fieldName)) {
+                                    fae.type = vd.type;
+                                    foundField = true;
+                                    break;
+                                }
+                            }
+
+                            if (!foundField) {
+                                error("Field (" + fieldName + ") not found in struct " + st.name);
+                                fae.type = BaseType.UNKNOWN;
+                            }
                         }
                     }
                     default -> {
