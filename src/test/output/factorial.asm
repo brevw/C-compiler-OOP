@@ -9,85 +9,85 @@ label_2_str:
 .asciiz "\n"
 .align 2
 # Allocated labels for virtual registers
-label_71_v19:
-.space 4
-label_102_v38:
-.space 4
-label_35_v7:
-.space 4
-label_59_v18:
-.space 4
-label_33_v6:
-.space 4
-label_78_v28:
-.space 4
-label_103_v39:
-.space 4
-label_95_v35:
-.space 4
-label_55_v15:
-.space 4
-label_86_v32:
-.space 4
-label_22_v1:
-.space 4
-label_65_v22:
-.space 4
 label_42_v10:
-.space 4
-label_46_v13:
-.space 4
-label_62_v20:
-.space 4
-label_74_v26:
-.space 4
-label_81_v25:
-.space 4
-label_24_v2:
-.space 4
-label_39_v9:
-.space 4
-label_93_v34:
 .space 4
 label_80_v29:
 .space 4
-label_89_v31:
+label_39_v9:
 .space 4
-label_28_v4:
-.space 4
-label_54_v17:
-.space 4
-label_47_v12:
+label_71_v19:
 .space 4
 label_83_v30:
 .space 4
-label_52_v16:
+label_103_v39:
 .space 4
-label_29_v3:
+label_74_v26:
 .space 4
-label_43_v11:
+label_102_v38:
 .space 4
-label_70_v24:
-.space 4
-label_38_v8:
-.space 4
-label_67_v21:
-.space 4
-label_77_v27:
-.space 4
-label_25_v0:
-.space 4
-label_49_v14:
+label_33_v6:
 .space 4
 label_88_v33:
 .space 4
+label_86_v32:
+.space 4
 label_68_v23:
 .space 4
-label_32_v5:
+label_46_v13:
+.space 4
+label_22_v1:
+.space 4
+label_28_v4:
+.space 4
+label_43_v11:
 .space 4
 label_99_v37:
 .space 4
+label_54_v17:
+.space 4
+label_52_v16:
+.space 4
+label_25_v0:
+.space 4
+label_81_v25:
+.space 4
+label_62_v20:
+.space 4
+label_65_v22:
+.space 4
+label_95_v35:
+.space 4
+label_38_v8:
+.space 4
+label_29_v3:
+.space 4
+label_67_v21:
+.space 4
+label_35_v7:
+.space 4
+label_89_v31:
+.space 4
+label_24_v2:
+.space 4
+label_55_v15:
+.space 4
 label_98_v36:
+.space 4
+label_47_v12:
+.space 4
+label_59_v18:
+.space 4
+label_32_v5:
+.space 4
+label_70_v24:
+.space 4
+label_93_v34:
+.space 4
+label_49_v14:
+.space 4
+label_78_v28:
+.space 4
+label_77_v27:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

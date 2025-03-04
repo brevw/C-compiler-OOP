@@ -2,23 +2,23 @@
 # Allocated labels for virtual registers
 label_23_v0:
 .space 4
-label_17_v1:
+label_29_v7:
 .space 4
-label_33_v9:
+label_27_v5:
 .space 4
 label_26_v6:
 .space 4
-label_27_v5:
+label_22_v4:
+.space 4
+label_18_v2:
 .space 4
 label_32_v8:
 .space 4
 label_20_v3:
 .space 4
-label_29_v7:
+label_17_v1:
 .space 4
-label_18_v2:
-.space 4
-label_22_v4:
+label_33_v9:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

@@ -1,78 +1,78 @@
 .data
 # Allocated labels for virtual registers
-label_66_v21:
-.space 4
-label_41_v9:
-.space 4
-label_63_v20:
-.space 4
-label_38_v8:
-.space 4
-label_84_v30:
-.space 4
-label_59_v17:
-.space 4
-label_93_v34:
-.space 4
-label_29_v3:
-.space 4
-label_72_v24:
-.space 4
 label_46_v12:
-.space 4
-label_54_v15:
-.space 4
-label_67_v22:
-.space 4
-label_88_v28:
-.space 4
-label_78_v27:
-.space 4
-label_30_v4:
-.space 4
-label_44_v11:
-.space 4
-label_96_v36:
 .space 4
 label_85_v31:
 .space 4
-label_90_v33:
-.space 4
 label_24_v0:
 .space 4
-label_36_v6:
+label_44_v11:
 .space 4
-label_70_v19:
-.space 4
-label_50_v14:
+label_66_v21:
 .space 4
 label_87_v32:
 .space 4
-label_60_v18:
+label_88_v28:
 .space 4
-label_32_v5:
-.space 4
-label_49_v13:
-.space 4
-label_76_v26:
-.space 4
-label_23_v1:
-.space 4
-label_42_v10:
-.space 4
-label_69_v23:
-.space 4
-label_81_v29:
-.space 4
-label_26_v2:
-.space 4
-label_56_v16:
+label_38_v8:
 .space 4
 label_94_v35:
 .space 4
+label_93_v34:
+.space 4
 label_75_v25:
 .space 4
+label_54_v15:
+.space 4
+label_29_v3:
+.space 4
+label_36_v6:
+.space 4
+label_49_v13:
+.space 4
+label_70_v19:
+.space 4
+label_60_v18:
+.space 4
+label_26_v2:
+.space 4
+label_78_v27:
+.space 4
+label_67_v22:
+.space 4
+label_72_v24:
+.space 4
+label_42_v10:
+.space 4
+label_32_v5:
+.space 4
+label_69_v23:
+.space 4
+label_41_v9:
+.space 4
+label_90_v33:
+.space 4
+label_30_v4:
+.space 4
+label_59_v17:
+.space 4
+label_23_v1:
+.space 4
+label_50_v14:
+.space 4
+label_63_v20:
+.space 4
 label_35_v7:
+.space 4
+label_76_v26:
+.space 4
+label_96_v36:
+.space 4
+label_56_v16:
+.space 4
+label_84_v30:
+.space 4
+label_81_v29:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

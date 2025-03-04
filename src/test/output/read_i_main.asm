@@ -2,9 +2,9 @@
 # Allocated labels for virtual registers
 label_25_v5:
 .space 4
-label_16_v1:
-.space 4
 label_18_v2:
+.space 4
+label_16_v1:
 .space 4
 label_24_v4:
 .space 4

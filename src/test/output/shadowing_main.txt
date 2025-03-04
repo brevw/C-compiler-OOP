@@ -1,0 +1,6 @@
+Outer scope - x: 10
+Outer scope - y: 20
+Inner scope - x: 30
+Inner scope - y: 40
+Outer scope after inner block - x: 10
+Outer scope after inner block - y: 20
