@@ -73,6 +73,8 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     for (VarDecl vd: std.varDecls) {
                         if (!hasFixedSizeTypeAndRecusivelyDefined(vd.type, name)) {
                             visit(vd);
+                        } else {
+                            handleStructTypeDeclRecursion(vd.type, std);
                         }
                     }
                     structNameSpace.put(name, std);
@@ -373,6 +375,23 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
             case ArrayType at -> {return hasFixedSizeTypeAndRecusivelyDefined(at.type, structName);}
             default -> {return false;}
         }
+    }
+
+    private static void handleStructTypeDeclRecursion(Type type, StructTypeDecl std) {
+        switch (type) {
+            case StructType st -> {
+                if (st.name.equals(std.name)) {
+                    st.decl = std;
+                }
+            }
+            case PointerType pt -> {
+                handleStructTypeDeclRecursion(pt.type, std);
+            }
+            case ArrayType at -> {
+                handleStructTypeDeclRecursion(at.type, std);
+            }
+            default -> {}
+        };
     }
 
 }
