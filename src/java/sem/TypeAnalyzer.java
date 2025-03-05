@@ -262,6 +262,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
             }
 
             case SizeOfExpr soe -> {
+                visit(soe.ofType);
                 soe.type = BaseType.INT;
                 yield soe.type;
             }

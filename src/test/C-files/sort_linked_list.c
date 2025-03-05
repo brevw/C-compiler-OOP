@@ -82,7 +82,7 @@ void sort_list(struct Node** head) {
 void main() {
     struct Node* head;
 
-    // Declare all variables at the beginning of the block
+    null = (struct Node*)mcmalloc(1); // Initialize the global null variable
     head = null; // Initialize the head of the list to null
 
     // Insert elements into the linked list

@@ -56,7 +56,7 @@ public class ExprAddrCodeGen extends CodeGen {
                 return reg;
             }
             case ValueAtExpr vae -> {
-                return visit(vae.expr);
+                return evcg.visit(vae.expr);
             }
             default -> throw new RuntimeException("Not an LValue");
         }

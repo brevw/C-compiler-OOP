@@ -2,17 +2,21 @@
 # Allocated labels for virtual registers
 label_23_v0:
 .space 4
-label_29_v7:
+label_28_v7:
 .space 4
-label_27_v5:
+label_25_v5:
 .space 4
-label_26_v6:
+label_29_v6:
 .space 4
 label_22_v4:
 .space 4
 label_18_v2:
 .space 4
-label_32_v8:
+label_36_v10:
+.space 4
+label_31_v8:
+.space 4
+label_37_v11:
 .space 4
 label_20_v3:
 .space 4
@@ -78,36 +82,48 @@ lw $t4,0($t4)
 sw $t5,0($t4)
 # Original instruction: addiu v5,$fp,-4
 addiu $t5,$fp,-4
-la $t0,label_27_v5
+la $t0,label_25_v5
 sw $t5,0($t0)
-# Original instruction: li v6,2
-li $t5,2
-la $t0,label_26_v6
-sw $t5,0($t0)
-# Original instruction: sw v6,0(v5)
-la $t5,label_26_v6
-lw $t5,0($t5)
-la $t4,label_27_v5
-lw $t4,0($t4)
-sw $t5,0($t4)
-# Original instruction: addiu v7,$fp,-4
-addiu $t5,$fp,-4
-la $t0,label_29_v7
-sw $t5,0($t0)
-# Original instruction: lw v8,0(v7)
-la $t5,label_29_v7
+# Original instruction: lw v6,0(v5)
+la $t5,label_25_v5
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_32_v8
+la $t0,label_29_v6
 sw $t4,0($t0)
-# Original instruction: addiu v9,$sp,-4
-addiu $t5,$sp,-4
-la $t0,label_33_v9
+# Original instruction: li v7,2
+li $t5,2
+la $t0,label_28_v7
 sw $t5,0($t0)
-# Original instruction: sw v8,0(v9)
-la $t5,label_32_v8
+# Original instruction: sw v7,0(v6)
+la $t5,label_28_v7
 lw $t5,0($t5)
-la $t4,label_33_v9
+la $t4,label_29_v6
+lw $t4,0($t4)
+sw $t5,0($t4)
+# Original instruction: addiu v8,$fp,-4
+addiu $t5,$fp,-4
+la $t0,label_31_v8
+sw $t5,0($t0)
+# Original instruction: lw v9,0(v8)
+la $t5,label_31_v8
+lw $t5,0($t5)
+lw $t4,0($t5)
+la $t0,label_33_v9
+sw $t4,0($t0)
+# Original instruction: lw v10,0(v9)
+la $t5,label_33_v9
+lw $t5,0($t5)
+lw $t4,0($t5)
+la $t0,label_36_v10
+sw $t4,0($t0)
+# Original instruction: addiu v11,$sp,-4
+addiu $t5,$sp,-4
+la $t0,label_37_v11
+sw $t5,0($t0)
+# Original instruction: sw v10,0(v11)
+la $t5,label_36_v10
+lw $t5,0($t5)
+la $t4,label_37_v11
 lw $t4,0($t4)
 sw $t5,0($t4)
 # Original instruction: addiu $sp,$sp,-4

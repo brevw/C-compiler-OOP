@@ -13,6 +13,7 @@ import ast.Assign;
 import ast.BinOp;
 import ast.IntLiteral;
 import ast.StrLiteral;
+import ast.StructType;
 import ast.Type;
 import ast.ChrLiteral;
 import ast.FunCallExpr;
@@ -92,7 +93,7 @@ public class ExprValCodeGen extends CodeGen {
                 yield Utils.addrToValue(currentSection, addr, fae.type);
             }
             case ValueAtExpr vae -> {
-                Register addr = addrCodeGen.visit(vae.expr);
+                Register addr = addrCodeGen.visit(vae);
                 yield Utils.addrToValue(currentSection, addr, vae.type);
             }
             case AddressOfExpr aoe -> {
@@ -100,7 +101,7 @@ public class ExprValCodeGen extends CodeGen {
             }
             case SizeOfExpr soe -> {
                 Register reg = Register.Virtual.create();
-                currentSection.emit(OpCode.LI, reg, soe.type.getSize());
+                currentSection.emit(OpCode.LI, reg, soe.ofType.getSize());
                 yield reg;
             }
             case TypecastExpr tce -> {
