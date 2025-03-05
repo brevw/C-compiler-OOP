@@ -1,8 +1,6 @@
 #include "minic-stdlib.h"
 
 int n;
-
-// Function to check if a number is prime
 int is_prime(int num) {
     int i;
 
@@ -22,15 +20,14 @@ int is_prime(int num) {
 }
 
 void main() {
+    // boolean (1 for prime)
     int result;
 
-    // Read input number
+    // read input
     n = read_i();
 
-    // Call the is_prime function
     result = is_prime(n);
 
-    // Print the result
     if (result == 1) {
         print_s((char*) "Prime\n");
     } else {

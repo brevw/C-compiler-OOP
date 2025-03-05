@@ -1,21 +1,18 @@
 #include "minic-stdlib.h"
 
-// Function to concatenate two strings
 char* concatenate(char* str1, char* str2) {
     int i;
     int j;
     char* result;
-    result = (char*)mcmalloc(100); // Allocate memory for the result
+    result = (char*)mcmalloc(100);
     i = 0; j = 0;
 
-    // Copy str1 to result
     while (str1[i] != '\0') {
         result[j] = str1[i];
         i = i + 1;
         j = j + 1;
     }
 
-    // Copy str2 to result
     i = 0;
     while (str2[i] != '\0') {
         result[j] = str2[i];
@@ -23,7 +20,7 @@ char* concatenate(char* str1, char* str2) {
         j = j + 1;
     }
 
-    result[j] = '\0'; // Null-terminate the result
+    result[j] = '\0';
     return result;
 }
 

@@ -34,11 +34,11 @@ void main() {
     struct Point p1;
     struct Point p2;
 
-    p1.x = 1;
-    p1.y = 2;
+    p1.x = 10;
+    p1.y = 20;
 
-    p2.x = 4;
-    p2.y = 6;
+    p2.x = 30;
+    p2.y = 40;
 
     print_distance(p1, p2);
 

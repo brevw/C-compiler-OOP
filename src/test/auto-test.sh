@@ -355,7 +355,7 @@ run_test_codegen funcall_main "$PASS" "$DEFAULT_TIMEOUT" "4" "$MARS_FORMAT_STDIN
 run_test_codegen global_decl_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen isPrime "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3n" "$MARS_FORMAT_STDIN_TRUE"
-run_test_codegen pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen shadowing_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 # -> struct, arrays
 run_test_codegen struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"

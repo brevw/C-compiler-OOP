@@ -1,18 +1,16 @@
 #include "minic-stdlib.h"
 
-// Define a Rectangle struct
 struct Rectangle {
+    // to test if compiler correctly aligns the struct members
     char confusion;
     int width;
     int height;
 };
 
-// Function to calculate the area of a rectangle
 int calculate_area(struct Rectangle rect) {
     return rect.width * rect.height;
 }
 
-// Function to print the rectangle's dimensions and area
 void print_rectangle(struct Rectangle rect) {
     print_s((char*) "Rectangle Dimensions: ");
     print_i(rect.width);
@@ -26,12 +24,12 @@ void print_rectangle(struct Rectangle rect) {
 }
 
 void main() {
-    // Create a Rectangle struct
     struct Rectangle rect;
+    // init
     rect.width = 5;
     rect.height = 10;
 
-    // Print the rectangle's details
+    // compute
     print_rectangle(rect);
     return;
 }

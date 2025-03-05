@@ -1378,8 +1378,8 @@ lw $t5,0($t5)
 addi $t4,$t5,0
 la $t0,label_175_v69
 sw $t4,0($t0)
-# Original instruction: li v71,1
-li $t5,1
+# Original instruction: li v71,10
+li $t5,10
 la $t0,label_174_v71
 sw $t5,0($t0)
 # Original instruction: sw v71,0(v69)
@@ -1398,8 +1398,8 @@ lw $t5,0($t5)
 addi $t4,$t5,4
 la $t0,label_181_v72
 sw $t4,0($t0)
-# Original instruction: li v74,2
-li $t5,2
+# Original instruction: li v74,20
+li $t5,20
 la $t0,label_180_v74
 sw $t5,0($t0)
 # Original instruction: sw v74,0(v72)
@@ -1418,8 +1418,8 @@ lw $t5,0($t5)
 addi $t4,$t5,0
 la $t0,label_187_v75
 sw $t4,0($t0)
-# Original instruction: li v77,4
-li $t5,4
+# Original instruction: li v77,30
+li $t5,30
 la $t0,label_186_v77
 sw $t5,0($t0)
 # Original instruction: sw v77,0(v75)
@@ -1438,8 +1438,8 @@ lw $t5,0($t5)
 addi $t4,$t5,4
 la $t0,label_193_v78
 sw $t4,0($t0)
-# Original instruction: li v80,6
-li $t5,6
+# Original instruction: li v80,40
+li $t5,40
 la $t0,label_192_v80
 sw $t5,0($t0)
 # Original instruction: sw v80,0(v78)
