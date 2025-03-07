@@ -13,7 +13,6 @@ import ast.Assign;
 import ast.BinOp;
 import ast.IntLiteral;
 import ast.StrLiteral;
-import ast.StructType;
 import ast.Type;
 import ast.ChrLiteral;
 import ast.FunCallExpr;

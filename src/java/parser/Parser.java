@@ -288,6 +288,7 @@ public class Parser extends CompilerPass {
                 for (int i = stack.size() - 1; i >= 0; --i) {
                     type = new ArrayType(type, stack.get(i));
                 }
+                stack.clear();
                 argsList.add(new VarDecl(type, id.data));
             }
         }
