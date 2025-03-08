@@ -217,6 +217,13 @@ public class Utils {
         }
     }
 
+    public static int getSizeOfFunArgsAndReturnTypes(Type type) {
+        return switch (type) {
+            case ArrayType at -> WORD_SIZE;
+            default -> type.getSize();
+        };
+    }
+
     public static List<VarDecl> funDefToLocalVars(FunDef fd) {
         List<Block> blocks = new ArrayList<>();
         List<VarDecl> localVars = new ArrayList<>();

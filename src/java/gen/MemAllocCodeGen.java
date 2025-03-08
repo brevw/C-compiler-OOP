@@ -37,7 +37,7 @@ public class MemAllocCodeGen extends CodeGen {
     void visit(ASTNode n) {
         switch (n) {
             case VarDecl vd -> {
-                int size = vd.type.getSize();
+                int size = vd.isFunArg ? Utils.getSizeOfFunArgsAndReturnTypes(vd.type) : vd.type.getSize();
                 if (global) {
                     // allocate in the data section
                     Label l = Label.get(vd.name);
@@ -53,11 +53,11 @@ public class MemAllocCodeGen extends CodeGen {
             case FunDef fd -> {
                 this.fpOffset = 0;
                 if (!fd.name.equals(Utils.MAIN_FUNCTION)) {
-                    int returnSize = fd.type instanceof ArrayType ? Utils.WORD_SIZE : fd.type.getSize();
+                    int returnSize = Utils.getSizeOfFunArgsAndReturnTypes(fd.type);
                     int argumentsOffset = Utils.WORD_SIZE + returnSize + Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
                     for (VarDecl vd : fd.params.reversed()) {
                         // array arguments are passed by reference
-                        int size = vd.type instanceof ArrayType ? Utils.WORD_SIZE : vd.type.getSize();
+                        int size = Utils.getSizeOfFunArgsAndReturnTypes(vd.type);
                         vd.fpOffset = argumentsOffset;
                         argumentsOffset += size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
                     }

@@ -51,7 +51,7 @@ public class ExprValCodeGen extends CodeGen {
                 for (Expr arg : fce.argsList) {
                     Register argReg = visit(arg);
                     // if the argument is an array, pass the address of the array
-                    int argSize = arg.type instanceof ArrayType ? Utils.WORD_SIZE : arg.type.getSize();
+                    int argSize = Utils.getSizeOfFunArgsAndReturnTypes(arg.type);
                     int offsetToAlignment = Utils.computeAlignmentOffset(argSize, Utils.WORD_SIZE);
                     argsSize += argSize + offsetToAlignment;
                     Register alignedArgAddr = Register.Virtual.create();
@@ -63,7 +63,7 @@ public class ExprValCodeGen extends CodeGen {
                 }
 
                 // reserve space for return value
-                int returnSize = fce.type instanceof ArrayType ? Utils.WORD_SIZE : fce.type.getSize();
+                int returnSize = Utils.getSizeOfFunArgsAndReturnTypes(fce.type);
                 returnSize += Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
                 if (returnSize > 0) {
                     currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -returnSize);
