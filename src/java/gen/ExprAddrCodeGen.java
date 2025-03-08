@@ -5,6 +5,7 @@ import ast.VarExpr;
 import ast.FieldAccessExpr;
 import ast.StructType;
 import ast.ArrayAccessExpr;
+import ast.ArrayType;
 import ast.ValueAtExpr;
 import gen.asm.AssemblyProgram;
 import gen.asm.Label;
@@ -35,6 +36,10 @@ public class ExprAddrCodeGen extends CodeGen {
                     currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
                 } else {
                     currentSection.emit(OpCode.ADDIU, reg, Arch.fp, ve.vd.fpOffset);
+                    // deference the array as it is passed by reference
+                    if (ve.vd.type instanceof ArrayType at && at.isFunArg) {
+                        currentSection.emit(OpCode.LW, reg, reg, 0);
+                    }
                 }
                 return reg;
             }

@@ -4,6 +4,7 @@ import ast.Expr;
 import ast.VarExpr;
 import ast.FieldAccessExpr;
 import ast.ArrayAccessExpr;
+import ast.ArrayType;
 import ast.ValueAtExpr;
 
 import ast.AddressOfExpr;
@@ -49,19 +50,21 @@ public class ExprValCodeGen extends CodeGen {
                 int argsSize = 0;
                 for (Expr arg : fce.argsList) {
                     Register argReg = visit(arg);
-                    int argSize = arg.type.getSize();
+                    // if the argument is an array, pass the address of the array
+                    int argSize = arg.type instanceof ArrayType ? Utils.WORD_SIZE : arg.type.getSize();
                     int offsetToAlignment = Utils.computeAlignmentOffset(argSize, Utils.WORD_SIZE);
                     argsSize += argSize + offsetToAlignment;
                     Register alignedArgAddr = Register.Virtual.create();
                     currentSection.emit(OpCode.ADDIU, alignedArgAddr, Arch.sp, - argsSize);
-                    Utils.copyToAddr(currentSection, alignedArgAddr, argReg, arg.type);
+                    Utils.copyToAddr(currentSection, alignedArgAddr, argReg, arg.type, true);
                 }
                 if (argsSize > 0) {
                     currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -argsSize);
                 }
 
                 // reserve space for return value
-                int returnSize = fce.type.getSize() + Utils.computeAlignmentOffset(fce.type.getSize(), Utils.WORD_SIZE);
+                int returnSize = fce.type instanceof ArrayType ? Utils.WORD_SIZE : fce.type.getSize();
+                returnSize += Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
                 if (returnSize > 0) {
                     currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -returnSize);
                 }
@@ -113,7 +116,7 @@ public class ExprValCodeGen extends CodeGen {
                 Register lhsReg = addrCodeGen.visit(a.lhs);
                 Register rhsReg = visit(a.rhs);
                 Type type = a.lhs.type;
-                yield Utils.copyToAddr(currentSection, lhsReg, rhsReg, type);
+                yield Utils.copyToAddr(currentSection, lhsReg, rhsReg, type, false);
             }
             case BinOp bo -> {
                 switch (bo.op) {

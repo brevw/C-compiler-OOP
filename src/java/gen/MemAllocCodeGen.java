@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ast.ASTNode;
+import ast.ArrayType;
 import ast.Block;
 import ast.FunDecl;
 import ast.FunDef;
@@ -52,10 +53,11 @@ public class MemAllocCodeGen extends CodeGen {
             case FunDef fd -> {
                 this.fpOffset = 0;
                 if (!fd.name.equals(Utils.MAIN_FUNCTION)) {
-                    int returnSize = fd.type.getSize();
+                    int returnSize = fd.type instanceof ArrayType ? Utils.WORD_SIZE : fd.type.getSize();
                     int argumentsOffset = Utils.WORD_SIZE + returnSize + Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
                     for (VarDecl vd : fd.params.reversed()) {
-                        int size = vd.type.getSize();
+                        // array arguments are passed by reference
+                        int size = vd.type instanceof ArrayType ? Utils.WORD_SIZE : vd.type.getSize();
                         vd.fpOffset = argumentsOffset;
                         argumentsOffset += size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
                     }

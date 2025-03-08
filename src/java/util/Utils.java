@@ -122,7 +122,7 @@ public class Utils {
         }
     }
 
-    public static Register copyToAddr(TextSection currentSection, Register addr, Register value, Type type) {
+    public static Register copyToAddr(TextSection currentSection, Register addr, Register value, Type type, boolean passArraysByRef) {
         switch (type) {
             case BaseType bt -> {
                 OpCode.Store op = null;
@@ -154,16 +154,20 @@ public class Utils {
             case ArrayType at -> {
                 // in this case left and right side are pointers
                 // copy the array
-                int size = at.getSize();
-                Register tmpReg = Register.Virtual.create();
-                int i;
-                for (i = 0; i < size; i += 4) {
-                    currentSection.emit(OpCode.LW, tmpReg, value, i);
-                    currentSection.emit(OpCode.SW, tmpReg, addr, i);
-                }
-                for (; i < size; ++i) {
-                    currentSection.emit(OpCode.LB, tmpReg, value, i);
-                    currentSection.emit(OpCode.SB, tmpReg, addr, i);
+                if (passArraysByRef) {
+                currentSection.emit(OpCode.SW, value, addr, 0);
+                } else {
+                    int size = at.getSize();
+                    Register tmpReg = Register.Virtual.create();
+                    int i;
+                    for (i = 0; i < size; i += 4) {
+                        currentSection.emit(OpCode.LW, tmpReg, value, i);
+                        currentSection.emit(OpCode.SW, tmpReg, addr, i);
+                    }
+                    for (; i < size; ++i) {
+                        currentSection.emit(OpCode.LB, tmpReg, value, i);
+                        currentSection.emit(OpCode.SB, tmpReg, addr, i);
+                    }
                 }
             }
             default -> throw new RuntimeException("Unexpected Value" + type);
