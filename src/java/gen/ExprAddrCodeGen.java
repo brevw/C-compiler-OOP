@@ -37,7 +37,7 @@ public class ExprAddrCodeGen extends CodeGen {
                 } else {
                     currentSection.emit(OpCode.ADDIU, reg, Arch.fp, ve.vd.fpOffset);
                     // deference the array as it is passed by reference
-                    if (ve.vd.type instanceof ArrayType at && at.isFunArg) {
+                    if (ve.vd.type instanceof ArrayType && ve.vd.isFunArg) {
                         currentSection.emit(OpCode.LW, reg, reg, 0);
                     }
                 }

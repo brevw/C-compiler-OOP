@@ -42,10 +42,8 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                 visit(fd.type);
                 for (var n : fd.params) {
                     Type type = visit(n);
-                    // mark the array to be passed by reference
-                    if (type instanceof ArrayType at) {
-                        at.isFunArg = true;
-                    }
+                    // mark the decl that are function arguments
+                    n.isFunArg = true;
                 }
                 var oldCurrentFunDef = currentFunDef;
                 currentFunDef = fd;

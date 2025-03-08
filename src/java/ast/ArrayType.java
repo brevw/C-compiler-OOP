@@ -8,7 +8,6 @@ public final class ArrayType implements Type{
 
     public final Type type;
     public final int nbrElements;
-    public boolean isFunArg = false; // used to determine if the array is passed by reference (filled in by the type checker)
 
     public ArrayType(Type type, int nbrElements){
         this.type = type;
