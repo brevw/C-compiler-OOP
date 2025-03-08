@@ -364,3 +364,8 @@ run_test_codegen funcall_struct "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS
 run_test_codegen print_matrix "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen big_program "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+
+
+# toDelete test file (for debugging)
+print_test_name "toDelete"
+run_test_codegen toDelete "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
