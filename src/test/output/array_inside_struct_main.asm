@@ -74,7 +74,7 @@ label_162_v64:
 .space 4
 label_181_v71:
 .space 4
-label_209_v85:
+label_233_v85:
 .space 4
 label_112_v37:
 .space 4
@@ -122,7 +122,7 @@ label_194_v80:
 .space 4
 label_147_v57:
 .space 4
-label_207_v83:
+label_231_v83:
 .space 4
 label_126_v43:
 .space 4
@@ -134,7 +134,7 @@ label_134_v54:
 .space 4
 label_200_v82:
 .space 4
-label_210_v84:
+label_234_v84:
 .space 4
 label_122_v46:
 .space 4
@@ -1138,36 +1138,108 @@ jal print_i
 addiu $sp,$sp,4
 # Original instruction: addiu v83,$fp,-8
 addiu $t5,$fp,-8
-la $t0,label_207_v83
+la $t0,label_231_v83
 sw $t5,0($t0)
 # Original instruction: addiu v84,$sp,-8
 addiu $t5,$sp,-8
-la $t0,label_210_v84
+la $t0,label_234_v84
 sw $t5,0($t0)
-# Original instruction: lw v85,0(v83)
-la $t5,label_207_v83
+# Original instruction: lb v85,0(v83)
+la $t5,label_231_v83
 lw $t5,0($t5)
-lw $t4,0($t5)
-la $t0,label_209_v85
+lb $t4,0($t5)
+la $t0,label_233_v85
 sw $t4,0($t0)
-# Original instruction: sw v85,0(v84)
-la $t5,label_209_v85
+# Original instruction: sb v85,0(v84)
+la $t5,label_233_v85
 lw $t5,0($t5)
-la $t4,label_210_v84
+la $t4,label_234_v84
 lw $t4,0($t4)
-sw $t5,0($t4)
-# Original instruction: lw v85,4(v83)
-la $t5,label_207_v83
+sb $t5,0($t4)
+# Original instruction: lb v85,1(v83)
+la $t5,label_231_v83
 lw $t5,0($t5)
-lw $t4,4($t5)
-la $t0,label_209_v85
+lb $t4,1($t5)
+la $t0,label_233_v85
 sw $t4,0($t0)
-# Original instruction: sw v85,4(v84)
-la $t5,label_209_v85
+# Original instruction: sb v85,1(v84)
+la $t5,label_233_v85
 lw $t5,0($t5)
-la $t4,label_210_v84
+la $t4,label_234_v84
 lw $t4,0($t4)
-sw $t5,4($t4)
+sb $t5,1($t4)
+# Original instruction: lb v85,2(v83)
+la $t5,label_231_v83
+lw $t5,0($t5)
+lb $t4,2($t5)
+la $t0,label_233_v85
+sw $t4,0($t0)
+# Original instruction: sb v85,2(v84)
+la $t5,label_233_v85
+lw $t5,0($t5)
+la $t4,label_234_v84
+lw $t4,0($t4)
+sb $t5,2($t4)
+# Original instruction: lb v85,3(v83)
+la $t5,label_231_v83
+lw $t5,0($t5)
+lb $t4,3($t5)
+la $t0,label_233_v85
+sw $t4,0($t0)
+# Original instruction: sb v85,3(v84)
+la $t5,label_233_v85
+lw $t5,0($t5)
+la $t4,label_234_v84
+lw $t4,0($t4)
+sb $t5,3($t4)
+# Original instruction: lb v85,4(v83)
+la $t5,label_231_v83
+lw $t5,0($t5)
+lb $t4,4($t5)
+la $t0,label_233_v85
+sw $t4,0($t0)
+# Original instruction: sb v85,4(v84)
+la $t5,label_233_v85
+lw $t5,0($t5)
+la $t4,label_234_v84
+lw $t4,0($t4)
+sb $t5,4($t4)
+# Original instruction: lb v85,5(v83)
+la $t5,label_231_v83
+lw $t5,0($t5)
+lb $t4,5($t5)
+la $t0,label_233_v85
+sw $t4,0($t0)
+# Original instruction: sb v85,5(v84)
+la $t5,label_233_v85
+lw $t5,0($t5)
+la $t4,label_234_v84
+lw $t4,0($t4)
+sb $t5,5($t4)
+# Original instruction: lb v85,6(v83)
+la $t5,label_231_v83
+lw $t5,0($t5)
+lb $t4,6($t5)
+la $t0,label_233_v85
+sw $t4,0($t0)
+# Original instruction: sb v85,6(v84)
+la $t5,label_233_v85
+lw $t5,0($t5)
+la $t4,label_234_v84
+lw $t4,0($t4)
+sb $t5,6($t4)
+# Original instruction: lb v85,7(v83)
+la $t5,label_231_v83
+lw $t5,0($t5)
+lb $t4,7($t5)
+la $t0,label_233_v85
+sw $t4,0($t0)
+# Original instruction: sb v85,7(v84)
+la $t5,label_233_v85
+lw $t5,0($t5)
+la $t4,label_234_v84
+lw $t4,0($t4)
+sb $t5,7($t4)
 # Original instruction: addiu $sp,$sp,-8
 addiu $sp,$sp,-8
 # Original instruction: jal print_struct

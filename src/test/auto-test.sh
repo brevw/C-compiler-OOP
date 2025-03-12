@@ -365,6 +365,7 @@ run_test_codegen print_matrix "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_F
 run_test_codegen big_program "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen array_inside_struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 
 
 # toDelete test file (for debugging)

@@ -141,11 +141,11 @@ public class Utils {
                 // copy the struct
                 int size = st.getSize();
                 Register tmpReg = Register.Virtual.create();
-                int i;
-                for (i = 0; i + WORD_SIZE <= size; i += WORD_SIZE) {
+                int i = 0;
+                /*for (i = 0; i + WORD_SIZE <= size; i += WORD_SIZE) {
                     currentSection.emit(OpCode.LW, tmpReg, value, i);
                     currentSection.emit(OpCode.SW, tmpReg, addr, i);
-                }
+                }*/
                 for (; i < size; ++i) {
                     currentSection.emit(OpCode.LB, tmpReg, value, i);
                     currentSection.emit(OpCode.SB, tmpReg, addr, i);
@@ -159,11 +159,11 @@ public class Utils {
                 } else {
                     int size = at.getSize();
                     Register tmpReg = Register.Virtual.create();
-                    int i;
-                    for (i = 0; i + WORD_SIZE < size; i += WORD_SIZE) {
+                    int i = 0;
+                    /* for (i = 0; i + WORD_SIZE < size; i += WORD_SIZE) {
                         currentSection.emit(OpCode.LW, tmpReg, value, i);
                         currentSection.emit(OpCode.SW, tmpReg, addr, i);
-                    }
+                    } */
                     for (; i < size; ++i) {
                         currentSection.emit(OpCode.LB, tmpReg, value, i);
                         currentSection.emit(OpCode.SB, tmpReg, addr, i);
