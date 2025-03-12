@@ -14,7 +14,7 @@
 
 		  To clean "bin" simply type
 		     $ ant clean
-		  on the commandline.		     
+		  on the commandline.
 		  -->
 <!-- Replace the value of the attribute "name" with the name of YOUR project. -->
 <project basedir="." default="build" name="comp520-coursework-w2025">
