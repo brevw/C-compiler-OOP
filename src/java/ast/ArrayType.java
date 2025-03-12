@@ -8,6 +8,7 @@ public final class ArrayType implements Type{
 
     public final Type type;
     public final int nbrElements;
+    private Integer largestAlignment = null;
 
     public ArrayType(Type type, int nbrElements){
         this.type = type;
@@ -24,6 +25,21 @@ public final class ArrayType implements Type{
 
     public List<ASTNode> children(){
         return List.of(type);
+    }
+
+
+    public int getLargestAlignment(){
+        // compute once and cache the result
+        return Objects.requireNonNullElseGet(largestAlignment, () -> {
+            if (type instanceof StructType st){
+                largestAlignment = st.getLargestAlignment();
+            } else if (type instanceof ArrayType at){
+                largestAlignment = at.getLargestAlignment();
+            } else {
+                largestAlignment = type.getSize();
+            }
+            return largestAlignment;
+        });
     }
 
     @Override

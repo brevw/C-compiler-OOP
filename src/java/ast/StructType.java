@@ -51,7 +51,8 @@ public final class StructType implements Type{
         // compute once and cache the result
         return Objects.requireNonNullElseGet(largestAlignment, () -> {
             largestAlignment = decl.varDecls.stream().mapToInt(
-                vd -> (vd.type instanceof StructType st) ? st.getLargestAlignment() : vd.type.getSize()
+                vd -> (vd.type instanceof StructType st) ? st.getLargestAlignment() :
+                        (vd.type instanceof ArrayType at ? at.getLargestAlignment() : vd.type.getSize())
             ).max().orElse(0);
             return largestAlignment;
         });
