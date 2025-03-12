@@ -142,7 +142,7 @@ public class Utils {
                 int size = st.getSize();
                 Register tmpReg = Register.Virtual.create();
                 int i;
-                for (i = 0; i < size; i += 4) {
+                for (i = 0; i + WORD_SIZE <= size; i += WORD_SIZE) {
                     currentSection.emit(OpCode.LW, tmpReg, value, i);
                     currentSection.emit(OpCode.SW, tmpReg, addr, i);
                 }
@@ -160,7 +160,7 @@ public class Utils {
                     int size = at.getSize();
                     Register tmpReg = Register.Virtual.create();
                     int i;
-                    for (i = 0; i < size; i += 4) {
+                    for (i = 0; i + WORD_SIZE < size; i += WORD_SIZE) {
                         currentSection.emit(OpCode.LW, tmpReg, value, i);
                         currentSection.emit(OpCode.SW, tmpReg, addr, i);
                     }
