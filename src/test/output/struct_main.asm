@@ -12,49 +12,49 @@ label_3_str:
 .asciiz " cm\n"
 .align 2
 # Allocated labels for virtual registers
-label_22_v2:
-.space 4
 label_49_v15:
-.space 4
-label_41_v11:
-.space 4
-label_32_v6:
-.space 4
-label_35_v9:
-.space 4
-label_61_v21:
-.space 4
-label_28_v5:
-.space 4
-label_51_v17:
-.space 4
-label_33_v7:
-.space 4
-label_44_v12:
-.space 4
-label_53_v16:
-.space 4
-label_23_v0:
-.space 4
-label_57_v19:
-.space 4
-label_56_v18:
-.space 4
-label_29_v3:
 .space 4
 label_37_v8:
 .space 4
-label_40_v10:
+label_35_v9:
+.space 4
+label_57_v19:
+.space 4
+label_61_v21:
+.space 4
+label_56_v18:
+.space 4
+label_33_v7:
+.space 4
+label_22_v2:
 .space 4
 label_60_v20:
 .space 4
-label_19_v1:
+label_32_v6:
+.space 4
+label_23_v0:
+.space 4
+label_28_v5:
 .space 4
 label_48_v14:
 .space 4
-label_25_v4:
+label_41_v11:
+.space 4
+label_53_v16:
+.space 4
+label_44_v12:
+.space 4
+label_29_v3:
+.space 4
+label_19_v1:
 .space 4
 label_45_v13:
+.space 4
+label_25_v4:
+.space 4
+label_40_v10:
+.space 4
+label_51_v17:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

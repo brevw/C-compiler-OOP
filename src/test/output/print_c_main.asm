@@ -1,48 +1,48 @@
 .data
 # Allocated labels for virtual registers
-label_20_v3:
+label_25_v4:
 .space 4
 label_35_v10:
 .space 4
-label_56_v20:
+label_53_v19:
+.space 4
+label_29_v6:
+.space 4
+label_46_v15:
+.space 4
+label_57_v21:
 .space 4
 label_31_v8:
 .space 4
-label_53_v19:
+label_21_v2:
 .space 4
-label_28_v7:
+label_20_v3:
 .space 4
 label_24_v5:
 .space 4
+label_40_v12:
+.space 4
+label_56_v20:
+.space 4
+label_37_v11:
+.space 4
+label_47_v16:
+.space 4
 label_51_v18:
+.space 4
+label_17_v0:
+.space 4
+label_28_v7:
+.space 4
+label_34_v9:
 .space 4
 label_41_v13:
 .space 4
 label_50_v17:
 .space 4
-label_25_v4:
-.space 4
-label_40_v12:
-.space 4
-label_47_v16:
-.space 4
-label_17_v0:
-.space 4
-label_34_v9:
-.space 4
-label_21_v2:
-.space 4
 label_16_v1:
 .space 4
-label_46_v15:
-.space 4
-label_37_v11:
-.space 4
 label_43_v14:
-.space 4
-label_29_v6:
-.space 4
-label_57_v21:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

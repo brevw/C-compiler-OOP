@@ -21,105 +21,105 @@ label_6_str:
 .asciiz "Outer scope after inner block - y: "
 .align 2
 # Allocated labels for virtual registers
-label_91_v34:
+label_59_v19:
+.space 4
+label_102_v40:
 .space 4
 label_27_v3:
 .space 4
-label_70_v24:
+label_24_v0:
 .space 4
-label_92_v35:
+label_116_v47:
 .space 4
-label_110_v44:
+label_91_v34:
+.space 4
+label_28_v2:
+.space 4
+label_51_v14:
+.space 4
+label_63_v21:
+.space 4
+label_115_v46:
+.space 4
+label_105_v41:
+.space 4
+label_42_v10:
+.space 4
+label_106_v42:
+.space 4
+label_78_v28:
+.space 4
+label_52_v15:
+.space 4
+label_68_v23:
+.space 4
+label_64_v20:
+.space 4
+label_46_v12:
+.space 4
+label_112_v45:
+.space 4
+label_56_v17:
+.space 4
+label_119_v48:
 .space 4
 label_84_v31:
 .space 4
-label_116_v47:
+label_23_v1:
+.space 4
+label_82_v30:
+.space 4
+label_60_v18:
+.space 4
+label_77_v27:
+.space 4
+label_110_v44:
+.space 4
+label_48_v13:
+.space 4
+label_31_v4:
+.space 4
+label_67_v22:
+.space 4
+label_73_v25:
+.space 4
+label_41_v9:
+.space 4
+label_87_v32:
 .space 4
 label_98_v38:
 .space 4
 label_96_v37:
 .space 4
-label_60_v18:
-.space 4
-label_120_v49:
-.space 4
-label_119_v48:
-.space 4
 label_32_v5:
-.space 4
-label_82_v30:
-.space 4
-label_73_v25:
-.space 4
-label_115_v46:
-.space 4
-label_74_v26:
-.space 4
-label_46_v12:
-.space 4
-label_95_v36:
-.space 4
-label_37_v7:
-.space 4
-label_31_v4:
-.space 4
-label_81_v29:
-.space 4
-label_23_v1:
-.space 4
-label_87_v32:
-.space 4
-label_52_v15:
-.space 4
-label_51_v14:
-.space 4
-label_28_v2:
-.space 4
-label_112_v45:
 .space 4
 label_109_v43:
 .space 4
-label_45_v11:
+label_55_v16:
 .space 4
-label_78_v28:
+label_81_v29:
+.space 4
+label_70_v24:
+.space 4
+label_37_v7:
+.space 4
+label_95_v36:
 .space 4
 label_34_v6:
 .space 4
-label_41_v9:
+label_45_v11:
 .space 4
-label_55_v16:
-.space 4
-label_106_v42:
-.space 4
-label_67_v22:
-.space 4
-label_63_v21:
-.space 4
-label_77_v27:
-.space 4
-label_102_v40:
-.space 4
-label_24_v0:
-.space 4
-label_48_v13:
-.space 4
-label_38_v8:
-.space 4
-label_64_v20:
-.space 4
-label_105_v41:
-.space 4
-label_56_v17:
-.space 4
-label_68_v23:
-.space 4
-label_42_v10:
+label_88_v33:
 .space 4
 label_101_v39:
 .space 4
-label_59_v19:
+label_38_v8:
 .space 4
-label_88_v33:
+label_74_v26:
+.space 4
+label_92_v35:
+.space 4
+label_120_v49:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers
