@@ -24,8 +24,9 @@ public class MemAllocCodeGen extends CodeGen {
     }
 
     private static final Map<String, Label> strToLabels = new HashMap<>();
-    boolean global = true;
-    int fpOffset = 0;
+    private boolean global = true;
+    private int fpOffset = 0;
+    private FunDef currentFunction = null;
 
     public static Label getStrLabel(String str) {
         if (!strToLabels.containsKey(str)) {
@@ -46,11 +47,16 @@ public class MemAllocCodeGen extends CodeGen {
                     asmProg.dataSection.emit(new Directive(Utils.ALIGN_DIRECTIVE + Utils.WORD_ALIGNMENT_CONST));
                 } else {
                     // allocate on the stack
-                    fpOffset -= size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
+                    int allocatedSize = size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
+                    fpOffset -= allocatedSize;
+                    currentFunction.localVarSize += allocatedSize;
                     vd.fpOffset = fpOffset;
                 }
             }
             case FunDef fd -> {
+                FunDef oldFunction = currentFunction;
+                currentFunction = fd;
+
                 this.fpOffset = 0;
                 if (!fd.name.equals(Utils.MAIN_FUNCTION)) {
                     int returnSize = Utils.getSizeOfFunArgsAndReturnTypes(fd.type);
@@ -71,6 +77,8 @@ public class MemAllocCodeGen extends CodeGen {
                 this.global = false;
                 visit(fd.block);
                 this.global = true;
+
+                currentFunction = oldFunction;
             }
             case StrLiteral st -> {
                 if (strToLabels.containsKey(st.strValue)) {

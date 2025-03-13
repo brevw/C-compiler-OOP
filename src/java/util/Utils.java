@@ -224,16 +224,4 @@ public class Utils {
         };
     }
 
-    public static List<VarDecl> funDefToLocalVars(FunDef fd) {
-        List<Block> blocks = new ArrayList<>();
-        List<VarDecl> localVars = new ArrayList<>();
-
-        blocks.add(fd.block);
-        while (!blocks.isEmpty()) {
-            Block b = blocks.remove(0);
-            blocks.addAll(b.stmts.stream().filter(s -> s instanceof Block).map(s -> (Block) s).toList());
-            localVars.addAll(b.vds);
-        }
-        return localVars;
-    }
 }

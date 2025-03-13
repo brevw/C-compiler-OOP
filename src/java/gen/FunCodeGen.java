@@ -31,7 +31,7 @@ public class FunCodeGen extends CodeGen {
         }
         funSection.emit(Label.get(fd.name));
 
-        int localVarSize = Utils.funDefToLocalVars(fd).stream().mapToInt(vd -> vd.type.getSize() + Utils.computeAlignmentOffset(vd.type.getSize(), Utils.WORD_SIZE)).sum();
+        int localVarSize = fd.localVarSize;
         // handle case of main function
         if (fd.name.equals(Utils.MAIN_FUNCTION)) {
             // allocate space for local variables
