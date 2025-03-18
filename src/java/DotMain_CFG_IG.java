@@ -148,6 +148,8 @@ public class DotMain_CFG_IG {
                 return iGraph;
             }).toList();
 
+            InterferenceGraph finalIG = InterferenceGraph.mergeDisjointGraphs(iGraphs);
+
             // produce the Control Flow Graph Dot file
             DotPrinterCFG dotPrinterCFG = new DotPrinterCFG(writerCFG);
             dotPrinterCFG.visit(entryNodes);
@@ -155,7 +157,7 @@ public class DotMain_CFG_IG {
 
             // produce the Interference Graph Dot file
             DotPrinterIG dotPrinterIG = new DotPrinterIG(writerIG);
-            dotPrinterIG.visit(iGraphs);
+            dotPrinterIG.visit(finalIG);
             writerIG.close();
         } catch (FileNotFoundException e) {
             System.out.println("File does not exist.");

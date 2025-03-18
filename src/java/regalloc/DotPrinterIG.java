@@ -19,8 +19,8 @@ public class DotPrinterIG {
         this.writer = writer;
     }
 
-    public void visit(List<InterferenceGraph> iGraphs) {
-        visitHelper(iGraphs);
+    public void visit(InterferenceGraph iGraph) {
+        visitHelper(iGraph);
         writer.print(DOT_HEADER);
         writer.print(nodes.toString());
         writer.print(eldges.stream().reduce("", (a, b) -> a + b));
@@ -28,23 +28,19 @@ public class DotPrinterIG {
         writer.flush();
     }
 
-    private void visitHelper(List<InterferenceGraph> iGraphs) {
-        AtomicInteger count = new AtomicInteger(0);
-        for (InterferenceGraph iGraph : iGraphs) {
-            List<InterferenceGraph.Node> allNodes = iGraph.getNodes();
-            AtomicInteger i = new AtomicInteger(0);
+    private void visitHelper(InterferenceGraph iGraph) {
+        List<InterferenceGraph.Node> allNodes = iGraph.getNodes();
+        AtomicInteger i = new AtomicInteger(0);
 
-            // create a nodes
-            allNodes.forEach(n -> addNewNode(n.reg.toString(), i.getAndIncrement() + count.get()));
+        // create a nodes
+        allNodes.forEach(n -> addNewNode(n.reg.toString(), i.getAndIncrement()));
 
-            // create edges
-            allNodes.forEach(n ->
-                n.adj.forEach(a ->
-                    linkNodes(count.get() + allNodes.indexOf(n), count.get() + allNodes.indexOf(a))
-                )
-            );
-            count.set(count.get() + i.get());
-        }
+        // create edges
+        allNodes.forEach(n ->
+            n.adj.forEach(a ->
+                linkNodes(allNodes.indexOf(n), allNodes.indexOf(a))
+            )
+        );
     }
 
 

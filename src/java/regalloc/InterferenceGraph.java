@@ -64,4 +64,19 @@ public class InterferenceGraph {
 
     }
 
+    public static InterferenceGraph mergeDisjointGraphs(List<InterferenceGraph> graphs) {
+        InterferenceGraph mergedGraph = new InterferenceGraph();
+
+        // assume that all graphs have disjoint sets of nodes
+        graphs.forEach(g -> {
+            g.getNodes().forEach(n -> {
+                mergedGraph.nodesMapping.put(n.reg, n);
+            });
+
+        });
+
+
+        return mergedGraph;
+    }
+
 }
