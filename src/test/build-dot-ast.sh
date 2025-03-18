@@ -43,9 +43,9 @@ fi
 echo -e "${BLUE}$DASHED_LINES Generating Dot $DASHED_LINES${RESET}"
 filename="$1"
 c_file_path="$CFILES_DIR/$filename.c"
-dot_output_path="$DEBUG_DIR/$filename.dot"
-pdf_output_path="$DEBUG_DIR/$filename.pdf"
-gtimeout "$DEFAULT_TIMEOUT" java -cp bin DotMain "$c_file_path" "$dot_output_path"
+dot_output_path="$DEBUG_DIR/$filename-ast.dot"
+pdf_output_path="$DEBUG_DIR/$filename-ast.pdf"
+gtimeout "$DEFAULT_TIMEOUT" java -cp bin DotMainAST "$c_file_path" "$dot_output_path"
 exit_code=$?  # Capture the program's exit code
 if [ $exit_code -eq 124 ]; then
     echo -e "Test ${RED}Failed${RESET}: Program timed out"

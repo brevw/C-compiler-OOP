@@ -8,7 +8,7 @@ import parser.Parser;
 import java.io.*;
 
 
-public class DotMain {
+public class DotMainAST {
 
     private static final String LOGFILE = "out.log";
     private static final int UNKNOWN_EXCEPTION = 1;
