@@ -14,8 +14,10 @@ public class InterferenceGraph {
     public static class Node {
         final Register.Virtual reg;
         public int degree = 0;
-        public boolean precolored = false; // to be used by the graph coloring algorithm
         final Set<Node> adj = new HashSet<>();
+
+        public boolean precolored = false; // to be used by the graph coloring algorithm
+        public Register.Arch archReg = null; // to be used by the graph coloring algorithm
 
         public Node(Register.Virtual reg) {
             this.reg = reg;

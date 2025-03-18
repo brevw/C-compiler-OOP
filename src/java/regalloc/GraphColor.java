@@ -1,10 +1,17 @@
 package regalloc;
 
-public class GraphColor {
+import java.util.Set;
 
-    public GraphColor() {
+import gen.asm.Register;
+
+public class GraphColor {
+    private final Set<Register.Arch> availableColors;
+
+    public GraphColor(Set<Register.Arch> availableColors) {
+        this.availableColors = availableColors;
     }
 
+    // implementation of the Chaitin algorithm
     public void colorGraph(InterferenceGraph iGraph) {
     }
 }

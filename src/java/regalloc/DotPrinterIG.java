@@ -33,7 +33,7 @@ public class DotPrinterIG {
         AtomicInteger i = new AtomicInteger(0);
 
         // create a nodes
-        allNodes.forEach(n -> addNewNode(n.reg.toString(), i.getAndIncrement()));
+        allNodes.forEach(n -> addNewNode(nodeToString(n), i.getAndIncrement()));
 
         // create edges
         allNodes.forEach(n ->
