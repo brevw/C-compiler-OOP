@@ -2,8 +2,10 @@ package regalloc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import gen.asm.AssemblyItem;
 import gen.asm.AssemblyProgram;
@@ -23,9 +25,11 @@ public class CFGraph {
 
     public static class Node {
         final Label label; // can be null (indicating an instruction that can't be the target of a branch)
-        final Instruction instr;
-        final List<Register.Virtual> liveIn = new ArrayList<>();  // to be filled in the liveness analysis
-        final List<Register.Virtual> liveOut = new ArrayList<>(); // to be filled in the liveness analysis
+        final Instruction instr; // can be null (indicating a dummy node)
+
+        final Set<Register.Virtual> liveIn = new HashSet<>();  // to be filled in the liveness analysis
+        final Set<Register.Virtual> liveOut = new HashSet<>(); // to be filled in the liveness analysis
+        boolean visited = false;                               // to be used by the liveness analysis
 
         final List<Node> pred = new ArrayList<>();
         final List<Node> succ = new ArrayList<>();
@@ -36,11 +40,12 @@ public class CFGraph {
         }
 
         public List<Register.Virtual> use() {
-            return instr.uses().stream().map(r -> (Register.Virtual) r).toList();
+            return instr.uses().stream().filter(Register.Virtual.class::isInstance).map(Register.Virtual.class::cast).toList();
         }
 
         public Register.Virtual def() {
-            return (Register.Virtual) instr.def();
+            Register reg = instr.def();
+            return reg instanceof Register.Virtual ? (Register.Virtual) reg : null;
         }
     }
 

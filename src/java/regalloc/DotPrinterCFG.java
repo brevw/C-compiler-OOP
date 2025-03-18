@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import gen.asm.AssemblyProgram;
 import regalloc.CFGraph.Node;
 
 
@@ -59,6 +58,11 @@ public class DotPrinterCFG {
         nodes.append("Node" + id + " [label=\"" + name + "\"];\n");
     }
     private String nodeToString(Node node) {
-        return node.label == null ? node.instr.toString() : node.label.toString() + " : " + node.instr.toString();
+        return (new StringBuilder())
+                    .append("LiveIn: ").append(node.liveIn).append("\n")
+                    .append(node.label == null ? node.instr.toString() : node.label.toString() + " : " + node.instr.toString()).append("\n")
+                    .append("LiveOut: ").append(node.liveOut)
+                    .toString()
+        ;
     }
 }

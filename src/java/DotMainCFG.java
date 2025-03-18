@@ -6,6 +6,7 @@ import lexer.Tokeniser;
 import parser.Parser;
 import regalloc.CFGraph;
 import regalloc.DotPrinterCFG;
+import regalloc.LivenessAnalysis;
 import sem.SemanticAnalyzer;
 
 import java.io.*;
@@ -135,6 +136,7 @@ public class DotMainCFG {
         try {
             PrintWriter writer = new PrintWriter(outputFile);
             ArrayList<CFGraph.Node> entryPoints = cfg.generateGraph(); // generate the CFG of the main function
+            entryPoints.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e)); // analyse the liveness of the main function
             DotPrinterCFG dotPrinter = new DotPrinterCFG(writer);
             dotPrinter.visit(entryPoints);
             writer.close();
