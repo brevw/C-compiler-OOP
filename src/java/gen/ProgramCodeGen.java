@@ -20,7 +20,7 @@ public class ProgramCodeGen extends CodeGen {
         this.asmProg = asmProg;
     }
 
-    void generate(Program p) {
+    public void generate(Program p) {
         // add built-in functions
         p.decls.add(new FunDef(BaseType.VOID, "print_s", List.of(new VarDecl(new PointerType(BaseType.CHAR), "s")), new Block(List.of(), List.of())));
         p.decls.add(new FunDef(BaseType.VOID, "print_i", List.of(new VarDecl(BaseType.INT, "i")), new Block(List.of(), List.of())));
