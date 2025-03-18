@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import gen.asm.AssemblyItem;
+import gen.asm.AssemblyProgram;
 import gen.asm.AssemblyTextItem;
 import gen.asm.Comment;
 import gen.asm.Directive;
@@ -15,6 +16,7 @@ import gen.asm.Register;
 import gen.asm.AssemblyProgram.TextSection;
 import gen.asm.Instruction.BinaryBranch;
 import gen.asm.Instruction.Jump;
+import gen.asm.Instruction.JumpRegister;
 import gen.asm.Instruction.UnaryBranch;
 
 public class CFGraph {
@@ -43,15 +45,24 @@ public class CFGraph {
     }
 
 
-    private final TextSection section;
+    private final AssemblyProgram asmProgram;
     private final Map<Label, Node> labelToNode = new HashMap<>();
 
-    public CFGraph(TextSection section) {
-        this.section = section;
+    public CFGraph(AssemblyProgram asmProgram) {
+        this.asmProgram = asmProgram;
     }
 
-    public Node generateGraph() {
-        Node entryNode = generateNodesIgnoreControlFlowInstructions();
+    public ArrayList<Node> generateGraph() {
+        ArrayList<Node> entryNodes = new ArrayList<>();
+        for (TextSection section : asmProgram.textSections) {
+            Node entryNode = generateSubGraph(section);
+            entryNodes.add(entryNode);
+        }
+        return entryNodes;
+    }
+
+    public Node generateSubGraph(TextSection section) {
+        Node entryNode = generateSubGraphNodesIgnoreControlFlowInstructions(section);
 
         // add edges for control flow instructions
         Node node = entryNode.succ.size() == 0 ? null : entryNode.succ.get(0);
@@ -59,14 +70,17 @@ public class CFGraph {
             if (node.instr instanceof Instruction.ControlFlow cf) {
                 Label targetLabel =
                     switch (cf) {
-                        case BinaryBranch bb -> bb.label;
                         case UnaryBranch ub -> ub.label;
+                        case BinaryBranch bb -> bb.label;
                         case Jump j -> j.label;
+                        case JumpRegister jr -> null;
                         default -> throw new AssertionError();
                     };
                 Node targetNode = labelToNode.get(targetLabel);
-                targetNode.pred.add(node);
-                node.succ.add(targetNode);
+                if (targetNode != null) {
+                    targetNode.pred.add(node);
+                    node.succ.add(targetNode);
+                }
             }
 
             // go to next instruction
@@ -76,11 +90,11 @@ public class CFGraph {
         return entryNode;
     }
 
-    private Node generateNodesIgnoreControlFlowInstructions() {
+    private Node generateSubGraphNodesIgnoreControlFlowInstructions(TextSection section) {
         Node entryNode = new Node(null, null);
         Node latestInstruction = entryNode;
         Label latestLabel = null;
-        for (AssemblyItem item : this.section.items) {
+        for (AssemblyItem item : section.items) {
             switch (item) {
                 // remember the latest label
                 case AssemblyTextItem ati -> {

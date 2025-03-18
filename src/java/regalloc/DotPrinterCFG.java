@@ -20,8 +20,8 @@ public class DotPrinterCFG {
         this.writer = writer;
     }
 
-    public void visit(Node entryPoint) {
-        visitHelper(entryPoint);
+    public void visit(ArrayList<Node> entryPoints) {
+        visitHelper(entryPoints);
         writer.print(DOT_HEADER);
         writer.print(nodes.toString());
         writer.print(eldges.toString());
@@ -29,20 +29,24 @@ public class DotPrinterCFG {
         writer.flush();
     }
 
-    private void visitHelper(Node entryPoint) {
-        Map<Node, Integer> nodes = new HashMap<>();
-        Node node = entryPoint.succ.size() == 0 ? null : entryPoint.succ.get(0);
-        int i = 0;
-        while (node != null) {
-            addNewNode(nodeToString(node), i);
-            nodes.put(node, i);
-            node = node.succ.size() == 0 ? null : node.succ.get(0);
-            ++i;
-        }
-        for (Node n : nodes.keySet()) {
-            for (Node succ : n.succ) {
-                linkNodes(nodes.get(n), nodes.get(succ));
+    private void visitHelper(ArrayList<Node> entryPoints) {
+        int count = 0;
+        for (Node entryPoint : entryPoints) {
+            Map<Node, Integer> nodes = new HashMap<>();
+            Node node = entryPoint.succ.size() == 0 ? null : entryPoint.succ.get(0);
+            int i = 0;
+            while (node != null) {
+                addNewNode(nodeToString(node), i + count);
+                nodes.put(node, i);
+                node = node.succ.size() == 0 ? null : node.succ.get(0);
+                ++i;
             }
+            for (Node n : nodes.keySet()) {
+                for (Node succ : n.succ) {
+                    linkNodes(nodes.get(n) + count, nodes.get(succ) + count);
+                }
+            }
+            count += i;
         }
     }
 

@@ -16,7 +16,7 @@ BLUE='\e[34m'
 RESET='\e[0m'
 
 
-rm -rf "$DEBUG_DIR/*.dot"
+rm -rf "$DEBUG_DIR"/*.dot
 
 exit_code=$?
 if [ $exit_code -ne 0 ]; then
@@ -24,4 +24,4 @@ if [ $exit_code -ne 0 ]; then
     exit
 fi
 
-echo -e "${GREEN}OUTPUT DIR is clean${RESET}"
+echo -e "${GREEN}dot-debug dir is clean${RESET}"

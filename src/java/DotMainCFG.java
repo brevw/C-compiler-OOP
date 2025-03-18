@@ -9,6 +9,7 @@ import regalloc.DotPrinterCFG;
 import sem.SemanticAnalyzer;
 
 import java.io.*;
+import java.util.ArrayList;
 
 
 /**
@@ -126,14 +127,14 @@ public class DotMainCFG {
         progGen.generate(programAst);
 
         // Generate CFG for main
-        CFGraph cfg = new CFGraph(asmProgWithVirtualRegs.textSections.get(0));
+        CFGraph cfg = new CFGraph(asmProgWithVirtualRegs);
 
         ensureArgExists(args, curArgCnt);
         File outputFile = new File(args[curArgCnt]);
         curArgCnt++;
         try {
             PrintWriter writer = new PrintWriter(outputFile);
-            CFGraph.Node entryPoint = cfg.generateGraph(); // generate the CFG of the main function
+            ArrayList<CFGraph.Node> entryPoint = cfg.generateGraph(); // generate the CFG of the main function
             DotPrinterCFG dotPrinter = new DotPrinterCFG(writer);
             dotPrinter.visit(entryPoint);
             writer.close();
