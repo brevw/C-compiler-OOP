@@ -16,7 +16,7 @@ BLUE='\e[34m'
 RESET='\e[0m'
 
 
-rm -rf "$OUTPUT_DIR/*.dot $OUTPUT_DIR/*.pdf"
+rm -rf "$DEBUG_DIR/*.dot"
 
 exit_code=$?
 if [ $exit_code -ne 0 ]; then
