@@ -20,8 +20,8 @@ public class DotPrinterCFG {
         this.writer = writer;
     }
 
-    public void visit(ArrayList<Node> entryPoints) {
-        visitHelper(entryPoints);
+    public void visit(ArrayList<Node> entryNodes) {
+        visitHelper(entryNodes);
         writer.print(DOT_HEADER);
         writer.print(nodes.toString());
         writer.print(eldges.toString());
@@ -29,11 +29,11 @@ public class DotPrinterCFG {
         writer.flush();
     }
 
-    private void visitHelper(ArrayList<Node> entryPoints) {
+    private void visitHelper(ArrayList<Node> entryNodes) {
         int count = 0;
-        for (Node entryPoint : entryPoints) {
+        for (Node entryNode : entryNodes) {
             Map<Node, Integer> nodes = new HashMap<>();
-            Node node = entryPoint.succ.size() == 0 ? null : entryPoint.succ.get(0);
+            Node node = entryNode.succ.size() == 0 ? null : entryNode.succ.get(0);
             int i = 0;
             while (node != null) {
                 addNewNode(nodeToString(node), i + count);

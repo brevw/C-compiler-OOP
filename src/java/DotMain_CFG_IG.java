@@ -6,17 +6,20 @@ import lexer.Tokeniser;
 import parser.Parser;
 import regalloc.CFGraph;
 import regalloc.DotPrinterCFG;
+import regalloc.DotPrinterIG;
+import regalloc.InterferenceGraph;
 import regalloc.LivenessAnalysis;
 import sem.SemanticAnalyzer;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * This is the entry point to the compiler. This files should not be modified.
  */
-public class DotMainCFG {
+public class DotMain_CFG_IG {
 
     private static final String LOGFILE = "out.log";
     private static final int UNKNOWN_EXCEPTION = 1;
@@ -28,19 +31,10 @@ public class DotMainCFG {
     private static final int SEM_FAIL       = 240;
     private static final int PASS           = 0;
 
-    private enum Mode {
-        LEXER, PARSER, AST, SEMANTICANALYSIS, GEN, REGALLOC
-    }
-
-    private enum RegAllocMode {
-        NONE, NAIVE, GRAPH_COLOURING
-    }
-
 
     private static void usage() {
-        System.out.println("Usage: java "+ Main4.class.getSimpleName()+" pass inputfile [outputfile]");
-        System.out.println("where pass is either: -lexer, -parser, -ast, -sem, -gen [naive|colour], -regalloc naive|colour");
-        System.out.println("if -ast, -gen or -regalloc is chosen, the output file must be specified");
+        System.out.println("Usage: java "+ DotMain_CFG_IG.class.getSimpleName()+" pass inputfile [outputfileCFG] [outputfileIG]");
+        System.out.println("where CFG is the control flow graph and IG is the interference graph");
         System.exit(-1);
     }
 
@@ -131,17 +125,40 @@ public class DotMainCFG {
         CFGraph cfg = new CFGraph(asmProgWithVirtualRegs);
 
         ensureArgExists(args, curArgCnt);
-        File outputFile = new File(args[curArgCnt]);
+        File outputFileCFG = new File(args[curArgCnt]);
+        curArgCnt++;
+
+        ensureArgExists(args, curArgCnt);
+        File outputFileIG = new File(args[curArgCnt]);
         curArgCnt++;
         try {
-            PrintWriter writer = new PrintWriter(outputFile);
-            ArrayList<CFGraph.Node> entryPoints = cfg.generateGraph(); // generate the CFG of the main function
-            entryPoints.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e)); // analyse the liveness of the main function
-            DotPrinterCFG dotPrinter = new DotPrinterCFG(writer);
-            dotPrinter.visit(entryPoints);
-            writer.close();
+            PrintWriter writerCFG = new PrintWriter(outputFileCFG);
+            PrintWriter writerIG = new PrintWriter(outputFileIG);
+
+            // generate the CFG of the main function
+            ArrayList<CFGraph.Node> entryNodes = cfg.generateGraph();
+
+            // analyse the liveness of the main function
+            entryNodes.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e));
+
+            // build the interference graph
+            List<InterferenceGraph> iGraphs = entryNodes.stream().map(e -> {
+                InterferenceGraph iGraph = new InterferenceGraph();
+                iGraph.buildInterferenceGraph(e);
+                return iGraph;
+            }).toList();
+
+            // produce the Control Flow Graph Dot file
+            DotPrinterCFG dotPrinterCFG = new DotPrinterCFG(writerCFG);
+            dotPrinterCFG.visit(entryNodes);
+            writerCFG.close();
+
+            // produce the Interference Graph Dot file
+            DotPrinterIG dotPrinterIG = new DotPrinterIG(writerIG);
+            dotPrinterIG.visit(iGraphs);
+            writerIG.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File "+outputFile.toString()+" does not exist.");
+            System.out.println("File does not exist.");
             System.exit(FILE_NOT_FOUND);
         }
 

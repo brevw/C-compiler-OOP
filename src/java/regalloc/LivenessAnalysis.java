@@ -50,7 +50,7 @@ public class LivenessAnalysis {
 
                 // update liveIn
                 Set<Register.Virtual> newLiveIn = newLiveOut;
-                newLiveIn.remove(node.def());
+                node.def().ifPresent(newLiveIn::remove);
                 newLiveIn.addAll(node.use());
                 oldSize = node.liveIn.size();
                 newSize = newLiveIn.size();

@@ -3,8 +3,11 @@ package regalloc;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 
 import gen.asm.AssemblyItem;
@@ -43,9 +46,33 @@ public class CFGraph {
             return instr.uses().stream().filter(Register.Virtual.class::isInstance).map(Register.Virtual.class::cast).toList();
         }
 
-        public Register.Virtual def() {
+        public Optional<Register.Virtual> def() {
             Register reg = instr.def();
-            return reg instanceof Register.Virtual ? (Register.Virtual) reg : null;
+            return reg instanceof Register.Virtual ? Optional.of((Register.Virtual) reg) : Optional.empty();
+        }
+
+        public static void resetVisited(Node entryNode) {
+            Node node = entryNode.succ.get(0);
+            while (node != null) {
+                if (node.succ.isEmpty()) {
+                    break;
+                }
+                node.visited = false;
+                node = node.succ.get(0);
+            }
+        }
+
+        public static ArrayList<Node> getAllNodes(Node entryNode) {
+            ArrayList<Node> nodes = new ArrayList<>();
+            Node node = entryNode.succ.get(0);
+            while (node != null) {
+                if (node.succ.isEmpty()) {
+                    break;
+                }
+                nodes.add(node);
+                node = node.succ.get(0);
+            }
+            return nodes;
         }
     }
 
