@@ -24,8 +24,8 @@ public class CFGraph {
     public static class Node {
         final Label label; // can be null (indicating an instruction that can't be the target of a branch)
         final Instruction instr;
-        final List<Register.Virtual> liveIn = new ArrayList<>();
-        final List<Register.Virtual> liveOut = new ArrayList<>();
+        final List<Register.Virtual> liveIn = new ArrayList<>();  // to be filled in the liveness analysis
+        final List<Register.Virtual> liveOut = new ArrayList<>(); // to be filled in the liveness analysis
 
         final List<Node> pred = new ArrayList<>();
         final List<Node> succ = new ArrayList<>();
