@@ -134,9 +134,9 @@ public class DotMainCFG {
         curArgCnt++;
         try {
             PrintWriter writer = new PrintWriter(outputFile);
-            ArrayList<CFGraph.Node> entryPoint = cfg.generateGraph(); // generate the CFG of the main function
+            ArrayList<CFGraph.Node> entryPoints = cfg.generateGraph(); // generate the CFG of the main function
             DotPrinterCFG dotPrinter = new DotPrinterCFG(writer);
-            dotPrinter.visit(entryPoint);
+            dotPrinter.visit(entryPoints);
             writer.close();
         } catch (FileNotFoundException e) {
             System.out.println("File "+outputFile.toString()+" does not exist.");

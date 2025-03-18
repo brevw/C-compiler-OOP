@@ -57,11 +57,12 @@ public class CFGraph {
         for (TextSection section : asmProgram.textSections) {
             Node entryNode = generateSubGraph(section);
             entryNodes.add(entryNode);
+            labelToNode.clear(); // clear labelToNode for the next section
         }
         return entryNodes;
     }
 
-    public Node generateSubGraph(TextSection section) {
+    private Node generateSubGraph(TextSection section) {
         Node entryNode = generateSubGraphNodesIgnoreControlFlowInstructions(section);
 
         // add edges for control flow instructions
@@ -76,8 +77,12 @@ public class CFGraph {
                         case JumpRegister jr -> null;
                         default -> throw new AssertionError();
                     };
+                if (targetLabel == null) { // early skip for JumpRegister (does not require an edge)
+                    node = node.succ.size() == 0 ? null : node.succ.get(0);
+                    continue;
+                }
                 Node targetNode = labelToNode.get(targetLabel);
-                if (targetNode != null) {
+                if (targetNode != null && !node.succ.contains(targetNode)) {
                     targetNode.pred.add(node);
                     node.succ.add(targetNode);
                 }

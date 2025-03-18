@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import gen.asm.AssemblyProgram;
 import regalloc.CFGraph.Node;
 
 
