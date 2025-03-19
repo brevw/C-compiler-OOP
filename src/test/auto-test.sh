@@ -255,6 +255,75 @@ run_test_codegen() {
 
 }
 
+run_test_regalloc_colour () {
+    local filename="$1"
+    local expected_exit_code="$2"
+    local timelimit="$3"
+    local stdin="$4"
+    local mars_format_stdin="$5"
+    local c_file_path="$CFILES_DIR/$filename.c"
+    local executable_file_path="$OUTPUT_DIR/$filename"
+    local asm_file_path="$OUTPUT_DIR/$filename-regalloc-color.asm"
+    local gcc_exec_output="$OUTPUT_DIR/$filename-regalloc-color.txt"
+    local mars_output="$OUTPUT_DIR/$filename-regalloc-color-mars.txt"
+
+    # Convert stdin to a format that can be passed to Mars Mips Simulator
+    local stdin_mars=""
+    if [ $mars_format_stdin -eq 0 ]; then
+        stdin_mars="${stdin}\n"
+    else
+        for (( i=0; i<${#stdin}; i++ )); do
+            stdin_mars+="${stdin:$i:1}\n"
+        done
+    fi
+
+    # Print test name
+    echo "$ARROW $filename"
+
+    # compile the C file with gcc
+    gcc -o "$executable_file_path" "$c_file_path" > /dev/null 2>&1
+    local exit_code=$?  # Capture the program's exit code
+    if [ $exit_code -ne 0 ]; then
+        echo -e "Test ${RED}Failed${RESET}: gcc exited with code $exit_code"
+        return
+    fi
+    echo "$stdin" | "$executable_file_path" > "$gcc_exec_output"
+
+    # Execute the program
+    gtimeout "$timelimit" java -cp bin Main4 -gen colour "$c_file_path" "$asm_file_path" > /dev/null
+    local exit_code=$?  # Capture the program's exit code
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program timed out"
+        return
+    fi
+    # Check if program exit code is non-zero
+    if [ $exit_code -ne $expected_exit_code ]; then
+        echo -e "Test ${RED}Failed${RESET}: Program exited with code $exit_code (expected $expected_exit_code)"
+        return
+    fi
+
+
+    # Run the generated assembly code with Mars Mips Simulator and redirect stderr to trash
+    echo -e "$stdin_mars" | gtimeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
+    local exit_code=$?  # Capture the program's exit code
+    # Check if program timeouts
+    if [ $exit_code -eq 124 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Mars Mips Simulator timed out"
+        return
+    fi
+
+    # Compare the output of the executable and the mars simulator
+    diff "$gcc_exec_output" "$mars_output"
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo -e "Test ${RED}Failed${RESET}: Output does not match expected file"
+    else
+        echo -e "Test ${GREEN}Passed${RESET}"
+    fi
+
+}
+
 # Compile Code using ant apache
 echo -e "${BLUE}$DASHED_LINES Compiling Code $DASHED_LINES${RESET}"
 ant build
@@ -367,6 +436,35 @@ run_test_codegen sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MA
 run_test_codegen array_inside_struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 
+print_test_name "Register Allocation tests"
+# -> build-in functions
+run_test_regalloc_colour  print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour   print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour print_s_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour read_c_main "$PASS" "$DEFAULT_TIMEOUT" "a" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour read_i_main "$PASS" "$DEFAULT_TIMEOUT" "1" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour mcmalloc_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+# -> simple programs
+run_test_regalloc_colour nested_whiles "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour arithmetics "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour fibonacci "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour factorial "$PASS" "$DEFAULT_TIMEOUT" "5" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour early_exit_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour funcall_main "$PASS" "$DEFAULT_TIMEOUT" "4" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour global_decl_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour isPrime "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3n" "$MARS_FORMAT_STDIN_TRUE"
+run_test_regalloc_colour pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour shadowing_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+# -> struct, arrays
+run_test_regalloc_colour struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour funcall_struct "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour print_matrix "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour big_program "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour array_inside_struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 
 # toDelete test file (for debugging)
 print_test_name "toDelete"
