@@ -37,7 +37,7 @@ public class DotPrinterIG {
 
         // create edges
         allNodes.forEach(n ->
-            n.adj.forEach(a ->
+            n.getAllAdj().forEach(a ->
                 linkNodes(allNodes.indexOf(n), allNodes.indexOf(a))
             )
         );
@@ -57,7 +57,7 @@ public class DotPrinterIG {
         nodes.append("Node" + id + " [label=\"" + name + "\"];\n");
     }
     private String nodeToString(InterferenceGraph.Node node) {
-        return node.reg.toString();
+        return node.reg.toString() + " : " + (node.archReg == null ? "spilled" : node.archReg.toString());
     }
 }
 

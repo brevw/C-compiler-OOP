@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import gen.asm.Register;
 
 public class InterferenceGraph {
@@ -14,13 +13,23 @@ public class InterferenceGraph {
     public static class Node {
         final Register.Virtual reg;
         public int degree = 0;
-        final Set<Node> adj = new HashSet<>();
+        private final List<Node> adj = new ArrayList<>();
 
-        public boolean precolored = false; // to be used by the graph coloring algorithm
+        public boolean active = true; // to be used by the graph coloring algorithm
         public Register.Arch archReg = null; // to be used by the graph coloring algorithm
+                                             // by default null (later null will mean that the node is spilled)
 
         public Node(Register.Virtual reg) {
             this.reg = reg;
+        }
+
+
+        public List<Node> getAllAdj() {
+            return new ArrayList<>(adj);
+        }
+
+        public List<Node> getActiveAdj() {
+            return getAllAdj().stream().filter(n -> n.active).toList();
         }
     }
 
@@ -28,10 +37,17 @@ public class InterferenceGraph {
     public InterferenceGraph() {
     }
 
+    // get activated and deactivated nodes
     public List<Node> getNodes() {
         return nodesMapping.values().stream().toList();
     }
 
+    // map a virtual register to its corresponding architecture register
+    public Register.Arch getArchReg(Register.Virtual vr) {
+        return nodesMapping.get(vr).archReg;
+    }
+
+    // build the interference graph
     public void buildInterferenceGraph(CFGraph.Node entryNode) {
         ArrayList<CFGraph.Node> allNodes = CFGraph.Node.getAllNodes(entryNode);
 
@@ -66,6 +82,7 @@ public class InterferenceGraph {
 
     }
 
+    // merge disjoint graphs
     public static InterferenceGraph mergeDisjointGraphs(List<InterferenceGraph> graphs) {
         InterferenceGraph mergedGraph = new InterferenceGraph();
 
@@ -76,9 +93,33 @@ public class InterferenceGraph {
             });
 
         });
-
-
         return mergedGraph;
+    }
+
+    public List<Node> allActiveNodes() {
+        return getNodes().stream().filter(n -> n.active).toList();
+    }
+
+    public void deactivateNode(Node n) {
+        assert nodesMapping.containsKey(n.reg);
+        assert n.active;
+        n.active = false;
+        getNodes().forEach(node -> {
+            if (node.getAllAdj().contains(n)) {
+                --node.degree;
+            }
+        });
+    }
+
+    public void activateNode(Node n) {
+        assert nodesMapping.containsKey(n.reg);
+        assert !n.active;
+        n.active = true;
+        getNodes().forEach(node -> {
+            if (node.getAllAdj().contains(n)) {
+                ++node.degree;
+            }
+        });
     }
 
 }
