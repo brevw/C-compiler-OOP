@@ -3,9 +3,12 @@ package regalloc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -60,26 +63,59 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         newProg.dataSection.emit("Allocated labels for virtual registers");
         vrSpilledMap.forEach((vr, lbl) -> {
             newProg.dataSection.emit(lbl);
-            newProg.dataSection.emit(new Directive("space " + Utils.WORD_SIZE));
+            newProg.dataSection.emit(new Directive(Utils.SPACE_DIRECTIVE + Utils.WORD_SIZE));
         });
         // rebuild instructions in the text section
         asmProgWithVirtualRegs.textSections.forEach( section -> {
             final AssemblyProgram.TextSection newSection = newProg.emitNewTextSection();
+            Set<Register.Arch> usedArchRegs = new HashSet<>();
+            AtomicBoolean startCapturing = new AtomicBoolean(false);
             section.items.forEach(item -> {
                 switch (item) {
                     case AssemblyTextItem it -> newSection.emit(it);
                     case Instruction insn -> {
                         if (insn == Instruction.Nullary.pushRegisters){
-                            // handle
+                            startCapturing.set(true);
                         } else if (insn == Instruction.Nullary.popRegisters){
-                            // handle
+                            startCapturing.set(false);
                         } else {
                             emitInstructionWithoutVirtualRegister(insn, vrArchMap, vrSpilledMap, newSection, graphColor);
+                            if (startCapturing.get()){
+                                usedArchRegs.addAll(insn.registers().stream().filter(r -> graphColor.availableRegs.contains(r)).map(r -> (Register.Arch)r).collect(Collectors.toSet()));
+                            }
                         }
                     }
                     default -> throw new RuntimeException("Unexpected item type: " + item.getClass());
                 }
             });
+
+            ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
+            final AssemblyProgram.TextSection newSection2 = newProg.emitNewTextSection();
+            newSection.items.forEach(item -> {
+                switch (item) {
+                    case AssemblyTextItem it -> newSection2.emit(it);
+                    case Instruction insn -> {
+                        if (insn == Instruction.Nullary.pushRegisters){
+                            newSection2.emit("Original instruction: "+insn);
+                            usedArchRegsList.forEach(r -> {
+                                newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, -Utils.WORD_SIZE);
+                                newSection2.emit(OpCode.SW, r, Register.Arch.sp, 0);
+                            });
+                        } else if (insn == Instruction.Nullary.popRegisters){
+                            newSection2.emit("Original instruction: "+insn);
+                            usedArchRegsList.reversed().forEach(r -> {
+                                newSection2.emit(OpCode.LW, r, Register.Arch.sp, 0);
+                                newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, Utils.WORD_SIZE);
+                            });
+                        } else {
+                            newSection2.emit(insn);
+                        }
+                    }
+                    default -> throw new RuntimeException("Unexpected item type: " + item.getClass());
+                }
+
+            });
+        newProg.textSections.remove(newSection);
         });
 
 
@@ -135,7 +171,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         section.emit(insn.rebuild(vrToAr));
 
         if (insn.def() != null) {
-            if (insn.def().isVirtual()) {
+            if (insn.def().isVirtual() && vrSpilledMap.containsKey(insn.def())) {
                 Register tmpVal = vrToAr.get(insn.def());
                 Register tmpAddr = spillRegs.get(spillRegIndex.getAndIncrement() % spillRegs.size());
                 Label label = vrSpilledMap.get(insn.def());
