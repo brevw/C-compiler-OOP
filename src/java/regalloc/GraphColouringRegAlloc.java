@@ -76,12 +76,14 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                     case Instruction insn -> {
                         if (insn == Instruction.Nullary.pushRegisters){
                             startCapturing.set(true);
+                            newSection.emit(insn);
                         } else if (insn == Instruction.Nullary.popRegisters){
                             startCapturing.set(false);
+                            newSection.emit(insn);
                         } else {
-                            emitInstructionWithoutVirtualRegister(insn, vrArchMap, vrSpilledMap, newSection, graphColor);
+                            Instruction newInsn = emitInstructionWithoutVirtualRegister(insn, vrArchMap, vrSpilledMap, newSection, graphColor);
                             if (startCapturing.get()){
-                                usedArchRegs.addAll(insn.registers().stream().filter(r -> graphColor.availableRegs.contains(r)).map(r -> (Register.Arch)r).collect(Collectors.toSet()));
+                                usedArchRegs.addAll(newInsn.registers().stream().filter(r -> graphColor.availableRegs.contains(r)).map(r -> (Register.Arch)r).collect(Collectors.toSet()));
                             }
                         }
                     }
@@ -90,6 +92,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
             });
 
             ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
+            ArrayList<Label> usedLabelsList = new ArrayList<>(vrSpilledMap.values());
             final AssemblyProgram.TextSection newSection2 = newProg.emitNewTextSection();
             newSection.items.forEach(item -> {
                 switch (item) {
@@ -97,12 +100,26 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                     case Instruction insn -> {
                         if (insn == Instruction.Nullary.pushRegisters){
                             newSection2.emit("Original instruction: "+insn);
+                            // push registers and spilled global variables
                             usedArchRegsList.forEach(r -> {
                                 newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, -Utils.WORD_SIZE);
                                 newSection2.emit(OpCode.SW, r, Register.Arch.sp, 0);
                             });
+                            usedLabelsList.forEach(l -> {
+                                newSection2.emit(OpCode.LA, graphColor.spillReg1, l);
+                                newSection2.emit(OpCode.LW, graphColor.spillReg1, graphColor.spillReg1, 0);
+                                newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, -Utils.WORD_SIZE);
+                                newSection2.emit(OpCode.SW, graphColor.spillReg1, Register.Arch.sp, 0);
+                            });
                         } else if (insn == Instruction.Nullary.popRegisters){
                             newSection2.emit("Original instruction: "+insn);
+                            // pop registers and spilled global variables
+                            usedLabelsList.reversed().forEach(l -> {
+                                newSection2.emit(OpCode.LW, graphColor.spillReg1, Register.Arch.sp, 0);
+                                newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, Utils.WORD_SIZE);
+                                newSection2.emit(OpCode.LA, graphColor.spillReg2, l);
+                                newSection2.emit(OpCode.SW, graphColor.spillReg1, graphColor.spillReg2, 0);
+                            });
                             usedArchRegsList.reversed().forEach(r -> {
                                 newSection2.emit(OpCode.LW, r, Register.Arch.sp, 0);
                                 newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, Utils.WORD_SIZE);
@@ -133,7 +150,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
     }
 
     // emit the instruction with all virtual registers replaced by architectural registers given a mapping from virtual to architectural registers
-    private static void emitInstructionWithoutVirtualRegister(Instruction insn, Map<Register.Virtual, Register.Arch> vrArchMap, Map<Register.Virtual, Label> vrSpilledMap, AssemblyProgram.TextSection section, GraphColor graphColor) {
+    private static Instruction emitInstructionWithoutVirtualRegister(Instruction insn, Map<Register.Virtual, Register.Arch> vrArchMap, Map<Register.Virtual, Label> vrSpilledMap, AssemblyProgram.TextSection section, GraphColor graphColor) {
 
         section.emit("Original instruction: "+insn);
 
@@ -168,7 +185,8 @@ public class GraphColouringRegAlloc implements AssemblyPass {
             }
         });
 
-        section.emit(insn.rebuild(vrToAr));
+        Instruction newInsn = insn.rebuild(vrToAr);
+        section.emit(newInsn);
 
         if (insn.def() != null) {
             if (insn.def().isVirtual() && vrSpilledMap.containsKey(insn.def())) {
@@ -180,6 +198,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                 section.emit(OpCode.SW, tmpVal, tmpAddr, 0);
             }
         }
+        return newInsn;
     }
 
 
