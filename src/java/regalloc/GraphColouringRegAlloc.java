@@ -1,13 +1,11 @@
 package regalloc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -94,6 +92,11 @@ public class GraphColouringRegAlloc implements AssemblyPass {
             ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
             ArrayList<Label> usedLabelsList = new ArrayList<>(vrSpilledMap.values());
             final AssemblyProgram.TextSection newSection2 = newProg.emitNewTextSection();
+
+            // registers that can be used for pushing and popping
+            Register.Arch pushPopReg1 = usedArchRegsList.size() > 0 ? usedArchRegsList.get(0) : null;
+            Register.Arch pushPopReg2 = usedArchRegsList.size() > 1 ? usedArchRegsList.get(1) : null;
+
             newSection.items.forEach(item -> {
                 switch (item) {
                     case AssemblyTextItem it -> newSection2.emit(it);
@@ -106,19 +109,19 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                                 newSection2.emit(OpCode.SW, r, Register.Arch.sp, 0);
                             });
                             usedLabelsList.forEach(l -> {
-                                newSection2.emit(OpCode.LA, graphColor.spillReg1, l);
-                                newSection2.emit(OpCode.LW, graphColor.spillReg1, graphColor.spillReg1, 0);
+                                newSection2.emit(OpCode.LA, pushPopReg1, l);
+                                newSection2.emit(OpCode.LW, pushPopReg1, pushPopReg1, 0);
                                 newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, -Utils.WORD_SIZE);
-                                newSection2.emit(OpCode.SW, graphColor.spillReg1, Register.Arch.sp, 0);
+                                newSection2.emit(OpCode.SW, pushPopReg1, Register.Arch.sp, 0);
                             });
                         } else if (insn == Instruction.Nullary.popRegisters){
                             newSection2.emit("Original instruction: "+insn);
                             // pop registers and spilled global variables
                             usedLabelsList.reversed().forEach(l -> {
-                                newSection2.emit(OpCode.LW, graphColor.spillReg1, Register.Arch.sp, 0);
+                                newSection2.emit(OpCode.LW, pushPopReg1, Register.Arch.sp, 0);
                                 newSection2.emit(OpCode.ADDIU, Register.Arch.sp, Register.Arch.sp, Utils.WORD_SIZE);
-                                newSection2.emit(OpCode.LA, graphColor.spillReg2, l);
-                                newSection2.emit(OpCode.SW, graphColor.spillReg1, graphColor.spillReg2, 0);
+                                newSection2.emit(OpCode.LA, pushPopReg2, l);
+                                newSection2.emit(OpCode.SW, pushPopReg1, pushPopReg2, 0);
                             });
                             usedArchRegsList.reversed().forEach(r -> {
                                 newSection2.emit(OpCode.LW, r, Register.Arch.sp, 0);
