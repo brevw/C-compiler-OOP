@@ -104,10 +104,8 @@ public class InterferenceGraph {
         assert nodesMapping.containsKey(n.reg);
         assert n.active;
         n.active = false;
-        getNodes().forEach(node -> {
-            if (node.getAllAdj().contains(n)) {
-                --node.degree;
-            }
+        n.getAllAdj().forEach(node -> {
+            --node.degree;
         });
     }
 
@@ -115,10 +113,8 @@ public class InterferenceGraph {
         assert nodesMapping.containsKey(n.reg);
         assert !n.active;
         n.active = true;
-        getNodes().forEach(node -> {
-            if (node.getAllAdj().contains(n)) {
-                ++node.degree;
-            }
+        n.getAllAdj().forEach(node -> {
+            ++node.degree;
         });
     }
 

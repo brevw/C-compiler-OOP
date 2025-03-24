@@ -24,11 +24,38 @@ public class GraphColouringRegAlloc implements AssemblyPass {
 
     public static final GraphColouringRegAlloc INSTANCE = new GraphColouringRegAlloc();
 
+    public static class PairBoolProg {
+        public final boolean virtual;
+        public final AssemblyProgram prog;
+
+        public PairBoolProg(boolean virtual, AssemblyProgram prog) {
+            this.virtual = virtual;
+            this.prog = prog;
+        }
+    }
+
 
     @Override
     public AssemblyProgram apply(AssemblyProgram asmProgWithVirtualRegs) {
 
+        AssemblyProgram newProg = null;
+        boolean isVirtualProg = true;
+        HashSet<Label> usedLabels = new HashSet<>();
+
+        while (isVirtualProg) {
+            PairBoolProg p = applyOnce(asmProgWithVirtualRegs, usedLabels);
+            isVirtualProg = p.virtual;
+            newProg = p.prog;
+        }
+        return newProg;
+    }
+
+    // apply the graph coloring register allocation algorithm once
+    // if there is spilling, create a new program with virtual registers and return false
+    // otherwise, create a new program with architectural registers and return true
+    private PairBoolProg applyOnce(AssemblyProgram asmProgWithVirtualRegs, Set<Label> usedLabels) {
         AssemblyProgram newProg = new AssemblyProgram();
+        boolean isVirtual = false;
 
         // generate the Control Flow Graph of the program (each function will have its own entry node (dummy node))
         ArrayList<CFGraph.Node> entryNodes = (new CFGraph(asmProgWithVirtualRegs)).generateGraph();
@@ -48,25 +75,85 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         List<Register.Arch> availableColors = List.of(Register.Arch.t0, Register.Arch.t1, Register.Arch.t2, Register.Arch.t3, Register.Arch.t4, Register.Arch.t5, Register.Arch.t6, Register.Arch.t7, Register.Arch.t8, Register.Arch.t9
                                                     , Register.Arch.s0, Register.Arch.s1, Register.Arch.s2, Register.Arch.s3, Register.Arch.s4, Register.Arch.s5, Register.Arch.s6, Register.Arch.s7);
         GraphColor graphColor = new GraphColor(availableColors);
-        graphColor.colorGraph(finalIG);
+        Register.Virtual spilled =  graphColor.colorGraph(finalIG);
 
-        // create new program with architecture registers
-        Map<Register.Virtual, Register.Arch> vrArchMap = finalIG.getNodes().stream().filter(n -> n.archReg != null).collect(Collectors.toMap(n -> n.reg, n -> n.archReg));
-        Map<Register.Virtual, Label> vrSpilledMap = collectSpilledVirtualRegisters(finalIG.getNodes().stream().filter(n -> n.archReg == null).map(n -> n.reg).toList());
+        if (spilled != null) {
+            // rewrite the program with the spilled virtual register
+            isVirtual = true;
+            Label newLabel = applySpilling(asmProgWithVirtualRegs, newProg, finalIG, graphColor, spilled);
+            usedLabels.add(newLabel);
+        } else {
+            applyColoring(asmProgWithVirtualRegs, newProg, finalIG, graphColor, usedLabels);
+        }
+        return new PairBoolProg(isVirtual, newProg);
+
+    }
+
+
+    private static Label applySpilling(AssemblyProgram asmProgWithVirtualRegs, AssemblyProgram newProg, InterferenceGraph finalIG, GraphColor graphColor, Register.Virtual spilledReg) {
         // copy the data section
         asmProgWithVirtualRegs.dataSection.items.forEach( item -> {
             newProg.dataSection.emit(item);
         });
-        // allocate one label for each spilled virtual register in a new data section
-        newProg.dataSection.emit("Allocated labels for virtual registers");
-        vrSpilledMap.forEach((vr, lbl) -> {
-            newProg.dataSection.emit(lbl);
-            newProg.dataSection.emit(new Directive(Utils.SPACE_DIRECTIVE + Utils.WORD_SIZE));
+
+        // allocate a label for the spilled virtual register in a new data section
+        Label spilledLabel = Label.create(spilledReg.toString());
+        newProg.dataSection.emit(spilledLabel);
+        newProg.dataSection.emit(new Directive(Utils.SPACE_DIRECTIVE + Utils.WORD_SIZE));
+
+        // rebuild instructions in the text section
+        asmProgWithVirtualRegs.textSections.forEach( section -> {
+            final AssemblyProgram.TextSection newSection = newProg.emitNewTextSection();
+            section.items.forEach(item -> {
+                switch (item) {
+                    case AssemblyTextItem it -> newSection.emit(it);
+                    case Instruction insn -> {
+                        Map<Register, Register> regMap = new HashMap<>();
+                        Register.Virtual newVirtualReg = null;
+                        boolean usesIsSpilled = false;
+                        if (insn.uses().contains(spilledReg)) {
+                            usesIsSpilled = true;
+                            newVirtualReg = Register.Virtual.create();
+                            newSection.emit(OpCode.LA, newVirtualReg, spilledLabel);
+                            newSection.emit(OpCode.LW, newVirtualReg, newVirtualReg, 0);
+                            regMap.put(spilledReg, newVirtualReg);
+                        }
+                        Register oldDef = insn.def();
+                        Register.Virtual newVirtualReg2 = newVirtualReg;
+                        boolean defIsSpilled = oldDef == spilledReg;
+                        if (defIsSpilled && !usesIsSpilled) {
+                            newVirtualReg2 = Register.Virtual.create();
+                            regMap.put(spilledReg, newVirtualReg2);
+                        }
+                        newSection.emit(insn.rebuild(regMap));
+                        if (defIsSpilled) {
+                            Register.Virtual newVirtualReg3 = Register.Virtual.create();
+                            newSection.emit(OpCode.LA, newVirtualReg3, spilledLabel);
+                            newSection.emit(OpCode.SW, newVirtualReg2, newVirtualReg3, 0);
+                        }
+                    }
+                    default -> throw new RuntimeException("Unexpected item type: " + item.getClass());
+                }
+            });
+        });
+
+        return spilledLabel;
+    }
+
+
+    private static void applyColoring(AssemblyProgram asmProgWithVirtualRegs, AssemblyProgram newProg, InterferenceGraph finalIG, GraphColor graphColor, Set<Label> labels) {
+        // create new program with architecture registers
+        assert finalIG.getNodes().stream().allMatch(n -> n.archReg != null);
+        Map<Register, Register> vrArchMap = finalIG.getNodes().stream().collect(Collectors.toMap(n -> n.reg, n -> n.archReg));
+        // copy the data section
+        asmProgWithVirtualRegs.dataSection.items.forEach( item -> {
+            newProg.dataSection.emit(item);
         });
         // rebuild instructions in the text section
         asmProgWithVirtualRegs.textSections.forEach( section -> {
             final AssemblyProgram.TextSection newSection = newProg.emitNewTextSection();
             Set<Register.Arch> usedArchRegs = new HashSet<>();
+            Set<Label> usedLabels = new HashSet<>();
             AtomicBoolean startCapturing = new AtomicBoolean(false);
             section.items.forEach(item -> {
                 switch (item) {
@@ -79,9 +166,13 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                             startCapturing.set(false);
                             newSection.emit(insn);
                         } else {
-                            Instruction newInsn = emitInstructionWithoutVirtualRegister(insn, vrArchMap, vrSpilledMap, newSection, graphColor);
+                            Instruction newInsn = insn.rebuild(vrArchMap);
+                            newSection.emit(newInsn);
                             if (startCapturing.get()){
                                 usedArchRegs.addAll(newInsn.registers().stream().filter(r -> graphColor.availableRegs.contains(r)).map(r -> (Register.Arch)r).collect(Collectors.toSet()));
+                                if (insn instanceof Instruction.LoadAddress la && labels.contains(la.label)){
+                                    usedLabels.add(la.label);
+                                }
                             }
                         }
                     }
@@ -90,7 +181,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
             });
 
             ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
-            ArrayList<Label> usedLabelsList = new ArrayList<>(vrSpilledMap.values());
+            ArrayList<Label> usedLabelsList = new ArrayList<>(usedLabels);
             final AssemblyProgram.TextSection newSection2 = newProg.emitNewTextSection();
 
             // registers that can be used for pushing and popping
@@ -137,72 +228,6 @@ public class GraphColouringRegAlloc implements AssemblyPass {
             });
         newProg.textSections.remove(newSection);
         });
-
-
-        return newProg;
     }
-
-    // collect all spilled virtual registers and assign them a label
-    private static Map<Register.Virtual, Label>  collectSpilledVirtualRegisters(List<Register.Virtual> spilledRegs) {
-        final Map<Register.Virtual, Label> vrSpilledMap = new HashMap<>();
-        spilledRegs.forEach(vr -> {
-            Label l = Label.create(vr.toString());
-            vrSpilledMap.put(vr, l);
-        });
-        return vrSpilledMap;
-    }
-
-    // emit the instruction with all virtual registers replaced by architectural registers given a mapping from virtual to architectural registers
-    private static Instruction emitInstructionWithoutVirtualRegister(Instruction insn, Map<Register.Virtual, Register.Arch> vrArchMap, Map<Register.Virtual, Label> vrSpilledMap, AssemblyProgram.TextSection section, GraphColor graphColor) {
-
-        section.emit("Original instruction: "+insn);
-
-        final Map<Register, Register> vrToAr = new HashMap<>();
-        List<Register.Arch> spillRegs = List.of(graphColor.spillReg1, graphColor.spillReg2);
-
-        AtomicInteger spillRegIndex = new AtomicInteger(0);
-        insn.registers().forEach(reg -> {
-            if (reg.isVirtual()) {
-                // regular virtual register
-                if (vrArchMap.containsKey(reg)) {
-                    vrToAr.put(reg, vrArchMap.get(reg));
-                } else
-                // spilled virtual register
-                if (vrSpilledMap.containsKey(reg)) {
-                    Label label = vrSpilledMap.get(reg);
-                    Register tmp = spillRegs.get(spillRegIndex.getAndIncrement() % spillRegs.size());
-                    vrToAr.put(reg, tmp);
-                } else
-                // virtual register not found in the mapping
-                throw new RuntimeException("Virtual register not found in the mapping: " + reg);
-            }
-        });
-
-
-        insn.uses().forEach(reg -> {
-            if (reg.isVirtual() && vrSpilledMap.containsKey(reg)) {
-                    Register tmp = vrToAr.get(reg);
-                    Label label = vrSpilledMap.get(reg);
-                    section.emit(OpCode.LA, tmp, label);
-                    section.emit(OpCode.LW, tmp, tmp, 0);
-            }
-        });
-
-        Instruction newInsn = insn.rebuild(vrToAr);
-        section.emit(newInsn);
-
-        if (insn.def() != null) {
-            if (insn.def().isVirtual() && vrSpilledMap.containsKey(insn.def())) {
-                Register tmpVal = vrToAr.get(insn.def());
-                Register tmpAddr = spillRegs.get(spillRegIndex.getAndIncrement() % spillRegs.size());
-                Label label = vrSpilledMap.get(insn.def());
-
-                section.emit(OpCode.LA, tmpAddr, label);
-                section.emit(OpCode.SW, tmpVal, tmpAddr, 0);
-            }
-        }
-        return newInsn;
-    }
-
 
 }

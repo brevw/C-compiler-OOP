@@ -9,22 +9,20 @@ import java.util.Stack;
 import gen.asm.Register;
 
 public class GraphColor {
+    public boolean DEBUG_PRINT = false;
     public final ArrayList<Register.Arch> availableRegs;
 
     // allocate two registers to handle spilling
-    public final Register.Arch spillReg1, spillReg2;
 
     public GraphColor(List<Register.Arch> availableRegs) {
         assert availableRegs.size() >= 2;
-
-        int size = availableRegs.size();
-        this.availableRegs = new ArrayList<>(availableRegs.subList(0, size - 2));
-        this.spillReg1 = availableRegs.get(size - 2);
-        this.spillReg2 = availableRegs.get(size - 1);
+        this.availableRegs = new ArrayList<>(availableRegs);
     }
 
     // implementation of the Chaitin algorithm
-    public void colorGraph(InterferenceGraph iGraph) {
+    // if return value is null then successfully colored the graph
+    // otherwise return the node that has to be spilled
+    public Register.Virtual colorGraph(InterferenceGraph iGraph) {
         Stack<InterferenceGraph.Node> stack = new Stack<>();
 
         // keep deactivating nodes with degree less than the number of available colors (registers)
@@ -35,6 +33,9 @@ public class GraphColor {
             if (cantidates.size() == 0) {
                 // spill the node with the highest degree
                 InterferenceGraph.Node spillNode = iGraph.allActiveNodes().stream().max((n1, n2) -> Integer.compare(n1.degree, n2.degree)).get();
+                if (!DEBUG_PRINT) {
+                    return spillNode.reg;
+                }
                 iGraph.deactivateNode(spillNode);
                 spillNode.archReg = null; // mark the node as spilled
             } else {
@@ -59,6 +60,8 @@ public class GraphColor {
             });
             node.archReg = availableRegs.stream().filter(c -> !usedColors.contains(c)).findFirst().get();
         }
+
+        return null;
 
     }
 }
