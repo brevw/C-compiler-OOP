@@ -47,7 +47,7 @@ dot_output_path_cfg="$DEBUG_DIR/$filename-cfg.dot"
 pdf_output_path_cfg="$DEBUG_DIR/$filename-cfg.pdf"
 dot_output_path_ig="$DEBUG_DIR/$filename-ig.dot"
 pdf_output_path_ig="$DEBUG_DIR/$filename-ig.pdf"
-gtimeout "$DEFAULT_TIMEOUT" java -cp bin DotMain_CFG_IG "$c_file_path" "$dot_output_path_cfg" "$dot_output_path_ig"
+gtimeout "$DEFAULT_TIMEOUT" java -cp bin DotMain_CFG_IG -c "$c_file_path" "$dot_output_path_cfg" "$dot_output_path_ig"
 exit_code=$?  # Capture the program's exit code
 if [ $exit_code -eq 124 ]; then
     echo -e "Test ${RED}Failed${RESET}: Program timed out"
