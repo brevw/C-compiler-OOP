@@ -4,7 +4,6 @@ import ast.Expr;
 import ast.VarExpr;
 import ast.FieldAccessExpr;
 import ast.ArrayAccessExpr;
-import ast.ArrayType;
 import ast.ValueAtExpr;
 
 import ast.AddressOfExpr;

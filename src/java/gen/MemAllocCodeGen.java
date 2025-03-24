@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ast.ASTNode;
-import ast.ArrayType;
-import ast.Block;
 import ast.FunDecl;
 import ast.FunDef;
 import ast.StrLiteral;
