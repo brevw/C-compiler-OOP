@@ -16,9 +16,11 @@ public class GraphColor {
 
     public GraphColor(List<Register.Arch> availableRegs) {
         assert availableRegs.size() >= 2;
-        this.availableRegs = new ArrayList<>(availableRegs.subList(0, availableRegs.size() - 2));
-        this.spillReg1 = availableRegs.get(availableRegs.size() - 2);
-        this.spillReg2 = availableRegs.get(availableRegs.size() - 1);
+
+        int size = availableRegs.size();
+        this.availableRegs = new ArrayList<>(availableRegs.subList(0, size - 2));
+        this.spillReg1 = availableRegs.get(size - 2);
+        this.spillReg2 = availableRegs.get(size - 1);
     }
 
     // implementation of the Chaitin algorithm

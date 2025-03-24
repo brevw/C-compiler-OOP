@@ -57,7 +57,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         asmProgWithVirtualRegs.dataSection.items.forEach( item -> {
             newProg.dataSection.emit(item);
         });
-        // allocate one label for each virtual register in a new data section
+        // allocate one label for each spilled virtual register in a new data section
         newProg.dataSection.emit("Allocated labels for virtual registers");
         vrSpilledMap.forEach((vr, lbl) -> {
             newProg.dataSection.emit(lbl);
