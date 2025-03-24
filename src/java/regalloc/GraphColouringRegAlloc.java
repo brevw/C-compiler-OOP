@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import gen.asm.AssemblyPass;
@@ -38,12 +37,12 @@ public class GraphColouringRegAlloc implements AssemblyPass {
     @Override
     public AssemblyProgram apply(AssemblyProgram asmProgWithVirtualRegs) {
 
-        AssemblyProgram newProg = null;
+        AssemblyProgram newProg = asmProgWithVirtualRegs;
         boolean isVirtualProg = true;
         HashSet<Label> usedLabels = new HashSet<>();
 
         while (isVirtualProg) {
-            PairBoolProg p = applyOnce(asmProgWithVirtualRegs, usedLabels);
+            PairBoolProg p = applyOnce(newProg, usedLabels);
             isVirtualProg = p.virtual;
             newProg = p.prog;
         }
