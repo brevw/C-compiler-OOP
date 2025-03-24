@@ -1,5 +1,6 @@
 import ast.Program;
 import gen.ProgramCodeGen;
+import gen.asm.AssemblyParser;
 import gen.asm.AssemblyProgram;
 import gen.asm.Register;
 import lexer.Scanner;
@@ -71,12 +72,30 @@ public class DotMain_CFG_IG {
         }
     }
 
+    private enum Mode {
+        ASM, C
+    }
     public static void compile(String[] args) {
 
         ensureArgExists(args, 0);
 
         int curArgCnt = 0;
         ensureArgExists(args, curArgCnt);
+        Mode mode = null;
+        switch (args[curArgCnt]) {
+            case "-c":
+                mode = Mode.C;
+                curArgCnt++;
+                break;
+            case "-asm":
+                mode = Mode.ASM;
+                curArgCnt++;
+                break;
+            default:
+                System.out.println("Invalid mode: " + args[curArgCnt]);
+                usage();
+                break;
+        }
         File inputFile = new File(args[curArgCnt]);
         curArgCnt++;
 
@@ -88,92 +107,109 @@ public class DotMain_CFG_IG {
             System.exit(FILE_NOT_FOUND);
             return;
         }
+        AssemblyProgram asmProgWithVirtualRegs = null;
+        if (mode == Mode.C) {
+            Tokeniser tokeniser = new Tokeniser(scanner);
+            Parser parser = new Parser(tokeniser);
+            Program programAst = parser.parse();
 
-        Tokeniser tokeniser = new Tokeniser(scanner);
-        Parser parser = new Parser(tokeniser);
-        Program programAst = parser.parse();
+            // Tokinisation
+            if (tokeniser.hasErrors()) {
+                System.out.println("Lexing: failed (" + tokeniser.getNumErrors() + " errors)");
+                System.exit(LEXER_FAIL);
+                return;
+            }
 
-        // Tokinisation
-        if (tokeniser.hasErrors()) {
-            System.out.println("Lexing: failed (" + tokeniser.getNumErrors() + " errors)");
-            System.exit(LEXER_FAIL);
-            return;
+            // Parsing
+            if (parser.hasErrors()) {
+                System.out.println("Parsing: failed (" + parser.getNumErrors() + " errors)");
+                System.exit(PARSER_FAIL);
+                return;
+            }
+            System.out.println("Parsing: pass");
+
+            // Semantic Analysis
+            SemanticAnalyzer sem = new SemanticAnalyzer();
+            sem.analyze(programAst);
+            if (sem.hasErrors()) {
+                System.out.println("Semantic analysis: Failed (" + sem.getNumErrors() + " errors)");
+                System.exit(SEM_FAIL);
+            }
+
+            System.out.println("Semantic analysis: Pass");
+
+            // Code Generation (with virtual registers)
+            asmProgWithVirtualRegs = new AssemblyProgram();
+            ProgramCodeGen progGen = new ProgramCodeGen(asmProgWithVirtualRegs);
+            progGen.generate(programAst);
+        } else if (mode == Mode.ASM) {
+            try {
+                var reader = new FileReader(inputFile);
+                asmProgWithVirtualRegs = AssemblyParser.readAssemblyProgram(new BufferedReader(reader));
+                reader.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("File " + inputFile + " does not exist.");
+                System.exit(FILE_NOT_FOUND);
+                return;
+            } catch (IOException e) {
+                System.out.println("An I/O exception occurred when reading " + inputFile + ".");
+                System.exit(IO_EXCEPTION);
+                return;
+            }
         }
 
-        // Parsing
-        if (parser.hasErrors()) {
-            System.out.println("Parsing: failed (" + parser.getNumErrors() + " errors)");
-            System.exit(PARSER_FAIL);
-            return;
-        }
-        System.out.println("Parsing: pass");
+            // Generate CFG for main
+            CFGraph cfg = new CFGraph(asmProgWithVirtualRegs);
 
-        // Semantic Analysis
-        SemanticAnalyzer sem = new SemanticAnalyzer();
-        sem.analyze(programAst);
-        if (sem.hasErrors()) {
-            System.out.println("Semantic analysis: Failed (" + sem.getNumErrors() + " errors)");
-            System.exit(SEM_FAIL);
-        }
+            ensureArgExists(args, curArgCnt);
+            File outputFileCFG = new File(args[curArgCnt]);
+            curArgCnt++;
 
-        System.out.println("Semantic analysis: Pass");
+            ensureArgExists(args, curArgCnt);
+            File outputFileIG = new File(args[curArgCnt]);
+            curArgCnt++;
+            try {
+                PrintWriter writerCFG = new PrintWriter(outputFileCFG);
+                PrintWriter writerIG = new PrintWriter(outputFileIG);
 
-        // Code Generation (with virtual registers)
-        AssemblyProgram asmProgWithVirtualRegs = new AssemblyProgram();
-        ProgramCodeGen progGen = new ProgramCodeGen(asmProgWithVirtualRegs);
-        progGen.generate(programAst);
+                // generate the CFG of the main function
+                ArrayList<CFGraph.Node> entryNodes = cfg.generateGraph();
 
-        // Generate CFG for main
-        CFGraph cfg = new CFGraph(asmProgWithVirtualRegs);
+                // analyse the liveness of the main function
+                entryNodes.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e));
 
-        ensureArgExists(args, curArgCnt);
-        File outputFileCFG = new File(args[curArgCnt]);
-        curArgCnt++;
+                // build the interference graph
+                List<InterferenceGraph> iGraphs = entryNodes.stream().map(e -> {
+                    InterferenceGraph iGraph = new InterferenceGraph();
+                    iGraph.buildInterferenceGraph(e);
+                    return iGraph;
+                }).toList();
 
-        ensureArgExists(args, curArgCnt);
-        File outputFileIG = new File(args[curArgCnt]);
-        curArgCnt++;
-        try {
-            PrintWriter writerCFG = new PrintWriter(outputFileCFG);
-            PrintWriter writerIG = new PrintWriter(outputFileIG);
+                InterferenceGraph finalIG = InterferenceGraph.mergeDisjointGraphs(iGraphs);
 
-            // generate the CFG of the main function
-            ArrayList<CFGraph.Node> entryNodes = cfg.generateGraph();
+                // color the graph (we will only use $s0-$s9 and $t0-$t7)
+                List<Register.Arch> availableColors = List.of(Register.Arch.t0, Register.Arch.t1, Register.Arch.t2, Register.Arch.t3, Register.Arch.t4, Register.Arch.t5, Register.Arch.t6, Register.Arch.t7, Register.Arch.t8, Register.Arch.t9
+                    , Register.Arch.s0, Register.Arch.s1, Register.Arch.s2, Register.Arch.s3, Register.Arch.s4, Register.Arch.s5, Register.Arch.s6, Register.Arch.s7);
+                var graphColor = new GraphColor(availableColors);
+                graphColor.DEBUG_PRINT = true;
+                graphColor.colorGraph(finalIG);
 
-            // analyse the liveness of the main function
-            entryNodes.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e));
+                // produce the Control Flow Graph Dot file
+                DotPrinterCFG dotPrinterCFG = new DotPrinterCFG(writerCFG);
+                dotPrinterCFG.visit(entryNodes);
+                writerCFG.close();
 
-            // build the interference graph
-            List<InterferenceGraph> iGraphs = entryNodes.stream().map(e -> {
-                InterferenceGraph iGraph = new InterferenceGraph();
-                iGraph.buildInterferenceGraph(e);
-                return iGraph;
-            }).toList();
+                // produce the Interference Graph Dot file
+                DotPrinterIG dotPrinterIG = new DotPrinterIG(writerIG);
+                dotPrinterIG.visit(finalIG);
+                writerIG.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("File does not exist.");
+                System.exit(FILE_NOT_FOUND);
+            }
 
-            InterferenceGraph finalIG = InterferenceGraph.mergeDisjointGraphs(iGraphs);
+            System.exit(PASS);
 
-            // color the graph (we will only use $s0-$s9 and $t0-$t7)
-            List<Register.Arch> availableColors = List.of(Register.Arch.t0, Register.Arch.t1, Register.Arch.t2, Register.Arch.t3, Register.Arch.t4, Register.Arch.t5, Register.Arch.t6, Register.Arch.t7, Register.Arch.t8, Register.Arch.t9
-                , Register.Arch.s0, Register.Arch.s1, Register.Arch.s2, Register.Arch.s3, Register.Arch.s4, Register.Arch.s5, Register.Arch.s6, Register.Arch.s7);
-            var graphColor = new GraphColor(availableColors);
-            graphColor.DEBUG_PRINT = true;
-            graphColor.colorGraph(finalIG);
-
-            // produce the Control Flow Graph Dot file
-            DotPrinterCFG dotPrinterCFG = new DotPrinterCFG(writerCFG);
-            dotPrinterCFG.visit(entryNodes);
-            writerCFG.close();
-
-            // produce the Interference Graph Dot file
-            DotPrinterIG dotPrinterIG = new DotPrinterIG(writerIG);
-            dotPrinterIG.visit(finalIG);
-            writerIG.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("File does not exist.");
-            System.exit(FILE_NOT_FOUND);
-        }
-
-        System.exit(PASS);
     }
 }
 
