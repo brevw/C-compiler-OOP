@@ -1,5 +1,6 @@
 package regalloc;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -27,16 +28,23 @@ public class LivenessAnalysis {
         }
 
         // fixed point algorithm
+        ArrayList<CFGraph.Node> reverseOrder = new ArrayList<>();
         Queue<CFGraph.Node> workList = new LinkedList<>();
         workList.add(lastNode);
+
+        // reverse order traversal
+        while (!workList.isEmpty()) {
+            CFGraph.Node node = workList.poll();
+            reverseOrder.add(node);
+            workList.addAll(node.pred.stream().filter(n -> !n.visited && n.instr != null).toList());
+            node.visited = true;
+        }
+
+
         boolean detectedUpdate = true;
         while (detectedUpdate) {
             detectedUpdate = false;
-            // mask all nodes as not visited
-            entryNode.succ.forEach(n -> n.visited = false);
-            while (!workList.isEmpty()) {
-                CFGraph.Node node = workList.poll();
-
+            for (CFGraph.Node node : reverseOrder) {
                 // update liveOut
                 Set<Register.Virtual> newLiveOut = new HashSet<>();
                 node.succ.stream().map(n -> n.liveIn).forEach(newLiveOut::addAll);
@@ -59,11 +67,6 @@ public class LivenessAnalysis {
                     node.liveIn.clear();
                     node.liveIn.addAll(newLiveIn);
                 }
-
-                // update workList and mark node as visited
-                node.visited = true;
-                workList.addAll(node.pred.stream().filter(n -> !n.visited && n.instr != null).toList());
-
             }
         }
     }

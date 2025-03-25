@@ -17,6 +17,7 @@ import gen.asm.Instruction;
 import gen.asm.Label;
 import gen.asm.OpCode;
 import gen.asm.Register;
+import util.CollapseLabels;
 import util.Utils;
 
 public class GraphColouringRegAlloc implements AssemblyPass {
@@ -37,7 +38,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
     @Override
     public AssemblyProgram apply(AssemblyProgram asmProgWithVirtualRegs) {
 
-        AssemblyProgram newProg = asmProgWithVirtualRegs;
+        AssemblyProgram newProg = new CollapseLabels().visit(asmProgWithVirtualRegs);
         boolean isVirtualProg = true;
         HashSet<Label> usedLabels = new HashSet<>();
 

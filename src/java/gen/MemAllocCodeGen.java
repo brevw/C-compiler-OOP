@@ -45,7 +45,7 @@ public class MemAllocCodeGen extends CodeGen {
                     asmProg.dataSection.emit(new Directive(Utils.ALIGN_DIRECTIVE + Utils.WORD_ALIGNMENT_CONST));
                 } else {
                     // allocate on the stack
-                    int allocatedSize = size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
+                    int allocatedSize = vd.upgradeToReg != null && vd.upgradeToReg == true ? 0 : size + Utils.computeAlignmentOffset(size, Utils.WORD_SIZE);
                     fpOffset -= allocatedSize;
                     currentFunction.localVarSize += allocatedSize;
                     vd.fpOffset = fpOffset;

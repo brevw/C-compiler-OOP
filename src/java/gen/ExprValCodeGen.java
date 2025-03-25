@@ -38,9 +38,13 @@ public class ExprValCodeGen extends CodeGen {
         TextSection currentSection = asmProg.getCurrentTextSection();
         return switch (e) {
             case VarExpr ve -> {
-                Register reg = addrCodeGen.visit(ve);
-                reg = Utils.addrToValue(currentSection, reg, ve.vd.type);
-                yield reg;
+                if (ve.vd.upgradeToReg != null && ve.vd.upgradeToReg) {
+                    yield ve.vd.reg;
+                } else {
+                    Register reg = addrCodeGen.visit(ve);
+                    reg = Utils.addrToValue(currentSection, reg, ve.vd.type);
+                    yield reg;
+                }
             }
             case FunCallExpr fce -> {
                 Register returnReg = null;
@@ -112,10 +116,16 @@ public class ExprValCodeGen extends CodeGen {
                 yield visit(tce.expr);
             }
             case Assign a -> {
-                Register lhsReg = addrCodeGen.visit(a.lhs);
-                Register rhsReg = visit(a.rhs);
-                Type type = a.lhs.type;
-                yield Utils.copyToAddr(currentSection, lhsReg, rhsReg, type, false);
+                if (a.lhs instanceof VarExpr ve && ve.vd.upgradeToReg != null && ve.vd.upgradeToReg) {
+                    Register rhsReg = visit(a.rhs);
+                    currentSection.emit(OpCode.ADDI, ve.vd.reg, rhsReg, 0);
+                    yield ve.vd.reg;
+                } else {
+                    Register lhsReg = addrCodeGen.visit(a.lhs);
+                    Register rhsReg = visit(a.rhs);
+                    Type type = a.lhs.type;
+                    yield Utils.copyToAddr(currentSection, lhsReg, rhsReg, type, false);
+                }
             }
             case BinOp bo -> {
                 switch (bo.op) {

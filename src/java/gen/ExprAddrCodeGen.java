@@ -35,10 +35,14 @@ public class ExprAddrCodeGen extends CodeGen {
                 if (isGlobalVar) {
                     currentSection.emit(OpCode.LA, reg, Label.get(ve.vd.name));
                 } else {
-                    currentSection.emit(OpCode.ADDIU, reg, Arch.fp, ve.vd.fpOffset);
-                    // deference the array as it is passed by reference
-                    if (ve.vd.type instanceof ArrayType && ve.vd.isFunArg) {
-                        currentSection.emit(OpCode.LW, reg, reg, 0);
+                    if (ve.vd.upgradeToReg != null && ve.vd.upgradeToReg) {
+                        reg = ve.vd.reg;
+                    } else {
+                        currentSection.emit(OpCode.ADDIU, reg, Arch.fp, ve.vd.fpOffset);
+                        // deference the array as it is passed by reference
+                        if (ve.vd.type instanceof ArrayType && ve.vd.isFunArg) {
+                            currentSection.emit(OpCode.LW, reg, reg, 0);
+                        }
                     }
                 }
                 return reg;
@@ -56,8 +60,8 @@ public class ExprAddrCodeGen extends CodeGen {
                 Register index = evcg.visit(aae.indexExpr);
                 Register size = Register.Virtual.create();
                 currentSection.emit(OpCode.LI, size, aae.type.getSize());
-                currentSection.emit(OpCode.MUL, index, index, size);
-                currentSection.emit(OpCode.ADD, reg, base, index);
+                currentSection.emit(OpCode.MUL, reg, index, size);
+                currentSection.emit(OpCode.ADD, reg, reg, base);
                 return reg;
             }
             case ValueAtExpr vae -> {
