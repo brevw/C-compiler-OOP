@@ -426,6 +426,8 @@ run_test_codegen isPrime "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALS
 run_test_codegen tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3n" "$MARS_FORMAT_STDIN_TRUE"
 run_test_codegen pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen shadowing_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen dec2bin "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen binary_search "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
 # -> struct, arrays
 run_test_codegen struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
@@ -456,6 +458,8 @@ run_test_regalloc_colour isPrime "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_ST
 run_test_regalloc_colour tictactoe "$PASS" "$DEFAULT_TIMEOUT" "a1b2a2b3a3n" "$MARS_FORMAT_STDIN_TRUE"
 run_test_regalloc_colour pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour shadowing_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour dec2bin "$PASS" "$DEFAULT_TIMEOUT" "15" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour binary_search "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
 # -> struct, arrays
 run_test_regalloc_colour struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"

@@ -6,16 +6,16 @@ main:
 addiu $fp,$sp,0
 addiu $sp,$sp,-12
 addiu $t0,$fp,-8
-addi $t0,$t0,1
+addi $t2,$t0,1
 addiu $t1,$fp,-12
-lb $t2,0($t1)
-sb $t2,0($t0)
-lb $t2,1($t1)
-sb $t2,1($t0)
-lb $t2,2($t1)
-sb $t2,2($t0)
-lb $t2,3($t1)
-sb $t2,3($t0)
+lb $t0,0($t1)
+sb $t0,0($t2)
+lb $t0,1($t1)
+sb $t0,1($t2)
+lb $t0,2($t1)
+sb $t0,2($t2)
+lb $t0,3($t1)
+sb $t0,3($t2)
 main_epilogue:
 li $v0,10
 syscall

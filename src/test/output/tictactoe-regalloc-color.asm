@@ -140,11 +140,11 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t2,0($sp)
-addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t2,0($sp)
 li $t0,0
 addi $t1,$t0,0
 la $t0,a11
@@ -250,23 +250,23 @@ li $t0,9
 xor $t0,$t1,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_37_ELSE
-li $t1,1
-addi $t0,$fp,4
-sw $t1,0($t0)
-j label_38_END
-j label_38_END
-label_37_ELSE:
-li $t0,0
+li $t0,1
 addi $t1,$fp,4
 sw $t0,0($t1)
 j label_38_END
+j label_38_END
+label_37_ELSE:
+li $t1,0
+addi $t0,$fp,4
+sw $t1,0($t0)
+j label_38_END
 label_38_END:
 # Original instruction: popRegisters
+lw $t2,0($sp)
+addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
-addiu $sp,$sp,4
-lw $t2,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -280,23 +280,23 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t2,0($sp)
-addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t2,0($sp)
 li $t0,1
 addi $t1,$t0,0
 addiu $t0,$fp,16
-lb $t0,0($t0)
-li $t2,97
-xor $t0,$t0,$t2
+lb $t2,0($t0)
+li $t0,97
+xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_41_ELSE
 addiu $t0,$fp,12
-lw $t2,0($t0)
-li $t0,1
-xor $t0,$t2,$t0
+lw $t0,0($t0)
+li $t2,1
+xor $t0,$t0,$t2
 sltiu $t0,$t0,1
 beqz $t0,label_43_ELSE
 la $t0,a11
@@ -320,9 +320,9 @@ label_46_END:
 j label_52_END
 label_43_ELSE:
 addiu $t0,$fp,12
-lw $t0,0($t0)
-li $t2,2
-xor $t0,$t0,$t2
+lw $t2,0($t0)
+li $t0,2
+xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_47_ELSE
 la $t0,a12
@@ -346,9 +346,9 @@ label_50_END:
 j label_52_END
 label_47_ELSE:
 addiu $t0,$fp,12
-lw $t0,0($t0)
-li $t2,3
-xor $t0,$t0,$t2
+lw $t2,0($t0)
+li $t0,3
+xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_51_ELSE
 la $t0,a13
@@ -364,9 +364,9 @@ lb $t0,0($t0)
 sb $t0,0($t2)
 j label_54_END
 label_53_ELSE:
-li $t1,0
-li $t0,1
-sub $t0,$t1,$t0
+li $t0,0
+li $t1,1
+sub $t0,$t0,$t1
 addi $t1,$t0,0
 label_54_END:
 j label_52_END
@@ -409,9 +409,9 @@ label_60_END:
 j label_66_END
 label_57_ELSE:
 addiu $t0,$fp,12
-lw $t0,0($t0)
-li $t2,2
-xor $t0,$t0,$t2
+lw $t2,0($t0)
+li $t0,2
+xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_61_ELSE
 la $t0,a22
@@ -427,17 +427,17 @@ lb $t0,0($t0)
 sb $t0,0($t2)
 j label_64_END
 label_63_ELSE:
-li $t1,0
-li $t0,1
-sub $t0,$t1,$t0
+li $t0,0
+li $t1,1
+sub $t0,$t0,$t1
 addi $t1,$t0,0
 label_64_END:
 j label_66_END
 label_61_ELSE:
 addiu $t0,$fp,12
-lw $t0,0($t0)
-li $t2,3
-xor $t0,$t0,$t2
+lw $t2,0($t0)
+li $t0,3
+xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_65_ELSE
 la $t0,a23
@@ -453,9 +453,9 @@ lb $t0,0($t0)
 sb $t0,0($t2)
 j label_68_END
 label_67_ELSE:
-li $t1,0
-li $t0,1
-sub $t0,$t1,$t0
+li $t0,0
+li $t1,1
+sub $t0,$t0,$t1
 addi $t1,$t0,0
 label_68_END:
 j label_66_END
@@ -472,9 +472,9 @@ xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_69_ELSE
 addiu $t0,$fp,12
-lw $t2,0($t0)
-li $t0,1
-xor $t0,$t2,$t0
+lw $t0,0($t0)
+li $t2,1
+xor $t0,$t0,$t2
 sltiu $t0,$t0,1
 beqz $t0,label_71_ELSE
 la $t0,a31
@@ -498,9 +498,9 @@ label_74_END:
 j label_80_END
 label_71_ELSE:
 addiu $t0,$fp,12
-lw $t2,0($t0)
-li $t0,2
-xor $t0,$t2,$t0
+lw $t0,0($t0)
+li $t2,2
+xor $t0,$t0,$t2
 sltiu $t0,$t0,1
 beqz $t0,label_75_ELSE
 la $t0,a32
@@ -516,17 +516,17 @@ lb $t0,0($t0)
 sb $t0,0($t2)
 j label_78_END
 label_77_ELSE:
-li $t1,0
-li $t0,1
-sub $t0,$t1,$t0
+li $t0,0
+li $t1,1
+sub $t0,$t0,$t1
 addi $t1,$t0,0
 label_78_END:
 j label_80_END
 label_75_ELSE:
 addiu $t0,$fp,12
-lw $t0,0($t0)
-li $t2,3
-xor $t0,$t0,$t2
+lw $t2,0($t0)
+li $t0,3
+xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_79_ELSE
 la $t0,a33
@@ -542,9 +542,9 @@ lb $t0,0($t0)
 sb $t0,0($t2)
 j label_82_END
 label_81_ELSE:
-li $t0,0
-li $t1,1
-sub $t0,$t0,$t1
+li $t1,0
+li $t0,1
+sub $t0,$t1,$t0
 addi $t1,$t0,0
 label_82_END:
 j label_80_END
@@ -562,11 +562,11 @@ sw $t1,0($t0)
 j set_epilogue
 set_epilogue:
 # Original instruction: popRegisters
+lw $t2,0($sp)
+addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
-addiu $sp,$sp,4
-lw $t2,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -585,15 +585,15 @@ addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
-la $t1,label_10_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_10_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
-la $t1,label_11_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_11_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -636,15 +636,15 @@ addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
 la $t0,a13
-lb $t1,0($t0)
-addiu $t0,$sp,-4
-sb $t1,0($t0)
+lb $t0,0($t0)
+addiu $t1,$sp,-4
+sb $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_c
 addiu $sp,$sp,4
-la $t1,label_15_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_15_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -680,9 +680,9 @@ sb $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_c
 addiu $sp,$sp,4
-la $t0,label_14_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_14_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -693,9 +693,9 @@ sb $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_c
 addiu $sp,$sp,4
-la $t1,label_15_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_15_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -705,9 +705,9 @@ sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
-la $t0,label_17_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_17_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -731,9 +731,9 @@ sb $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_c
 addiu $sp,$sp,4
-la $t0,label_14_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_14_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -756,9 +756,9 @@ sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
-la $t1,label_10_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_10_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -828,9 +828,9 @@ sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
 addiu $t0,$fp,8
-lw $t0,0($t0)
-li $t1,1
-xor $t0,$t0,$t1
+lw $t1,0($t0)
+li $t0,1
+xor $t0,$t1,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_92_ELSE
 li $t1,2
@@ -839,9 +839,9 @@ sw $t1,0($t0)
 j label_93_END
 j label_93_END
 label_92_ELSE:
-li $t1,1
-addi $t0,$fp,4
-sw $t1,0($t0)
+li $t0,1
+addi $t1,$fp,4
+sw $t0,0($t1)
 j label_93_END
 label_93_END:
 # Original instruction: popRegisters
@@ -865,9 +865,9 @@ sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
 addiu $t0,$fp,8
-lw $t0,0($t0)
-li $t1,1
-xor $t0,$t0,$t1
+lw $t1,0($t0)
+li $t0,1
+xor $t0,$t1,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_96_ELSE
 li $t1,88
@@ -900,29 +900,29 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t2,0($sp)
-addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t4,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
 addiu $sp,$sp,-4
+sw $t2,0($sp)
+addiu $sp,$sp,-4
 sw $t3,0($sp)
 li $t0,1
 addi $t1,$t0,0
 beqz $t1,label_100_next
 label_102_body:
-la $t0,label_18_str
-addiu $t2,$sp,-4
-sw $t0,0($t2)
+la $t2,label_18_str
+addiu $t0,$sp,-4
+sw $t2,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
 addiu $t0,$fp,4
-lw $t2,0($t0)
-addiu $t0,$sp,-4
-sw $t2,0($t0)
+lw $t0,0($t0)
+addiu $t2,$sp,-4
+sw $t0,0($t2)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
@@ -945,9 +945,9 @@ lw $t0,0($t0)
 addiu $sp,$sp,4
 addi $t3,$t0,0
 addiu $t0,$fp,4
-lw $t2,0($t0)
-addiu $t0,$sp,-4
-sw $t2,0($t0)
+lw $t0,0($t0)
+addiu $t2,$sp,-4
+sw $t0,0($t2)
 addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 jal get_mark
@@ -1002,13 +1002,13 @@ label_100_next:
 # Original instruction: popRegisters
 lw $t3,0($sp)
 addiu $sp,$sp,4
+lw $t2,0($sp)
+addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t4,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
-addiu $sp,$sp,4
-lw $t2,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -1023,11 +1023,11 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t2,0($sp)
-addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t2,0($sp)
 li $t0,0
 addi $t1,$t0,0
 la $t0,a11
@@ -1212,11 +1212,11 @@ sw $t1,0($t0)
 j won_epilogue
 won_epilogue:
 # Original instruction: popRegisters
+lw $t2,0($sp)
+addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
-addiu $sp,$sp,4
-lw $t2,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -1253,11 +1253,11 @@ jal get_mark
 addi $t0,$sp,0
 lb $t0,0($t0)
 addiu $sp,$sp,8
-addi $t0,$t0,0
+addi $t3,$t0,0
 jal printGame
 addiu $sp,$sp,0
-addiu $t3,$sp,-4
-sb $t0,0($t3)
+addiu $t0,$sp,-4
+sb $t3,0($t0)
 addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 jal won
@@ -1283,9 +1283,9 @@ li $t3,1
 xor $t0,$t0,$t3
 sltiu $t0,$t0,1
 beqz $t0,label_142_ELSE
-la $t0,label_23_str
-addiu $t2,$sp,-4
-sw $t0,0($t2)
+la $t2,label_23_str
+addiu $t0,$sp,-4
+sw $t2,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4

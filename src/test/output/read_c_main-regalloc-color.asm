@@ -10,9 +10,9 @@ jal read_c
 addi $t0,$sp,0
 lb $t0,0($t0)
 addiu $sp,$sp,4
-addi $t1,$t0,0
-addiu $t0,$sp,-4
-sb $t1,0($t0)
+addi $t0,$t0,0
+addiu $t1,$sp,-4
+sb $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_c
 addiu $sp,$sp,4

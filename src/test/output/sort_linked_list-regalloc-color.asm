@@ -25,14 +25,14 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
+sw $t2,0($sp)
+addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
-addiu $sp,$sp,-4
-sw $t2,0($sp)
-li $t0,8
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+li $t1,8
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 jal mcmalloc
@@ -53,11 +53,11 @@ sw $t2,0($t0)
 j create_node_epilogue
 create_node_epilogue:
 # Original instruction: popRegisters
-lw $t2,0($sp)
-addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t2,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -74,13 +74,13 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t0,0($sp)
-addiu $sp,$sp,-4
-sw $t1,0($sp)
-addiu $sp,$sp,-4
 sw $t3,0($sp)
 addiu $sp,$sp,-4
 sw $t2,0($sp)
+addiu $sp,$sp,-4
+sw $t0,0($sp)
+addiu $sp,$sp,-4
+sw $t1,0($sp)
 addiu $t0,$fp,4
 lw $t1,0($t0)
 addiu $t0,$sp,-4
@@ -133,13 +133,13 @@ addi $t0,$t3,4
 sw $t1,0($t0)
 label_10_END:
 # Original instruction: popRegisters
-lw $t2,0($sp)
-addiu $sp,$sp,4
-lw $t3,0($sp)
-addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t2,0($sp)
+addiu $sp,$sp,4
+lw $t3,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -156,11 +156,11 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
+sw $t2,0($sp)
+addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
-addiu $sp,$sp,-4
-sw $t2,0($sp)
 addiu $t0,$fp,4
 lw $t0,0($t0)
 addi $t2,$t0,0
@@ -177,9 +177,9 @@ sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
-la $t0,label_1_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_1_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -193,19 +193,19 @@ xor $t0,$t2,$t0
 sltu $t0,$zero,$t0
 bnez $t0,label_18_body
 label_16_next:
-la $t0,label_2_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_2_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
 print_list_epilogue:
 # Original instruction: popRegisters
-lw $t2,0($sp)
-addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t2,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -220,15 +220,15 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t0,0($sp)
-addiu $sp,$sp,-4
 sw $t4,0($sp)
-addiu $sp,$sp,-4
-sw $t1,0($sp)
 addiu $sp,$sp,-4
 sw $t3,0($sp)
 addiu $sp,$sp,-4
 sw $t2,0($sp)
+addiu $sp,$sp,-4
+sw $t0,0($sp)
+addiu $sp,$sp,-4
+sw $t1,0($sp)
 addiu $t0,$fp,4
 lw $t0,0($t0)
 lw $t1,0($t0)
@@ -313,15 +313,15 @@ label_28_posttest:
 bnez $t3,label_29_body
 label_27_next:
 # Original instruction: popRegisters
+lw $t1,0($sp)
+addiu $sp,$sp,4
+lw $t0,0($sp)
+addiu $sp,$sp,4
 lw $t2,0($sp)
 addiu $sp,$sp,4
 lw $t3,0($sp)
 addiu $sp,$sp,4
-lw $t1,0($sp)
-addiu $sp,$sp,4
 lw $t4,0($sp)
-addiu $sp,$sp,4
-lw $t0,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -333,9 +333,9 @@ main:
 addiu $fp,$sp,0
 addiu $sp,$sp,-4
 la $t2,null
-li $t0,1
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+li $t1,1
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 jal mcmalloc
@@ -359,9 +359,9 @@ addiu $sp,$sp,8
 addiu $t0,$fp,-4
 addiu $t1,$sp,-4
 sw $t0,0($t1)
-li $t1,3
-addiu $t0,$sp,-8
-sw $t1,0($t0)
+li $t0,3
+addiu $t1,$sp,-8
+sw $t0,0($t1)
 addiu $sp,$sp,-8
 jal insert_end
 addiu $sp,$sp,8
@@ -374,21 +374,21 @@ sw $t0,0($t1)
 addiu $sp,$sp,-8
 jal insert_end
 addiu $sp,$sp,8
-addiu $t0,$fp,-4
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+addiu $t1,$fp,-4
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 li $t1,1
 addiu $t0,$sp,-8
 sw $t1,0($t0)
 addiu $sp,$sp,-8
 jal insert_end
 addiu $sp,$sp,8
-addiu $t1,$fp,-4
-addiu $t0,$sp,-4
-sw $t1,0($t0)
-li $t0,6
-addiu $t1,$sp,-8
+addiu $t0,$fp,-4
+addiu $t1,$sp,-4
 sw $t0,0($t1)
+li $t1,6
+addiu $t0,$sp,-8
+sw $t1,0($t0)
 addiu $sp,$sp,-8
 jal insert_end
 addiu $sp,$sp,8
@@ -405,9 +405,9 @@ sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_list
 addiu $sp,$sp,4
-addiu $t1,$fp,-4
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+addiu $t0,$fp,-4
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal sort_list
 addiu $sp,$sp,4
