@@ -406,7 +406,7 @@ run_test_sem struct_recursive_def_accepted "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem break_outside_loop "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 
 # CodeGen tests
-print_test_name "CodeGen tests"
+print_test_name "CodeGen tests (Uses Naive Register Allocator)"
 # -> build-in functions
 run_test_codegen print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
