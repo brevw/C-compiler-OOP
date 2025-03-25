@@ -12,8 +12,10 @@ public class InterferenceGraph {
 
     public static class Node {
         final Register.Virtual reg;
-        public int degree = 0;
+        int degree = 0;
         private final List<Node> adj = new ArrayList<>();
+        int uses = 0;
+        int defs = 0;
 
         public boolean active = true; // to be used by the graph coloring algorithm
         public Register.Arch archReg = null; // to be used by the graph coloring algorithm
@@ -61,9 +63,22 @@ public class InterferenceGraph {
         // create a node for each virtual register
         virtualRegs.forEach(vr -> nodesMapping.put(vr, new Node(vr)));
 
-        // fill in the adjacencies
+        // fill in the adjacencies and nbr of uses of the registers
         allNodes.forEach(n -> {
             Set<Register.Virtual> live = n.liveOut;
+
+            // update the number of uses of each register
+            n.use().forEach(r -> {
+                Node node = nodesMapping.get(r);
+                ++node.uses;
+            });
+
+            // update the number of defs of each register
+            n.def().ifPresent(r -> {
+                Node node = nodesMapping.get(r);
+                ++node.defs;
+            });
+
 
             // add an edge between all pairs of live variables
             live.forEach(vr1 -> {

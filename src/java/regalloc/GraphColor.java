@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import java.util.function.Function;
 
 import gen.asm.Register;
 
@@ -27,12 +28,14 @@ public class GraphColor {
 
         // keep deactivating nodes with degree less than the number of available colors (registers)
         int graphSize = iGraph.getNodes().size();
+        Function<InterferenceGraph.Node, Float> heuristicCost = n -> (float) (n.uses + n.defs) / (float) (n.degree + 1);
+
         int processedNodes = 0;
         for (; processedNodes < graphSize; ++processedNodes) {
             List<InterferenceGraph.Node> cantidates = iGraph.allActiveNodes().stream().filter(n -> n.degree < availableRegs.size()).toList();
             if (cantidates.size() == 0) {
-                // spill the node with the highest degree
-                InterferenceGraph.Node spillNode = iGraph.allActiveNodes().stream().max((n1, n2) -> Integer.compare(n1.degree, n2.degree)).get();
+                // spill the node with a heuristic that minimizes the cost
+                InterferenceGraph.Node spillNode = iGraph.allActiveNodes().stream().min((n1, n2) -> Float.compare(heuristicCost.apply(n1), heuristicCost.apply(n2))).get();
                 if (!DEBUG_PRINT) {
                     return spillNode.reg;
                 }

@@ -18,6 +18,7 @@ import gen.asm.Label;
 import gen.asm.OpCode;
 import gen.asm.Register;
 import util.CollapseLabels;
+import util.RemoveUselessInstructions;
 import util.Utils;
 
 public class GraphColouringRegAlloc implements AssemblyPass {
@@ -39,6 +40,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
     public AssemblyProgram apply(AssemblyProgram asmProgWithVirtualRegs) {
 
         AssemblyProgram newProg = new CollapseLabels().visit(asmProgWithVirtualRegs);
+        new RemoveUselessInstructions().visit(newProg); // edge case need to remove useless instructions
         boolean isVirtualProg = true;
         HashSet<Label> usedLabels = new HashSet<>();
 
