@@ -33,9 +33,9 @@ jal print_s
 addiu $sp,$sp,4
 addiu $t0,$fp,-8
 addi $t0,$t0,0
-lw $t1,0($t0)
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+lw $t0,0($t0)
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
@@ -53,9 +53,9 @@ jal print_s
 addiu $sp,$sp,4
 addiu $t0,$fp,-8
 addi $t0,$t0,4
-lw $t0,0($t0)
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+lw $t1,0($t0)
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4

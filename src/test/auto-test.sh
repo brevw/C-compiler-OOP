@@ -290,7 +290,7 @@ run_test_regalloc_colour () {
     echo "$stdin" | "$executable_file_path" > "$gcc_exec_output"
 
     # Execute the program
-    gtimeout "$timelimit" java -cp bin Main4 -gen colour "$c_file_path" "$asm_file_path" > /dev/null
+    gtimeout "$timelimit" java -cp bin Main4_promoteVarToReg -gen colour "$c_file_path" "$asm_file_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
     # Check if program timeouts
     if [ $exit_code -eq 124 ]; then
@@ -436,7 +436,7 @@ run_test_codegen sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MA
 run_test_codegen array_inside_struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 
-print_test_name "Register Allocation tests"
+print_test_name "Register Allocation tests (Using a Compiler that Promotes Variables to Registers)"
 # -> build-in functions
 run_test_regalloc_colour  print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour   print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"

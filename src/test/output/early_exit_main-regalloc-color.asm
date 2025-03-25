@@ -4,15 +4,12 @@
 .globl main
 main:
 addiu $fp,$sp,0
-addiu $sp,$sp,-4
-addiu $t0,$fp,-4
-li $t1,1
-sw $t1,0($t0)
+addiu $sp,$sp,0
+li $t0,1
+addi $t0,$t0,0
 j main_epilogue
-addiu $t0,$fp,-4
-lw $t1,0($t0)
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4

@@ -13,7 +13,7 @@ label_79_v25:
 .space 4
 label_234_v92:
 .space 4
-label_88_v26:
+label_89_v26:
 .space 4
 label_167_v64:
 .space 4
@@ -25,9 +25,9 @@ label_157_v58:
 .space 4
 label_177_v68:
 .space 4
-label_152_v56:
+label_148_v56:
 .space 4
-label_173_v63:
+label_174_v63:
 .space 4
 label_107_v37:
 .space 4
@@ -53,13 +53,13 @@ label_131_v47:
 .space 4
 label_82_v27:
 .space 4
-label_151_v54:
+label_152_v54:
 .space 4
-label_75_v20:
+label_76_v20:
 .space 4
 label_184_v72:
 .space 4
-label_125_v43:
+label_126_v43:
 .space 4
 label_73_v23:
 .space 4
@@ -89,7 +89,7 @@ label_66_v19:
 .space 4
 label_256_v102:
 .space 4
-label_174_v65:
+label_170_v65:
 .space 4
 label_230_v91:
 .space 4
@@ -105,7 +105,7 @@ label_47_v12:
 .space 4
 label_136_v49:
 .space 4
-label_224_v88:
+label_220_v88:
 .space 4
 label_243_v98:
 .space 4
@@ -121,11 +121,11 @@ label_128_v41:
 .space 4
 label_56_v9:
 .space 4
-label_126_v45:
+label_122_v45:
 .space 4
-label_245_v95:
+label_246_v95:
 .space 4
-label_76_v22:
+label_72_v22:
 .space 4
 label_236_v94:
 .space 4
@@ -135,7 +135,7 @@ label_86_v29:
 .space 4
 label_199_v77:
 .space 4
-label_89_v28:
+label_85_v28:
 .space 4
 label_41_v8:
 .space 4
@@ -167,7 +167,7 @@ label_28_v1:
 .space 4
 label_229_v90:
 .space 4
-label_246_v97:
+label_242_v97:
 .space 4
 label_142_v53:
 .space 4
@@ -175,11 +175,11 @@ label_113_v40:
 .space 4
 label_202_v74:
 .space 4
-label_54_v13:
+label_50_v13:
 .space 4
-label_186_v69:
+label_187_v69:
 .space 4
-label_187_v71:
+label_183_v71:
 .space 4
 label_64_v17:
 .space 4
@@ -195,7 +195,7 @@ label_192_v61:
 .space 4
 label_116_v42:
 .space 4
-label_53_v11:
+label_54_v11:
 .space 4
 label_104_v31:
 .space 4
@@ -205,7 +205,7 @@ label_34_v0:
 .space 4
 label_91_v24:
 .space 4
-label_223_v86:
+label_224_v86:
 .space 4
 label_44_v10:
 .space 4
@@ -282,7 +282,7 @@ la $t0,label_234_v92
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_88_v26
+la $t0,label_89_v26
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -306,11 +306,11 @@ la $t0,label_177_v68
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_152_v56
+la $t0,label_148_v56
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_173_v63
+la $t0,label_174_v63
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -362,11 +362,11 @@ la $t0,label_82_v27
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_151_v54
+la $t0,label_152_v54
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_75_v20
+la $t0,label_76_v20
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -374,7 +374,7 @@ la $t0,label_184_v72
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_125_v43
+la $t0,label_126_v43
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -434,7 +434,7 @@ la $t0,label_256_v102
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_174_v65
+la $t0,label_170_v65
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -466,7 +466,7 @@ la $t0,label_136_v49
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_224_v88
+la $t0,label_220_v88
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -498,15 +498,15 @@ la $t0,label_56_v9
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_126_v45
+la $t0,label_122_v45
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_245_v95
+la $t0,label_246_v95
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_76_v22
+la $t0,label_72_v22
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -526,7 +526,7 @@ la $t0,label_199_v77
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_89_v28
+la $t0,label_85_v28
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -590,7 +590,7 @@ la $t0,label_229_v90
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_246_v97
+la $t0,label_242_v97
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -606,15 +606,15 @@ la $t0,label_202_v74
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_54_v13
+la $t0,label_50_v13
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_186_v69
+la $t0,label_187_v69
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_187_v71
+la $t0,label_183_v71
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -646,7 +646,7 @@ la $t0,label_116_v42
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_53_v11
+la $t0,label_54_v11
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -666,7 +666,7 @@ la $t0,label_91_v24
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
-la $t0,label_223_v86
+la $t0,label_224_v86
 lw $t0,0($t0)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
@@ -764,7 +764,7 @@ sw $t5,0($t0)
 la $t5,label_44_v10
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_53_v11
+la $t0,label_54_v11
 sw $t4,0($t0)
 # Original instruction: addiu v12,$fp,-8
 addiu $t5,$fp,-8
@@ -774,26 +774,26 @@ sw $t5,0($t0)
 la $t5,label_47_v12
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_54_v13
+la $t0,label_50_v13
 sw $t4,0($t0)
 # Original instruction: li v14,1
 li $t5,1
 la $t0,label_51_v14
 sw $t5,0($t0)
-# Original instruction: mul v13,v13,v14
-la $t3,label_54_v13
-lw $t3,0($t3)
+# Original instruction: mul v9,v13,v14
+la $t5,label_50_v13
+lw $t5,0($t5)
 la $t4,label_51_v14
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_54_v13
+mul $t3,$t5,$t4
+la $t0,label_56_v9
 sw $t3,0($t0)
-# Original instruction: add v9,v11,v13
-la $t5,label_53_v11
-lw $t5,0($t5)
-la $t4,label_54_v13
+# Original instruction: add v9,v9,v11
+la $t3,label_56_v9
+lw $t3,0($t3)
+la $t4,label_54_v11
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_56_v9
 sw $t3,0($t0)
 # Original instruction: lb v15,0(v9)
@@ -833,7 +833,7 @@ sw $t5,0($t0)
 la $t5,label_66_v19
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_75_v20
+la $t0,label_76_v20
 sw $t4,0($t0)
 # Original instruction: addiu v21,$fp,-12
 addiu $t5,$fp,-12
@@ -843,26 +843,26 @@ sw $t5,0($t0)
 la $t5,label_69_v21
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_76_v22
+la $t0,label_72_v22
 sw $t4,0($t0)
 # Original instruction: li v23,1
 li $t5,1
 la $t0,label_73_v23
 sw $t5,0($t0)
-# Original instruction: mul v22,v22,v23
-la $t3,label_76_v22
-lw $t3,0($t3)
+# Original instruction: mul v18,v22,v23
+la $t5,label_72_v22
+lw $t5,0($t5)
 la $t4,label_73_v23
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_76_v22
+mul $t3,$t5,$t4
+la $t0,label_94_v18
 sw $t3,0($t0)
-# Original instruction: add v18,v20,v22
-la $t5,label_75_v20
-lw $t5,0($t5)
-la $t4,label_76_v22
+# Original instruction: add v18,v18,v20
+la $t3,label_94_v18
+lw $t3,0($t3)
+la $t4,label_76_v20
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_94_v18
 sw $t3,0($t0)
 # Original instruction: addiu v25,$fp,12
@@ -873,7 +873,7 @@ sw $t5,0($t0)
 la $t5,label_79_v25
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_88_v26
+la $t0,label_89_v26
 sw $t4,0($t0)
 # Original instruction: addiu v27,$fp,-8
 addiu $t5,$fp,-8
@@ -883,26 +883,26 @@ sw $t5,0($t0)
 la $t5,label_82_v27
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_89_v28
+la $t0,label_85_v28
 sw $t4,0($t0)
 # Original instruction: li v29,1
 li $t5,1
 la $t0,label_86_v29
 sw $t5,0($t0)
-# Original instruction: mul v28,v28,v29
-la $t3,label_89_v28
-lw $t3,0($t3)
+# Original instruction: mul v24,v28,v29
+la $t5,label_85_v28
+lw $t5,0($t5)
 la $t4,label_86_v29
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_89_v28
+mul $t3,$t5,$t4
+la $t0,label_91_v24
 sw $t3,0($t0)
-# Original instruction: add v24,v26,v28
-la $t5,label_88_v26
-lw $t5,0($t5)
-la $t4,label_89_v28
+# Original instruction: add v24,v24,v26
+la $t3,label_91_v24
+lw $t3,0($t3)
+la $t4,label_89_v26
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_91_v24
 sw $t3,0($t0)
 # Original instruction: lb v30,0(v24)
@@ -990,7 +990,7 @@ sw $t5,0($t0)
 la $t5,label_116_v42
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_125_v43
+la $t0,label_126_v43
 sw $t4,0($t0)
 # Original instruction: addiu v44,$fp,-8
 addiu $t5,$fp,-8
@@ -1000,26 +1000,26 @@ sw $t5,0($t0)
 la $t5,label_119_v44
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_126_v45
+la $t0,label_122_v45
 sw $t4,0($t0)
 # Original instruction: li v46,1
 li $t5,1
 la $t0,label_123_v46
 sw $t5,0($t0)
-# Original instruction: mul v45,v45,v46
-la $t3,label_126_v45
-lw $t3,0($t3)
+# Original instruction: mul v41,v45,v46
+la $t5,label_122_v45
+lw $t5,0($t5)
 la $t4,label_123_v46
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_126_v45
+mul $t3,$t5,$t4
+la $t0,label_128_v41
 sw $t3,0($t0)
-# Original instruction: add v41,v43,v45
-la $t5,label_125_v43
-lw $t5,0($t5)
-la $t4,label_126_v45
+# Original instruction: add v41,v41,v43
+la $t3,label_128_v41
+lw $t3,0($t3)
+la $t4,label_126_v43
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_128_v41
 sw $t3,0($t0)
 # Original instruction: lb v47,0(v41)
@@ -1073,7 +1073,7 @@ sw $t5,0($t0)
 la $t5,label_142_v53
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_151_v54
+la $t0,label_152_v54
 sw $t4,0($t0)
 # Original instruction: addiu v55,$fp,-8
 addiu $t5,$fp,-8
@@ -1083,26 +1083,26 @@ sw $t5,0($t0)
 la $t5,label_145_v55
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_152_v56
+la $t0,label_148_v56
 sw $t4,0($t0)
 # Original instruction: li v57,1
 li $t5,1
 la $t0,label_149_v57
 sw $t5,0($t0)
-# Original instruction: mul v56,v56,v57
-la $t3,label_152_v56
-lw $t3,0($t3)
+# Original instruction: mul v52,v56,v57
+la $t5,label_148_v56
+lw $t5,0($t5)
 la $t4,label_149_v57
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_152_v56
+mul $t3,$t5,$t4
+la $t0,label_154_v52
 sw $t3,0($t0)
-# Original instruction: add v52,v54,v56
-la $t5,label_151_v54
-lw $t5,0($t5)
-la $t4,label_152_v56
+# Original instruction: add v52,v52,v54
+la $t3,label_154_v52
+lw $t3,0($t3)
+la $t4,label_152_v54
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_154_v52
 sw $t3,0($t0)
 # Original instruction: lb v58,0(v52)
@@ -1142,7 +1142,7 @@ sw $t5,0($t0)
 la $t5,label_164_v62
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_173_v63
+la $t0,label_174_v63
 sw $t4,0($t0)
 # Original instruction: addiu v64,$fp,-12
 addiu $t5,$fp,-12
@@ -1152,26 +1152,26 @@ sw $t5,0($t0)
 la $t5,label_167_v64
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_174_v65
+la $t0,label_170_v65
 sw $t4,0($t0)
 # Original instruction: li v66,1
 li $t5,1
 la $t0,label_171_v66
 sw $t5,0($t0)
-# Original instruction: mul v65,v65,v66
-la $t3,label_174_v65
-lw $t3,0($t3)
+# Original instruction: mul v61,v65,v66
+la $t5,label_170_v65
+lw $t5,0($t5)
 la $t4,label_171_v66
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_174_v65
+mul $t3,$t5,$t4
+la $t0,label_192_v61
 sw $t3,0($t0)
-# Original instruction: add v61,v63,v65
-la $t5,label_173_v63
-lw $t5,0($t5)
-la $t4,label_174_v65
+# Original instruction: add v61,v61,v63
+la $t3,label_192_v61
+lw $t3,0($t3)
+la $t4,label_174_v63
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_192_v61
 sw $t3,0($t0)
 # Original instruction: addiu v68,$fp,8
@@ -1182,7 +1182,7 @@ sw $t5,0($t0)
 la $t5,label_177_v68
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_186_v69
+la $t0,label_187_v69
 sw $t4,0($t0)
 # Original instruction: addiu v70,$fp,-8
 addiu $t5,$fp,-8
@@ -1192,26 +1192,26 @@ sw $t5,0($t0)
 la $t5,label_180_v70
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_187_v71
+la $t0,label_183_v71
 sw $t4,0($t0)
 # Original instruction: li v72,1
 li $t5,1
 la $t0,label_184_v72
 sw $t5,0($t0)
-# Original instruction: mul v71,v71,v72
-la $t3,label_187_v71
-lw $t3,0($t3)
+# Original instruction: mul v67,v71,v72
+la $t5,label_183_v71
+lw $t5,0($t5)
 la $t4,label_184_v72
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_187_v71
+mul $t3,$t5,$t4
+la $t0,label_189_v67
 sw $t3,0($t0)
-# Original instruction: add v67,v69,v71
-la $t5,label_186_v69
-lw $t5,0($t5)
-la $t4,label_187_v71
+# Original instruction: add v67,v67,v69
+la $t3,label_189_v67
+lw $t3,0($t3)
+la $t4,label_187_v69
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_189_v67
 sw $t3,0($t0)
 # Original instruction: lb v73,0(v67)
@@ -1299,7 +1299,7 @@ sw $t5,0($t0)
 la $t5,label_214_v85
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_223_v86
+la $t0,label_224_v86
 sw $t4,0($t0)
 # Original instruction: addiu v87,$fp,-8
 addiu $t5,$fp,-8
@@ -1309,26 +1309,26 @@ sw $t5,0($t0)
 la $t5,label_217_v87
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_224_v88
+la $t0,label_220_v88
 sw $t4,0($t0)
 # Original instruction: li v89,1
 li $t5,1
 la $t0,label_221_v89
 sw $t5,0($t0)
-# Original instruction: mul v88,v88,v89
-la $t3,label_224_v88
-lw $t3,0($t3)
+# Original instruction: mul v84,v88,v89
+la $t5,label_220_v88
+lw $t5,0($t5)
 la $t4,label_221_v89
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_224_v88
+mul $t3,$t5,$t4
+la $t0,label_226_v84
 sw $t3,0($t0)
-# Original instruction: add v84,v86,v88
-la $t5,label_223_v86
-lw $t5,0($t5)
-la $t4,label_224_v88
+# Original instruction: add v84,v84,v86
+la $t3,label_226_v84
+lw $t3,0($t3)
+la $t4,label_224_v86
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_226_v84
 sw $t3,0($t0)
 # Original instruction: lb v90,0(v84)
@@ -1368,7 +1368,7 @@ sw $t5,0($t0)
 la $t5,label_236_v94
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_245_v95
+la $t0,label_246_v95
 sw $t4,0($t0)
 # Original instruction: addiu v96,$fp,-12
 addiu $t5,$fp,-12
@@ -1378,26 +1378,26 @@ sw $t5,0($t0)
 la $t5,label_239_v96
 lw $t5,0($t5)
 lw $t4,0($t5)
-la $t0,label_246_v97
+la $t0,label_242_v97
 sw $t4,0($t0)
 # Original instruction: li v98,1
 li $t5,1
 la $t0,label_243_v98
 sw $t5,0($t0)
-# Original instruction: mul v97,v97,v98
-la $t3,label_246_v97
-lw $t3,0($t3)
+# Original instruction: mul v93,v97,v98
+la $t5,label_242_v97
+lw $t5,0($t5)
 la $t4,label_243_v98
 lw $t4,0($t4)
-mul $t3,$t3,$t4
-la $t0,label_246_v97
+mul $t3,$t5,$t4
+la $t0,label_250_v93
 sw $t3,0($t0)
-# Original instruction: add v93,v95,v97
-la $t5,label_245_v95
-lw $t5,0($t5)
-la $t4,label_246_v97
+# Original instruction: add v93,v93,v95
+la $t3,label_250_v93
+lw $t3,0($t3)
+la $t4,label_246_v95
 lw $t4,0($t4)
-add $t3,$t5,$t4
+add $t3,$t3,$t4
 la $t0,label_250_v93
 sw $t3,0($t0)
 # Original instruction: li v99,0
@@ -1452,7 +1452,7 @@ la $t1,label_44_v10
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_223_v86
+la $t1,label_224_v86
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1472,7 +1472,7 @@ la $t1,label_104_v31
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_53_v11
+la $t1,label_54_v11
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1504,15 +1504,15 @@ la $t1,label_64_v17
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_187_v71
+la $t1,label_183_v71
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_186_v69
+la $t1,label_187_v69
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_54_v13
+la $t1,label_50_v13
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1528,7 +1528,7 @@ la $t1,label_142_v53
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_246_v97
+la $t1,label_242_v97
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1592,7 +1592,7 @@ la $t1,label_41_v8
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_89_v28
+la $t1,label_85_v28
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1612,15 +1612,15 @@ la $t1,label_236_v94
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_76_v22
+la $t1,label_72_v22
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_245_v95
+la $t1,label_246_v95
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_126_v45
+la $t1,label_122_v45
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1652,7 +1652,7 @@ la $t1,label_243_v98
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_224_v88
+la $t1,label_220_v88
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1684,7 +1684,7 @@ la $t1,label_230_v91
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_174_v65
+la $t1,label_170_v65
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1744,7 +1744,7 @@ la $t1,label_73_v23
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_125_v43
+la $t1,label_126_v43
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1752,11 +1752,11 @@ la $t1,label_184_v72
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_75_v20
+la $t1,label_76_v20
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_151_v54
+la $t1,label_152_v54
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1808,11 +1808,11 @@ la $t1,label_107_v37
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_173_v63
+la $t1,label_174_v63
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_152_v56
+la $t1,label_148_v56
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
@@ -1836,7 +1836,7 @@ la $t1,label_167_v64
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4
-la $t1,label_88_v26
+la $t1,label_89_v26
 sw $t0,0($t1)
 lw $t0,0($sp)
 addiu $sp,$sp,4

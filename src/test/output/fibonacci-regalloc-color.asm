@@ -13,30 +13,25 @@ label_2_str:
 .globl main
 main:
 addiu $fp,$sp,0
-addiu $sp,$sp,-24
-addiu $t1,$fp,-4
+addiu $sp,$sp,0
 addiu $sp,$sp,-4
 jal read_i
 addi $t0,$sp,0
 lw $t0,0($t0)
 addiu $sp,$sp,4
-sw $t0,0($t1)
-addiu $t0,$fp,-8
-li $t1,0
-sw $t1,0($t0)
-addiu $t0,$fp,-12
-li $t1,1
-sw $t1,0($t0)
+addi $t2,$t0,0
+li $t0,0
+addi $t3,$t0,0
+li $t0,1
+addi $t4,$t0,0
 la $t1,label_0_str
 addiu $t0,$sp,-4
 sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
-addiu $t0,$fp,-4
-lw $t1,0($t0)
 addiu $t0,$sp,-4
-sw $t1,0($t0)
+sw $t2,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
@@ -46,46 +41,23 @@ sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
-addiu $t1,$fp,-20
 li $t0,0
-sw $t0,0($t1)
-addiu $t0,$fp,-20
-lw $t1,0($t0)
-addiu $t0,$fp,-4
-lw $t0,0($t0)
-slt $t0,$t1,$t0
+addi $t5,$t0,0
+slt $t0,$t5,$t2
 beqz $t0,label_7_next
 label_9_body:
-addiu $t0,$fp,-20
-lw $t1,0($t0)
 li $t0,1
-slt $t0,$t0,$t1
+slt $t0,$t0,$t5
 xori $t0,$t0,1
 beqz $t0,label_10_ELSE
-addiu $t1,$fp,-16
-addiu $t0,$fp,-20
-lw $t0,0($t0)
-sw $t0,0($t1)
+addi $t0,$t5,0
 j label_11_END
 label_10_ELSE:
-addiu $t2,$fp,-16
-addiu $t0,$fp,-8
-lw $t1,0($t0)
-addiu $t0,$fp,-12
-lw $t0,0($t0)
-add $t0,$t1,$t0
-sw $t0,0($t2)
-addiu $t1,$fp,-8
-addiu $t0,$fp,-12
-lw $t0,0($t0)
-sw $t0,0($t1)
-addiu $t1,$fp,-12
-addiu $t0,$fp,-16
-lw $t0,0($t0)
-sw $t0,0($t1)
+add $t0,$t3,$t4
+addi $t0,$t0,0
+addi $t3,$t4,0
+addi $t4,$t0,0
 label_11_END:
-addiu $t0,$fp,-16
-lw $t0,0($t0)
 addiu $t1,$sp,-4
 sw $t0,0($t1)
 addiu $sp,$sp,-4
@@ -97,21 +69,13 @@ sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
-addiu $t2,$fp,-20
-addiu $t0,$fp,-20
-lw $t1,0($t0)
 li $t0,1
-add $t0,$t1,$t0
-sw $t0,0($t2)
+add $t0,$t5,$t0
+addi $t5,$t0,0
 label_8_posttest:
-addiu $t0,$fp,-20
-lw $t1,0($t0)
-addiu $t0,$fp,-4
-lw $t0,0($t0)
-slt $t0,$t1,$t0
+slt $t0,$t5,$t2
 bnez $t0,label_9_body
 label_7_next:
-main_epilogue:
 li $v0,10
 syscall
 
