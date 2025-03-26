@@ -1,43 +1,58 @@
 .data
 
 .text
+add:
+addiu $sp,$sp,-4
+sw $fp,0($sp)
+addi $fp,$sp,0
+addiu $sp,$sp,0
+# Original instruction: pushRegisters
+addiu $sp,$sp,-4
+sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t0,0($sp)
+addiu $t0,$fp,12
+lw $t1,0($t0)
+addiu $t0,$fp,8
+lw $t0,0($t0)
+add $t1,$t1,$t0
+addi $t0,$fp,4
+sw $t1,0($t0)
+j add_epilogue
+add_epilogue:
+# Original instruction: popRegisters
+lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t1,0($sp)
+addiu $sp,$sp,4
+addiu $sp,$fp,4
+lw $fp,0($fp)
+jr $ra
+
+.text
 .globl main
 main:
 addiu $fp,$sp,0
 addiu $sp,$sp,0
-li $t0,104
-addi $t3,$t0,0
-li $t0,101
-addi $t1,$t0,0
-li $t0,108
+li $t0,1
 addi $t2,$t0,0
-li $t0,111
-addi $t4,$t0,0
+li $t0,2
+addi $t1,$t0,0
 addiu $t0,$sp,-4
-sb $t3,0($t0)
+sw $t2,0($t0)
+addiu $t0,$sp,-8
+sw $t1,0($t0)
+addiu $sp,$sp,-8
 addiu $sp,$sp,-4
-jal print_c
-addiu $sp,$sp,4
+jal add
+addi $t0,$sp,0
+lw $t0,0($t0)
+addiu $sp,$sp,12
+addi $t1,$t0,0
 addiu $t0,$sp,-4
-sb $t1,0($t0)
+sw $t1,0($t0)
 addiu $sp,$sp,-4
-jal print_c
-addiu $sp,$sp,4
-addiu $t0,$sp,-4
-sb $t2,0($t0)
-addiu $sp,$sp,-4
-jal print_c
-addiu $sp,$sp,4
-li $t1,108
-addiu $t0,$sp,-4
-sb $t1,0($t0)
-addiu $sp,$sp,-4
-jal print_c
-addiu $sp,$sp,4
-addiu $t0,$sp,-4
-sb $t4,0($t0)
-addiu $sp,$sp,-4
-jal print_c
+jal print_i
 addiu $sp,$sp,4
 main_epilogue:
 li $v0,10

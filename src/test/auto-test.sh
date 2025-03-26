@@ -472,4 +472,4 @@ run_test_regalloc_colour correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$E
 
 # toDelete test file (for debugging)
 print_test_name "toDelete"
-run_test_codegen toDelete "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour toDelete "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"

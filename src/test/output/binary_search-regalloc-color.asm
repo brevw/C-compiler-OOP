@@ -15,24 +15,24 @@ main:
 addiu $fp,$sp,0
 addiu $sp,$sp,-40
 li $t0,0
-addi $t2,$t0,0
+addi $t3,$t0,0
 li $t0,10
-slt $t0,$t2,$t0
+slt $t0,$t3,$t0
 beqz $t0,label_4_next
 label_6_body:
-addiu $t0,$fp,-40
-li $t1,4
-mul $t1,$t2,$t1
-add $t1,$t1,$t0
+addiu $t1,$fp,-40
+li $t0,4
+mul $t2,$t3,$t0
+add $t2,$t2,$t1
 li $t0,1
-add $t0,$t2,$t0
-sw $t0,0($t1)
+add $t0,$t3,$t0
+sw $t0,0($t2)
 li $t0,1
-add $t0,$t2,$t0
-addi $t2,$t0,0
+add $t0,$t3,$t0
+addi $t3,$t0,0
 label_5_posttest:
 li $t0,10
-slt $t0,$t2,$t0
+slt $t0,$t3,$t0
 bnez $t0,label_6_body
 label_4_next:
 addiu $sp,$sp,-4
@@ -59,9 +59,9 @@ sub $t0,$t0,$t1
 xor $t0,$t2,$t0
 sltiu $t0,$t0,1
 beqz $t0,label_9_ELSE
-la $t0,label_0_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_0_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -78,9 +78,9 @@ sw $t2,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
-la $t0,label_2_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_2_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -96,32 +96,32 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
+sw $t3,0($sp)
+addiu $sp,$sp,-4
+sw $t5,0($sp)
+addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t4,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
 addiu $sp,$sp,-4
-sw $t5,0($sp)
-addiu $sp,$sp,-4
 sw $t2,0($sp)
-addiu $sp,$sp,-4
-sw $t3,0($sp)
 li $t0,0
-addi $t3,$t0,0
-li $t0,9
 addi $t2,$t0,0
-li $t0,0
-li $t1,1
-sub $t0,$t0,$t1
+li $t0,9
+addi $t3,$t0,0
+li $t1,0
+li $t0,1
+sub $t0,$t1,$t0
 addi $t1,$t0,0
-slt $t0,$t2,$t3
+slt $t0,$t3,$t2
 xori $t0,$t0,1
 beqz $t0,label_14_next
 label_16_body:
-add $t0,$t3,$t2
-li $t4,2
-div $t0,$t4
+add $t4,$t2,$t3
+li $t0,2
+div $t4,$t0
 mflo $t0
 addi $t5,$t0,0
 addiu $t4,$fp,12
@@ -151,14 +151,14 @@ slt $t0,$t4,$t0
 beqz $t0,label_19_ELSE
 li $t0,1
 add $t0,$t5,$t0
-addi $t3,$t0,0
+addi $t2,$t0,0
 j label_20_END
 label_19_ELSE:
 li $t0,1
 sub $t0,$t5,$t0
-addi $t2,$t0,0
+addi $t3,$t0,0
 label_20_END:
-slt $t0,$t2,$t3
+slt $t0,$t3,$t2
 xori $t0,$t0,1
 bnez $t0,label_16_body
 label_14_next:
@@ -167,17 +167,17 @@ sw $t1,0($t0)
 j binary_search_epilogue
 binary_search_epilogue:
 # Original instruction: popRegisters
-lw $t3,0($sp)
-addiu $sp,$sp,4
 lw $t2,0($sp)
-addiu $sp,$sp,4
-lw $t5,0($sp)
 addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t4,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t5,0($sp)
+addiu $sp,$sp,4
+lw $t3,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)

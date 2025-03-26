@@ -19,19 +19,19 @@ sw $ra,0($sp)
 addiu $sp,$sp,-10000
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t3,0($sp)
-addiu $sp,$sp,-4
-sw $t5,0($sp)
-addiu $sp,$sp,-4
 sw $t1,0($sp)
-addiu $sp,$sp,-4
-sw $t2,0($sp)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
-sw $t4,0($sp)
+sw $t3,0($sp)
 addiu $sp,$sp,-4
 sw $t6,0($sp)
+addiu $sp,$sp,-4
+sw $t2,0($sp)
+addiu $sp,$sp,-4
+sw $t5,0($sp)
+addiu $sp,$sp,-4
+sw $t4,0($sp)
 li $t0,0
 addi $t1,$t0,0
 addiu $t0,$fp,4
@@ -58,10 +58,10 @@ label_12_:
 li $t0,1
 label_13_:
 beqz $t0,label_10_ELSE
-addiu $t0,$fp,-10004
-li $t3,200
-mul $t4,$t1,$t3
-add $t4,$t4,$t0
+addiu $t3,$fp,-10004
+li $t0,200
+mul $t4,$t1,$t0
+add $t4,$t4,$t3
 li $t0,4
 mul $t3,$t2,$t0
 add $t3,$t3,$t4
@@ -90,9 +90,9 @@ add $t0,$t0,$t6
 lw $t6,0($t0)
 addiu $t5,$fp,-10004
 li $t0,1
-sub $t0,$t1,$t0
-li $t3,200
-mul $t3,$t0,$t3
+sub $t3,$t1,$t0
+li $t0,200
+mul $t3,$t3,$t0
 add $t3,$t3,$t5
 li $t0,4
 mul $t0,$t2,$t0
@@ -131,13 +131,13 @@ slt $t0,$t1,$t2
 xori $t0,$t0,1
 beqz $t0,label_17_next
 label_19_body:
-addiu $t0,$fp,-10004
-li $t3,200
-mul $t3,$t1,$t3
-add $t3,$t3,$t0
+addiu $t3,$fp,-10004
+li $t0,200
+mul $t4,$t1,$t0
+add $t4,$t4,$t3
 li $t0,4
 mul $t0,$t2,$t0
-add $t0,$t0,$t3
+add $t0,$t0,$t4
 lw $t3,0($t0)
 addiu $t0,$sp,-4
 sw $t3,0($t0)
@@ -158,9 +158,9 @@ slt $t0,$t1,$t2
 xori $t0,$t0,1
 bnez $t0,label_19_body
 label_17_next:
-la $t0,label_1_str
-addiu $t2,$sp,-4
-sw $t0,0($t2)
+la $t2,label_1_str
+addiu $t0,$sp,-4
+sw $t2,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -174,19 +174,19 @@ slt $t0,$t1,$t0
 bnez $t0,label_16_body
 label_14_next:
 # Original instruction: popRegisters
-lw $t6,0($sp)
-addiu $sp,$sp,4
 lw $t4,0($sp)
-addiu $sp,$sp,4
-lw $t0,0($sp)
-addiu $sp,$sp,4
-lw $t2,0($sp)
-addiu $sp,$sp,4
-lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t5,0($sp)
 addiu $sp,$sp,4
+lw $t2,0($sp)
+addiu $sp,$sp,4
+lw $t6,0($sp)
+addiu $sp,$sp,4
 lw $t3,0($sp)
+addiu $sp,$sp,4
+lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -198,9 +198,9 @@ jr $ra
 main:
 addiu $fp,$sp,0
 addiu $sp,$sp,0
-la $t1,label_2_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_2_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4

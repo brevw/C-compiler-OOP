@@ -25,9 +25,9 @@ j main_epilogue
 label_2_END:
 addiu $t0,$sp,-4
 sw $t2,0($t0)
-addiu $t1,$fp,-128
-addiu $t0,$sp,-8
-sw $t1,0($t0)
+addiu $t0,$fp,-128
+addiu $t1,$sp,-8
+sw $t0,0($t1)
 addiu $t0,$fp,-132
 addiu $t1,$sp,-12
 sw $t0,0($t1)
@@ -38,9 +38,9 @@ addiu $t1,$fp,-128
 addiu $t0,$sp,-4
 sw $t1,0($t0)
 addiu $t0,$fp,-132
-lw $t0,0($t0)
-addiu $t1,$sp,-8
-sw $t0,0($t1)
+lw $t1,0($t0)
+addiu $t0,$sp,-8
+sw $t1,0($t0)
 addiu $sp,$sp,-8
 jal print_binary
 addiu $sp,$sp,8
@@ -56,27 +56,27 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t1,0($sp)
-addiu $sp,$sp,-4
 sw $t3,0($sp)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
+sw $t1,0($sp)
+addiu $sp,$sp,-4
 sw $t2,0($sp)
 addiu $t0,$fp,4
-lw $t1,0($t0)
-li $t0,0
-sw $t0,0($t1)
+lw $t0,0($t0)
+li $t1,0
+sw $t1,0($t0)
 addiu $t0,$fp,12
-lw $t1,0($t0)
-li $t0,0
-slt $t0,$t0,$t1
+lw $t0,0($t0)
+li $t1,0
+slt $t0,$t1,$t0
 beqz $t0,label_7_next
 label_9_body:
 addiu $t0,$fp,12
-lw $t1,0($t0)
-li $t0,2
-div $t1,$t0
+lw $t0,0($t0)
+li $t1,2
+div $t0,$t1
 mfhi $t0
 addi $t2,$t0,0
 addiu $t3,$fp,8
@@ -99,25 +99,25 @@ addiu $t0,$fp,4
 lw $t2,0($t0)
 addiu $t0,$fp,4
 lw $t0,0($t0)
-lw $t1,0($t0)
-li $t0,1
-add $t0,$t1,$t0
+lw $t0,0($t0)
+li $t1,1
+add $t0,$t0,$t1
 sw $t0,0($t2)
 label_8_posttest:
 addiu $t0,$fp,12
-lw $t1,0($t0)
-li $t0,0
-slt $t0,$t0,$t1
+lw $t0,0($t0)
+li $t1,0
+slt $t0,$t1,$t0
 bnez $t0,label_9_body
 label_7_next:
 # Original instruction: popRegisters
 lw $t2,0($sp)
 addiu $sp,$sp,4
+lw $t1,0($sp)
+addiu $sp,$sp,4
 lw $t0,0($sp)
 addiu $sp,$sp,4
 lw $t3,0($sp)
-addiu $sp,$sp,4
-lw $t1,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -133,15 +133,15 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t1,0($sp)
-addiu $sp,$sp,-4
 sw $t0,0($sp)
+addiu $sp,$sp,-4
+sw $t1,0($sp)
 addiu $sp,$sp,-4
 sw $t2,0($sp)
 addiu $t0,$fp,4
-lw $t1,0($t0)
-li $t0,1
-sub $t0,$t1,$t0
+lw $t0,0($t0)
+li $t1,1
+sub $t0,$t0,$t1
 addi $t2,$t0,0
 li $t0,0
 slt $t0,$t2,$t0
@@ -171,9 +171,9 @@ label_11_next:
 # Original instruction: popRegisters
 lw $t2,0($sp)
 addiu $sp,$sp,4
-lw $t0,0($sp)
-addiu $sp,$sp,4
 lw $t1,0($sp)
+addiu $sp,$sp,4
+lw $t0,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
