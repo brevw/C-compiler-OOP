@@ -31,7 +31,7 @@ public class RemoveUselessInstructions {
                                 if (registerUsed.containsKey(u)) {
                                     registerUsed.put( (Register.Virtual) u, registerUsed.get(u) + 1);
                                 } else {
-                                    throw new AssertionError("Register not defined: " + u);
+                                    registerUsed.put( (Register.Virtual) u, 1);
                                 }
                             }
                         });
