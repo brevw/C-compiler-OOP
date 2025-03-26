@@ -82,6 +82,40 @@ public class CFGraph {
         this.asmProgram = asmProgram;
     }
 
+    // can only be called after liveness analysis
+    public ArrayList<Node> GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(){
+        boolean detectChanges = true;
+        ArrayList<Node> entryNodes = null;
+
+        while (detectChanges) {
+            detectChanges = false;
+            // generate graph
+            labelToNode.clear();
+            entryNodes = generateGraph();
+
+            // analyse liveness
+            entryNodes.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e));
+
+            // detect and remove useless instructions
+            ArrayList<Instruction> instructionsToRemove = new ArrayList<>();
+            entryNodes.forEach(entryNode -> {
+                ArrayList<Node> allNodes = Node.getAllNodes(entryNode);
+                allNodes.forEach(node -> {
+                    if (node.instr != null && node.def().isPresent() && !node.liveOut.contains(node.def().get())) {
+                        instructionsToRemove.add(node.instr);
+                    }
+                });
+            });
+
+            // if some instructions were removed, we need to regenerate the graph
+            detectChanges = !instructionsToRemove.isEmpty();
+            asmProgram.textSections.forEach(section -> {
+                section.items.removeAll(instructionsToRemove);
+            });
+        }
+        return entryNodes;
+    }
+
     public ArrayList<Node> generateGraph() {
         ArrayList<Node> entryNodes = new ArrayList<>();
         for (TextSection section : asmProgram.textSections) {

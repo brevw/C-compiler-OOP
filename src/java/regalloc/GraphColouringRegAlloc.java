@@ -18,7 +18,6 @@ import gen.asm.Label;
 import gen.asm.OpCode;
 import gen.asm.Register;
 import util.CollapseLabels;
-import util.RemoveUselessInstructions;
 import util.Utils;
 
 public class GraphColouringRegAlloc implements AssemblyPass {
@@ -39,8 +38,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
     @Override
     public AssemblyProgram apply(AssemblyProgram asmProgWithVirtualRegs) {
 
-        AssemblyProgram newProg = new CollapseLabels().visit(asmProgWithVirtualRegs);
-        new RemoveUselessInstructions().visit(newProg); // edge case need to remove useless instructions
+        AssemblyProgram newProg = new CollapseLabels().visit(asmProgWithVirtualRegs); // fix edge case where multiple instructions point to the same instruction
         boolean isVirtualProg = true;
         HashSet<Label> usedLabels = new HashSet<>();
 
@@ -60,10 +58,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         boolean isVirtual = false;
 
         // generate the Control Flow Graph of the program (each function will have its own entry node (dummy node))
-        ArrayList<CFGraph.Node> entryNodes = (new CFGraph(asmProgWithVirtualRegs)).generateGraph();
-
-        // analyse the liveness of the main function
-        entryNodes.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e));
+        ArrayList<CFGraph.Node> entryNodes = (new CFGraph(asmProgWithVirtualRegs)).GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions();
 
         // build the interference graph
         List<InterferenceGraph> iGraphs = entryNodes.stream().map(e -> {
@@ -111,6 +106,8 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                     case AssemblyTextItem it -> newSection.emit(it);
                     case Instruction insn -> {
                         Map<Register, Register> regMap = new HashMap<>();
+
+                        // handle the uses
                         Register.Virtual newVirtualReg = null;
                         boolean usesIsSpilled = false;
                         if (insn.uses().contains(spilledReg)) {
@@ -121,6 +118,8 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                             regMap.put(spilledReg, newVirtualReg);
                         }
                         Register oldDef = insn.def();
+
+                        // hanfle the def
                         Register.Virtual newVirtualReg2 = newVirtualReg;
                         boolean defIsSpilled = oldDef == spilledReg;
                         if (defIsSpilled && !usesIsSpilled) {
