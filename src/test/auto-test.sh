@@ -469,6 +469,7 @@ run_test_regalloc_colour big_program "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "
 run_test_regalloc_colour sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour array_inside_struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour dead_code "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 
 # toDelete test file (for debugging)
 print_test_name "toDelete"

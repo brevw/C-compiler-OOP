@@ -28,14 +28,14 @@ public class GraphColor {
 
         // keep deactivating nodes with degree less than the number of available colors (registers)
         int graphSize = iGraph.getNodes().size();
-        Function<InterferenceGraph.Node, Float> heuristicCost = n -> (float) (n.uses + n.defs) / (float) (n.degree + 1);
+        Function<InterferenceGraph.Node, Integer> heuristicCost = n -> (n.uses + n.defs);
 
         int processedNodes = 0;
         for (; processedNodes < graphSize; ++processedNodes) {
             List<InterferenceGraph.Node> cantidates = iGraph.allActiveNodes().stream().filter(n -> n.degree < availableRegs.size()).toList();
             if (cantidates.size() == 0) {
                 // spill the node with a heuristic that minimizes the cost
-                InterferenceGraph.Node spillNode = iGraph.allActiveNodes().stream().min((n1, n2) -> Float.compare(heuristicCost.apply(n1), heuristicCost.apply(n2))).get();
+                InterferenceGraph.Node spillNode = iGraph.allActiveNodes().stream().min((n1, n2) -> Integer.compare(heuristicCost.apply(n1), heuristicCost.apply(n2))).get();
                 if (!DEBUG_PRINT) {
                     return spillNode.reg;
                 }

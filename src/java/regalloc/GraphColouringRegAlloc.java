@@ -109,9 +109,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
 
                         // handle the uses
                         Register.Virtual newVirtualReg = null;
-                        boolean usesIsSpilled = false;
                         if (insn.uses().contains(spilledReg)) {
-                            usesIsSpilled = true;
                             newVirtualReg = Register.Virtual.create();
                             newSection.emit(OpCode.LA, newVirtualReg, spilledLabel);
                             newSection.emit(OpCode.LW, newVirtualReg, newVirtualReg, 0);
@@ -119,10 +117,10 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                         }
                         Register oldDef = insn.def();
 
-                        // hanfle the def
-                        Register.Virtual newVirtualReg2 = newVirtualReg;
+                        // handle the def
+                        Register.Virtual newVirtualReg2 = null;
                         boolean defIsSpilled = oldDef == spilledReg;
-                        if (defIsSpilled && !usesIsSpilled) {
+                        if (defIsSpilled) {
                             newVirtualReg2 = Register.Virtual.create();
                             regMap.put(spilledReg, newVirtualReg2);
                         }
