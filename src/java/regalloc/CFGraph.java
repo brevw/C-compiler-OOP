@@ -86,6 +86,8 @@ public class CFGraph {
     public ArrayList<Node> GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(){
         boolean detectChanges = true;
         ArrayList<Node> entryNodes = null;
+        // WARNING
+        // System.err.println("Run");
 
         while (detectChanges) {
             detectChanges = false;
@@ -109,9 +111,10 @@ public class CFGraph {
 
             // if some instructions were removed, we need to regenerate the graph
             detectChanges = !instructionsToRemove.isEmpty();
-            if (detectChanges) {
-                System.err.println("Removing " + instructionsToRemove);
-            }
+            // WARNING
+            //if (detectChanges) {
+            //    System.err.println("Removing " + instructionsToRemove);
+            //}
             asmProgram.textSections.forEach(section -> {
                 section.items.removeAll(instructionsToRemove);
             });

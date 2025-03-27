@@ -56,11 +56,11 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t1,0($sp)
+sw $t3,0($sp)
 addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
-sw $t3,0($sp)
+sw $t1,0($sp)
 addiu $sp,$sp,-4
 sw $t2,0($sp)
 addiu $t0,$fp,4
@@ -113,11 +113,11 @@ label_7_next:
 # Original instruction: popRegisters
 lw $t2,0($sp)
 addiu $sp,$sp,4
-lw $t3,0($sp)
+lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
 addiu $sp,$sp,4
-lw $t1,0($sp)
+lw $t3,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -133,9 +133,9 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t1,0($sp)
-addiu $sp,$sp,-4
 sw $t0,0($sp)
+addiu $sp,$sp,-4
+sw $t1,0($sp)
 addiu $sp,$sp,-4
 sw $t2,0($sp)
 addiu $t0,$fp,4
@@ -171,9 +171,9 @@ label_11_next:
 # Original instruction: popRegisters
 lw $t2,0($sp)
 addiu $sp,$sp,4
-lw $t0,0($sp)
-addiu $sp,$sp,4
 lw $t1,0($sp)
+addiu $sp,$sp,4
+lw $t0,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4

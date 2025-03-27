@@ -99,18 +99,17 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         newProg.dataSection.emit(new Directive(Utils.SPACE_DIRECTIVE + Utils.WORD_SIZE));
 
         // rebuild instructions in the text section
+        Map<Register, Register> regMap = new HashMap<>();
         asmProgWithVirtualRegs.textSections.forEach( section -> {
             final AssemblyProgram.TextSection newSection = newProg.emitNewTextSection();
             section.items.forEach(item -> {
                 switch (item) {
                     case AssemblyTextItem it -> newSection.emit(it);
                     case Instruction insn -> {
-                        Map<Register, Register> regMap = new HashMap<>();
 
                         // handle the uses
-                        Register.Virtual newVirtualReg = null;
                         if (insn.uses().contains(spilledReg)) {
-                            newVirtualReg = Register.Virtual.create();
+                            Register.Virtual newVirtualReg = Register.Virtual.create();
                             newSection.emit(OpCode.LA, newVirtualReg, spilledLabel);
                             newSection.emit(OpCode.LW, newVirtualReg, newVirtualReg, 0);
                             regMap.put(spilledReg, newVirtualReg);
@@ -118,21 +117,20 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                         Register oldDef = insn.def();
 
                         // handle the def
-                        Register.Virtual newVirtualReg2 = null;
                         boolean defIsSpilled = oldDef == spilledReg;
-                        if (defIsSpilled) {
-                            newVirtualReg2 = Register.Virtual.create();
-                            regMap.put(spilledReg, newVirtualReg2);
+                        if (defIsSpilled && !regMap.containsKey(spilledReg)) {
+                            regMap.put(spilledReg, Register.Virtual.create());
                         }
                         newSection.emit(insn.rebuild(regMap));
                         if (defIsSpilled) {
                             Register.Virtual newVirtualReg3 = Register.Virtual.create();
                             newSection.emit(OpCode.LA, newVirtualReg3, spilledLabel);
-                            newSection.emit(OpCode.SW, newVirtualReg2, newVirtualReg3, 0);
+                            newSection.emit(OpCode.SW, regMap.get(spilledReg), newVirtualReg3, 0);
                         }
                     }
                     default -> throw new RuntimeException("Unexpected item type: " + item.getClass());
                 }
+                regMap.clear();
             });
         });
 
