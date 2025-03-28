@@ -77,11 +77,15 @@ public class CFGraph {
     }
 
     // can only be called after liveness analysis
-    public ArrayList<Node> GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(){
+    public ArrayList<Node> GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions() {
+        return GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(Integer.MAX_VALUE);
+    }
+    public ArrayList<Node> GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(int maxIterations) {
         boolean detectChanges = true;
         ArrayList<Node> entryNodes = null;
 
-        while (detectChanges) {
+        int iter = 0;
+        while (detectChanges && iter++ < maxIterations) {
             detectChanges = false;
             // generate graph
             labelToNode.clear();

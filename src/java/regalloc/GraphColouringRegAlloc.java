@@ -39,6 +39,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
     public AssemblyProgram apply(AssemblyProgram asmProgWithVirtualRegs) {
 
         AssemblyProgram newProg = new CollapseLabels().visit(asmProgWithVirtualRegs); // fix edge case where multiple instructions point to the same instruction
+        (new CFGraph(newProg)).GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(); // delete dead code
         boolean isVirtualProg = true;
         HashSet<Label> usedLabels = new HashSet<>();
 
@@ -58,7 +59,7 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         boolean isVirtual = false;
 
         // generate the Control Flow Graph of the program (each function will have its own entry node (dummy node))
-        ArrayList<CFGraph.Node> entryNodes = (new CFGraph(asmProgWithVirtualRegs)).GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions();
+        ArrayList<CFGraph.Node> entryNodes = (new CFGraph(asmProgWithVirtualRegs)).GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(1);
 
         // build the interference graph
         List<InterferenceGraph> iGraphs = entryNodes.stream().map(e -> {
