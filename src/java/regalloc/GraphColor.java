@@ -51,6 +51,7 @@ public class GraphColor {
             }
         }
 
+        assert stack.size() == graphSize;
         // assign colors to the nodes on the stack
         while (!stack.isEmpty()) {
             InterferenceGraph.Node node = stack.pop();

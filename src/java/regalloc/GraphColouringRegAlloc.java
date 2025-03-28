@@ -103,10 +103,10 @@ public class GraphColouringRegAlloc implements AssemblyPass {
         asmProgWithVirtualRegs.textSections.forEach( section -> {
             final AssemblyProgram.TextSection newSection = newProg.emitNewTextSection();
             section.items.forEach(item -> {
+                regMap.clear();
                 switch (item) {
                     case AssemblyTextItem it -> newSection.emit(it);
                     case Instruction insn -> {
-
                         // handle the uses
                         if (insn.uses().contains(spilledReg)) {
                             Register.Virtual newVirtualReg = Register.Virtual.create();
@@ -114,10 +114,9 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                             newSection.emit(OpCode.LW, newVirtualReg, newVirtualReg, 0);
                             regMap.put(spilledReg, newVirtualReg);
                         }
-                        Register oldDef = insn.def();
 
                         // handle the def
-                        boolean defIsSpilled = oldDef == spilledReg;
+                        boolean defIsSpilled = insn.def() != null && insn.def() == spilledReg;
                         if (defIsSpilled && !regMap.containsKey(spilledReg)) {
                             regMap.put(spilledReg, Register.Virtual.create());
                         }
@@ -130,7 +129,6 @@ public class GraphColouringRegAlloc implements AssemblyPass {
                     }
                     default -> throw new RuntimeException("Unexpected item type: " + item.getClass());
                 }
-                regMap.clear();
             });
         });
 

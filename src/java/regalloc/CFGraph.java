@@ -15,6 +15,7 @@ import gen.asm.Comment;
 import gen.asm.Directive;
 import gen.asm.Instruction;
 import gen.asm.Label;
+import gen.asm.OpCode;
 import gen.asm.Register;
 import gen.asm.AssemblyProgram.TextSection;
 import gen.asm.Instruction.BinaryBranch;
@@ -41,23 +42,16 @@ public class CFGraph {
         }
 
         public List<Register.Virtual> use() {
-            return instr.uses().stream().filter(Register.Virtual.class::isInstance).map(Register.Virtual.class::cast).toList();
+            return instr.uses().stream().filter(u -> u.isVirtual()).map(Register.Virtual.class::cast).toList();
         }
 
         public Optional<Register.Virtual> def() {
             Register reg = instr.def();
-            return reg instanceof Register.Virtual ? Optional.of((Register.Virtual) reg) : Optional.empty();
+            return reg != null && reg.isVirtual() ? Optional.of((Register.Virtual) reg) : Optional.empty();
         }
 
         public static void resetVisited(Node entryNode) {
-            Node node = entryNode.succ.get(0);
-            while (node != null) {
-                if (node.succ.isEmpty()) {
-                    break;
-                }
-                node.visited = false;
-                node = node.succ.get(0);
-            }
+            getAllNodes(entryNode).forEach(node -> node.visited = false);
         }
 
         public static ArrayList<Node> getAllNodes(Node entryNode) {
@@ -86,8 +80,6 @@ public class CFGraph {
     public ArrayList<Node> GenerateGraphAndLivenessAnalysisWhileDeletingUselessInstructions(){
         boolean detectChanges = true;
         ArrayList<Node> entryNodes = null;
-        // WARNING
-        // System.err.println("Run");
 
         while (detectChanges) {
             detectChanges = false;
@@ -111,10 +103,6 @@ public class CFGraph {
 
             // if some instructions were removed, we need to regenerate the graph
             detectChanges = !instructionsToRemove.isEmpty();
-            // WARNING
-            //if (detectChanges) {
-            //    System.err.println("Removing " + instructionsToRemove);
-            //}
             asmProgram.textSections.forEach(section -> {
                 section.items.removeAll(instructionsToRemove);
             });
@@ -136,30 +124,25 @@ public class CFGraph {
         Node entryNode = generateSubGraphNodesIgnoreControlFlowInstructions(section);
 
         // add edges for control flow instructions
-        Node node = entryNode.succ.size() == 0 ? null : entryNode.succ.get(0);
-        while (node != null) {
+        for (Node node: Node.getAllNodes(entryNode)) {
             if (node.instr instanceof Instruction.ControlFlow cf) {
                 Label targetLabel =
                     switch (cf) {
                         case UnaryBranch ub -> ub.label;
                         case BinaryBranch bb -> bb.label;
-                        case Jump j -> j.label;
+                        case Jump j -> j.opcode == OpCode.JAL ? null : j.label;
                         case JumpRegister jr -> null;
                         default -> throw new AssertionError();
                     };
-                if (targetLabel == null) { // early skip for JumpRegister (does not require an edge)
-                    node = node.succ.size() == 0 ? null : node.succ.get(0);
+                if (targetLabel == null) { // early skip for JR or JAL(does not require an edge)
                     continue;
                 }
                 Node targetNode = labelToNode.get(targetLabel);
-                if (targetNode != null && !node.succ.contains(targetNode)) {
+                if (!node.succ.contains(targetNode)) {
                     targetNode.pred.add(node);
                     node.succ.add(targetNode);
                 }
             }
-
-            // go to next instruction
-            node = node.succ.size() == 0 ? null : node.succ.get(0);
         }
 
         return entryNode;
