@@ -7,7 +7,6 @@ import java.util.Queue;
 import java.util.Set;
 
 import gen.asm.Register;
-import regalloc.CFGraph.Node;
 
 public class LivenessAnalysis {
 
@@ -16,8 +15,17 @@ public class LivenessAnalysis {
 
     // analyse only one connected component
     public void analyseLiveness(CFGraph.Node entryNode) {
-        CFGraph.Node lastNode = Node.getAllNodes(entryNode).getLast();
-        Node.resetVisited(entryNode);
+        CFGraph.Node lastNode = entryNode.succ.get(0); // skip first dummy node
+        while (lastNode != null) {
+            if (lastNode.succ.isEmpty()) {
+                break;
+            }
+            lastNode = lastNode.succ.get(0);
+        }
+
+        if (lastNode == null) {
+            return; // empty graph no need to analyse
+        }
 
         // fixed point algorithm
         ArrayList<CFGraph.Node> reverseOrder = new ArrayList<>();
