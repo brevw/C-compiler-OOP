@@ -8,22 +8,22 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t1,0($sp)
-addiu $sp,$sp,-4
 sw $t0,0($sp)
+addiu $sp,$sp,-4
+sw $t1,0($sp)
 addiu $t0,$fp,12
 lw $t1,0($t0)
 addiu $t0,$fp,8
 lw $t0,0($t0)
-add $t1,$t1,$t0
-addi $t0,$fp,4
-sw $t1,0($t0)
+add $t0,$t1,$t0
+addi $t1,$fp,4
+sw $t0,0($t1)
 j add_epilogue
 add_epilogue:
 # Original instruction: popRegisters
-lw $t0,0($sp)
-addiu $sp,$sp,4
 lw $t1,0($sp)
+addiu $sp,$sp,4
+lw $t0,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)

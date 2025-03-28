@@ -16,15 +16,15 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t0,0($sp)
-addiu $sp,$sp,-4
 sw $t2,0($sp)
 addiu $sp,$sp,-4
 sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t0,0($sp)
 addiu $t0,$fp,8
-lw $t1,0($t0)
-li $t0,0
-xor $t0,$t1,$t0
+lw $t0,0($t0)
+li $t1,0
+xor $t0,$t0,$t1
 sltiu $t0,$t0,1
 beqz $t0,label_3_ELSE
 li $t0,1
@@ -47,17 +47,17 @@ jal factorial
 addi $t0,$sp,0
 lw $t0,0($t0)
 addiu $sp,$sp,8
-mul $t0,$t2,$t0
-addi $t1,$fp,4
-sw $t0,0($t1)
+mul $t1,$t2,$t0
+addi $t0,$fp,4
+sw $t1,0($t0)
 j label_4_END
 label_4_END:
 # Original instruction: popRegisters
+lw $t0,0($sp)
+addiu $sp,$sp,4
 lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t2,0($sp)
-addiu $sp,$sp,4
-lw $t0,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -86,9 +86,9 @@ sw $t2,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
-la $t1,label_1_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_1_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -98,10 +98,10 @@ addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 jal factorial
 addi $t0,$sp,0
-lw $t0,0($t0)
+lw $t1,0($t0)
 addiu $sp,$sp,8
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4

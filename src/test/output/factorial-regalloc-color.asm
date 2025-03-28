@@ -22,9 +22,9 @@ addiu $sp,$sp,4
 addi $t3,$t0,0
 li $t0,1
 addi $t2,$t0,0
-la $t0,label_0_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_0_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -33,9 +33,9 @@ sw $t3,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
-la $t0,label_1_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_1_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4

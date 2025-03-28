@@ -19,17 +19,17 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t4,0($sp)
-addiu $sp,$sp,-4
-sw $t1,0($sp)
-addiu $sp,$sp,-4
 sw $t3,0($sp)
+addiu $sp,$sp,-4
+sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t2,0($sp)
 addiu $sp,$sp,-4
 sw $t5,0($sp)
 addiu $sp,$sp,-4
-sw $t0,0($sp)
+sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t4,0($sp)
 li $t1,100
 addiu $t0,$sp,-4
 sw $t1,0($t0)
@@ -49,9 +49,9 @@ lw $t4,0($t0)
 li $t0,1
 mul $t0,$t3,$t0
 add $t0,$t0,$t4
-lb $t0,0($t0)
-li $t4,0
-xor $t0,$t0,$t4
+lb $t4,0($t0)
+li $t0,0
+xor $t0,$t4,$t0
 sltu $t0,$zero,$t0
 beqz $t0,label_5_next
 label_7_body:
@@ -90,9 +90,9 @@ lw $t4,0($t0)
 li $t0,1
 mul $t0,$t3,$t0
 add $t0,$t0,$t4
-lb $t0,0($t0)
-li $t4,0
-xor $t0,$t0,$t4
+lb $t4,0($t0)
+li $t0,0
+xor $t0,$t4,$t0
 sltu $t0,$zero,$t0
 beqz $t0,label_8_next
 label_10_body:
@@ -118,33 +118,33 @@ lw $t4,0($t0)
 li $t0,1
 mul $t0,$t3,$t0
 add $t0,$t0,$t4
-lb $t4,0($t0)
-li $t0,0
-xor $t0,$t4,$t0
+lb $t0,0($t0)
+li $t4,0
+xor $t0,$t0,$t4
 sltu $t0,$zero,$t0
 bnez $t0,label_10_body
 label_8_next:
 li $t0,1
-mul $t0,$t2,$t0
-add $t0,$t0,$t1
-li $t2,0
-sb $t2,0($t0)
+mul $t2,$t2,$t0
+add $t2,$t2,$t1
+li $t0,0
+sb $t0,0($t2)
 addi $t0,$fp,4
 sw $t1,0($t0)
 j concatenate_epilogue
 concatenate_epilogue:
 # Original instruction: popRegisters
-lw $t0,0($sp)
+lw $t4,0($sp)
+addiu $sp,$sp,4
+lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $t5,0($sp)
 addiu $sp,$sp,4
 lw $t2,0($sp)
 addiu $sp,$sp,4
+lw $t0,0($sp)
+addiu $sp,$sp,4
 lw $t3,0($sp)
-addiu $sp,$sp,4
-lw $t1,0($sp)
-addiu $sp,$sp,4
-lw $t4,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -170,15 +170,15 @@ jal concatenate
 addi $t0,$sp,0
 lw $t0,0($t0)
 addiu $sp,$sp,12
-addi $t1,$t0,0
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+addi $t0,$t0,0
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
-la $t1,label_2_str
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+la $t0,label_2_str
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4

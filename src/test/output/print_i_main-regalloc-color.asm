@@ -5,9 +5,9 @@
 main:
 addiu $fp,$sp,0
 addiu $sp,$sp,0
-li $t1,10
-addiu $t0,$sp,-4
-sw $t1,0($t0)
+li $t0,10
+addiu $t1,$sp,-4
+sw $t0,0($t1)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
