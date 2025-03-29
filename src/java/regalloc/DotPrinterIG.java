@@ -19,6 +19,7 @@ public class DotPrinterIG {
         this.writer = writer;
     }
 
+    /*
     public void visit(InterferenceGraph iGraph) {
         visitHelper(iGraph);
         writer.print(DOT_HEADER);
@@ -59,5 +60,6 @@ public class DotPrinterIG {
     private String nodeToString(InterferenceGraph.Node node) {
         return node.reg.toString() + " : " + (node.archReg == null ? "spilled" : node.archReg.toString());
     }
+    */
 }
 

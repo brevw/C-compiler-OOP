@@ -19,7 +19,7 @@ public class DotPrinterCFG {
     public DotPrinterCFG(PrintWriter writer) {
         this.writer = writer;
     }
-
+    /*
     public void visit(ArrayList<Node> entryNodes) {
         visitHelper(entryNodes);
         writer.print(DOT_HEADER);
@@ -65,4 +65,5 @@ public class DotPrinterCFG {
                     .toString()
         ;
     }
+    */
 }

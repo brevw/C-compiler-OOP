@@ -10,6 +10,9 @@ import gen.asm.Register;
 
 public class InterferenceGraph {
 
+    /**
+     * A node in the interference graph
+     */
     public static class Node {
         final Register.Virtual reg;
         int degree = 0;
@@ -26,36 +29,65 @@ public class InterferenceGraph {
         }
 
 
+        /**
+         * Get all adjacent nodes
+         * @return a list of all adjacent nodes
+         */
         public List<Node> getAllAdj() {
             return new ArrayList<>(adj);
         }
 
+        /**
+         * Get active adjacent nodes
+         * @return a list of all active adjacent nodes
+         */
         public List<Node> getActiveAdj() {
             return getAllAdj().stream().filter(n -> n.active).toList();
         }
     }
 
+    /**
+     * A mapping from virtual registers to nodes in the interference graph
+     */
     private final Map<Register.Virtual, Node> nodesMapping = new HashMap<>();
     public InterferenceGraph() {
     }
 
-    // get activated and deactivated nodes
+    /**
+     * Get all nodes in the interference graph
+     * @return a list of all nodes in the interference graph
+     */
     public List<Node> getNodes() {
         return nodesMapping.values().stream().toList();
     }
 
-    // map a virtual register to its corresponding architecture register
+    /**
+     * Map virtual register to an architecture register
+     * @param vr the virtual register
+     * @return the arch register corresponding to the virtual register
+     */
     public Register.Arch getArchReg(Register.Virtual vr) {
         return nodesMapping.get(vr).archReg;
     }
 
-    // build the interference graph
-    public void buildInterferenceGraph(CFGraph.Node entryNode) {
-        ArrayList<CFGraph.Node> allNodes = CFGraph.Node.getAllNodes(entryNode);
+    /**
+     * Build the interference graph from the control flow graphs of the program
+     */
+    public static List<InterferenceGraph> buildInterferenceGraphFromCFGs(ArrayList<ArrayList<CFGraph.Node>> cfgs) {
+        return cfgs.stream().map(cfgNodes -> {
+        InterferenceGraph ig = new InterferenceGraph();
+        ig.buildInterferenceGraphFromFunctionCFG(cfgNodes);
+        return ig;
+        }).toList();
+    }
 
-        // generate the unique virtual registers used by the compiled program
+    /**
+     * Build the interference graph from the control flow graph of a function
+     */
+    public void buildInterferenceGraphFromFunctionCFG(ArrayList<CFGraph.Node> nodes) {
+        // get the unique virtual registers used by the compiled program
         Set<Register.Virtual> virtualRegs = new HashSet<>();
-        allNodes.forEach(n -> {
+        nodes.forEach(n -> {
             n.use().forEach(virtualRegs::add);
             n.def().ifPresent(virtualRegs::add);
         });
@@ -64,7 +96,7 @@ public class InterferenceGraph {
         virtualRegs.forEach(vr -> nodesMapping.put(vr, new Node(vr)));
 
         // fill in the adjacencies and nbr of uses of the registers
-        allNodes.forEach(n -> {
+        nodes.forEach(n -> {
             Set<Register.Virtual> live = n.liveOut;
 
             // update the number of uses of each register
@@ -94,27 +126,20 @@ public class InterferenceGraph {
                 });
             });
         });
-
     }
 
-    // merge disjoint graphs
-    public static InterferenceGraph mergeDisjointGraphs(List<InterferenceGraph> graphs) {
-        InterferenceGraph mergedGraph = new InterferenceGraph();
-
-        // assume that all graphs have disjoint sets of nodes
-        graphs.forEach(g -> {
-            g.getNodes().forEach(n -> {
-                mergedGraph.nodesMapping.put(n.reg, n);
-            });
-
-        });
-        return mergedGraph;
-    }
-
+    /**
+     * Get all active nodes
+     * @return a list of all active nodes
+     */
     public List<Node> allActiveNodes() {
         return getNodes().stream().filter(n -> n.active).toList();
     }
 
+    /**
+     * deactivate a node
+     * @param n the node to deactivate
+     */
     public void deactivateNode(Node n) {
         assert nodesMapping.containsKey(n.reg);
         assert n.active;
@@ -124,6 +149,10 @@ public class InterferenceGraph {
         });
     }
 
+    /**
+     * activate a node
+     * @param n the node to activate
+     */
     public void activateNode(Node n) {
         assert nodesMapping.containsKey(n.reg);
         assert !n.active;
