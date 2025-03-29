@@ -11,7 +11,6 @@ import regalloc.DotPrinterCFG;
 import regalloc.DotPrinterIG;
 import regalloc.GraphColor;
 import regalloc.InterferenceGraph;
-import regalloc.LivenessAnalysis;
 import sem.SemanticAnalyzer;
 
 import java.io.*;
@@ -24,6 +23,7 @@ import java.util.List;
  */
 public class DotMain_CFG_IG {
 
+    /*
     private static final String LOGFILE = "out.log";
     private static final int UNKNOWN_EXCEPTION = 1;
     private static final int FILE_NOT_FOUND = 2;
@@ -211,5 +211,6 @@ public class DotMain_CFG_IG {
             System.exit(PASS);
 
     }
+    */
 }
 
