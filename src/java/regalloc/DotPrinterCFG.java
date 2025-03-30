@@ -19,9 +19,8 @@ public class DotPrinterCFG {
     public DotPrinterCFG(PrintWriter writer) {
         this.writer = writer;
     }
-    /*
-    public void visit(ArrayList<Node> entryNodes) {
-        visitHelper(entryNodes);
+    public void visit(ArrayList<ArrayList<Node>> cfgs) {
+        visitHelper(cfgs);
         writer.print(DOT_HEADER);
         writer.print(nodes.toString());
         writer.print(eldges.toString());
@@ -29,24 +28,19 @@ public class DotPrinterCFG {
         writer.flush();
     }
 
-    private void visitHelper(ArrayList<Node> entryNodes) {
+    private void visitHelper(ArrayList<ArrayList<Node>> cfgs) {
         int count = 0;
-        for (Node entryNode : entryNodes) {
+        for (var cfg : cfgs) {
             Map<Node, Integer> nodes = new HashMap<>();
-            Node node = entryNode.succ.size() == 0 ? null : entryNode.succ.get(0);
-            int i = 0;
-            while (node != null) {
-                addNewNode(nodeToString(node), i + count);
-                nodes.put(node, i);
-                node = node.succ.size() == 0 ? null : node.succ.get(0);
-                ++i;
+            for (Node node : cfg) {
+                addNewNode(nodeToString(node), count++);
+                nodes.put(node, count - 1);
             }
-            for (Node n : nodes.keySet()) {
-                for (Node succ : n.succ) {
-                    linkNodes(nodes.get(n) + count, nodes.get(succ) + count);
+            for (Node node : cfg) {
+                for (Node succ : node.succ) {
+                    linkNodes(nodes.get(node), nodes.get(succ));
                 }
             }
-            count += i;
         }
     }
 
@@ -65,5 +59,4 @@ public class DotPrinterCFG {
                     .toString()
         ;
     }
-    */
 }

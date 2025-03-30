@@ -12,6 +12,7 @@ import regalloc.DotPrinterIG;
 import regalloc.GraphColor;
 import regalloc.InterferenceGraph;
 import sem.SemanticAnalyzer;
+import util.CollapseLabels;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ import java.util.List;
  */
 public class DotMain_CFG_IG {
 
-    /*
     private static final String LOGFILE = "out.log";
     private static final int UNKNOWN_EXCEPTION = 1;
     private static final int FILE_NOT_FOUND = 2;
@@ -129,6 +129,7 @@ public class DotMain_CFG_IG {
             System.out.println("Parsing: pass");
 
             // Semantic Analysis
+            SemanticAnalyzer.promoteVarToReg = true;
             SemanticAnalyzer sem = new SemanticAnalyzer();
             sem.analyze(programAst);
             if (sem.hasErrors()) {
@@ -172,36 +173,24 @@ public class DotMain_CFG_IG {
                 PrintWriter writerCFG = new PrintWriter(outputFileCFG);
                 PrintWriter writerIG = new PrintWriter(outputFileIG);
 
-                // generate the CFG of the main function
-                ArrayList<CFGraph.Node> entryNodes = cfg.generateGraph();
+                asmProgWithVirtualRegs = new CollapseLabels().visit(asmProgWithVirtualRegs);
+                ArrayList<ArrayList<CFGraph.Node>> cfgs = new CFGraph(asmProgWithVirtualRegs).generateProgramCFGs();
+                List<InterferenceGraph> iGraphs = InterferenceGraph.buildInterferenceGraphFromCFGs(cfgs);
+                //List<Register.Arch> availableColors = List.of(Register.Arch.t0, Register.Arch.t1, Register.Arch.t2, Register.Arch.t3, Register.Arch.t4, Register.Arch.t5, Register.Arch.t6, Register.Arch.t7, Register.Arch.t8, Register.Arch.t9
+                //                                            , Register.Arch.s0, Register.Arch.s1, Register.Arch.s2, Register.Arch.s3, Register.Arch.s4, Register.Arch.s5, Register.Arch.s6, Register.Arch.s7);
+                List<Register.Arch> availableColors = List.of(Register.Arch.t0, Register.Arch.t1, Register.Arch.t2, Register.Arch.t3, Register.Arch.t4);
+                GraphColor gc = new GraphColor(availableColors, asmProgWithVirtualRegs, iGraphs);
+                gc.transformToPhysicalASMProgram();
 
-                // analyse the liveness of the main function
-                entryNodes.forEach(e -> (new LivenessAnalysis()).analyseLiveness(e));
-
-                // build the interference graph
-                List<InterferenceGraph> iGraphs = entryNodes.stream().map(e -> {
-                    InterferenceGraph iGraph = new InterferenceGraph();
-                    iGraph.buildInterferenceGraph(e);
-                    return iGraph;
-                }).toList();
-
-                InterferenceGraph finalIG = InterferenceGraph.mergeDisjointGraphs(iGraphs);
-
-                // color the graph (we will only use $s0-$s9 and $t0-$t7)
-                List<Register.Arch> availableColors = List.of(Register.Arch.t0, Register.Arch.t1, Register.Arch.t2, Register.Arch.t3, Register.Arch.t4, Register.Arch.t5, Register.Arch.t6, Register.Arch.t7, Register.Arch.t8, Register.Arch.t9
-                    , Register.Arch.s0, Register.Arch.s1, Register.Arch.s2, Register.Arch.s3, Register.Arch.s4, Register.Arch.s5, Register.Arch.s6, Register.Arch.s7);
-                var graphColor = new GraphColor(availableColors);
-                graphColor.DEBUG_PRINT = true;
-                graphColor.colorGraph(finalIG);
 
                 // produce the Control Flow Graph Dot file
                 DotPrinterCFG dotPrinterCFG = new DotPrinterCFG(writerCFG);
-                dotPrinterCFG.visit(entryNodes);
+                dotPrinterCFG.visit(new ArrayList<>(gc.iGraphs.stream().map(ig -> ig.nodes).toList()));
                 writerCFG.close();
 
                 // produce the Interference Graph Dot file
-                DotPrinterIG dotPrinterIG = new DotPrinterIG(writerIG);
-                dotPrinterIG.visit(finalIG);
+                DotPrinterIG dotPrinterIG = new DotPrinterIG(writerIG, availableColors);
+                dotPrinterIG.visit(gc.iGraphs.get(0));
                 writerIG.close();
             } catch (FileNotFoundException e) {
                 System.out.println("File does not exist.");
@@ -211,6 +200,5 @@ public class DotMain_CFG_IG {
             System.exit(PASS);
 
     }
-    */
 }
 

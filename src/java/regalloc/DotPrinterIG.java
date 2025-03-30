@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import gen.asm.Register;
+
 
 public class DotPrinterIG {
     private final PrintWriter writer;
@@ -15,11 +17,12 @@ public class DotPrinterIG {
     private final Set<String> eldges = new HashSet<>();
 
 
-    public DotPrinterIG(PrintWriter writer) {
+    private List<Register.Arch> availableColors;
+    public DotPrinterIG(PrintWriter writer, List<Register.Arch> availableColors) {
         this.writer = writer;
+        this.availableColors = availableColors;
     }
 
-    /*
     public void visit(InterferenceGraph iGraph) {
         visitHelper(iGraph);
         writer.print(DOT_HEADER);
@@ -58,8 +61,7 @@ public class DotPrinterIG {
         nodes.append("Node" + id + " [label=\"" + name + "\"];\n");
     }
     private String nodeToString(InterferenceGraph.Node node) {
-        return node.reg.toString() + " : " + (node.archReg == null ? "spilled" : node.archReg.toString());
+        return node.reg.toString() + "(use=" + node.uses + ", def=" + node.defs +") : " + (node.degree >= this.availableColors.size() ? "spilled with " : "canSpill="+node.canSpill + " ") + "degree " + node.degree;
     }
-    */
 }
 

@@ -84,6 +84,13 @@ public class CFGraph {
         return cfgs;
     }
 
+    public ArrayList<Node> generateProgramFunctionCFGWihtoutRemovingDeadInstructions(TextSection section) {
+        ArrayList<Node> cfg = generateFunctionCFG(section);
+        ArrayList<Node> reverseOrderTraversal = reverseOrderTraversalFunctionCFG(cfg);
+        performLivenessAnalysisOnFunctionCFG(reverseOrderTraversal);
+        return cfg;
+    }
+
     /**
      * Remove dead instructions from the CFG of a function.
      * Can only be called after the liveness analysis has been performed.
@@ -232,6 +239,9 @@ public class CFGraph {
                     continue;
                 }
                 Node toNode = labelToNode.get(toLabel);
+                if (toNode == null) {
+                    System.err.println("fromNode: " + fromNode.instr + " toLabel: " + toLabel);
+                }
                 toNode.pred.add(fromNode);
                 fromNode.succ.add(toNode);
             }
