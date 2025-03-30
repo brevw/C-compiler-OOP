@@ -124,6 +124,9 @@ public class CFGraph {
             }
         }
         section.items.removeAll(instructionsToRemove);
+        if (!instructionsToRemove.isEmpty()) {
+            System.err.println("instructions removed : " + instructionsToRemove.size());
+        }
     }
 
     /**

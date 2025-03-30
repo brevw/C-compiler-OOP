@@ -16,10 +16,11 @@ public class InterferenceGraph {
     public static class Node {
         final Register.Virtual reg;
         int degree = 0;
-        private final List<Node> adj = new ArrayList<>();
+        final List<Node> adj = new ArrayList<>();
         int uses = 0;
         int defs = 0;
 
+        public boolean canSpill = true; // to be used by the graph coloring algorithm
         public boolean active = true; // to be used by the graph coloring algorithm
         public Register.Arch archReg = null; // to be used by the graph coloring algorithm
                                              // by default null (later null will mean that the node is spilled)
@@ -49,8 +50,10 @@ public class InterferenceGraph {
     /**
      * A mapping from virtual registers to nodes in the interference graph
      */
-    private final Map<Register.Virtual, Node> nodesMapping = new HashMap<>();
-    public InterferenceGraph() {
+    public final Map<Register.Virtual, Node> nodesMapping = new HashMap<>();
+    public final ArrayList<CFGraph.Node> nodes;
+    public InterferenceGraph(ArrayList<CFGraph.Node> nodes) {
+        this.nodes = nodes;
     }
 
     /**
@@ -62,12 +65,12 @@ public class InterferenceGraph {
     }
 
     /**
-     * Map virtual register to an architecture register
+     * Map virtual register to the node in the interference graph
      * @param vr the virtual register
-     * @return the arch register corresponding to the virtual register
+     * @return the node corresponding to the virtual register
      */
-    public Register.Arch getArchReg(Register.Virtual vr) {
-        return nodesMapping.get(vr).archReg;
+    public Node vrToNode(Register.Virtual vr) {
+        return nodesMapping.get(vr);
     }
 
     /**
@@ -75,8 +78,8 @@ public class InterferenceGraph {
      */
     public static List<InterferenceGraph> buildInterferenceGraphFromCFGs(ArrayList<ArrayList<CFGraph.Node>> cfgs) {
         return cfgs.stream().map(cfgNodes -> {
-        InterferenceGraph ig = new InterferenceGraph();
-        ig.buildInterferenceGraphFromFunctionCFG(cfgNodes);
+        InterferenceGraph ig = new InterferenceGraph(cfgNodes);
+        ig.buildInterferenceGraphFromFunctionCFG();
         return ig;
         }).toList();
     }
@@ -84,7 +87,7 @@ public class InterferenceGraph {
     /**
      * Build the interference graph from the control flow graph of a function
      */
-    public void buildInterferenceGraphFromFunctionCFG(ArrayList<CFGraph.Node> nodes) {
+    public void buildInterferenceGraphFromFunctionCFG() {
         // get the unique virtual registers used by the compiled program
         Set<Register.Virtual> virtualRegs = new HashSet<>();
         nodes.forEach(n -> {
