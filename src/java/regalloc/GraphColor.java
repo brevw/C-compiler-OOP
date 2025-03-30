@@ -63,7 +63,7 @@ public class GraphColor {
      * @param iGraph the interference graph
      * @param n the node to be spilled
      */
-    private void handleSpill(int sectionIndex, Node n) {
+    private void handleSpill(int sectionIndex, Node n, ArrayList<Register.Virtual> vrUsedForSpilling) {
         InterferenceGraph iGraph = iGraphs.get(sectionIndex);
 
         TextSection newSection = new TextSection();
@@ -81,8 +81,6 @@ public class GraphColor {
             throw new RuntimeException("nbr of nodes and instructions mismatch");
         }
 
-        ArrayList<Register.Virtual> newRegs = new ArrayList<>();
-
         this.asmProgWithVirtualRegs.textSections.get(sectionIndex).items.forEach(item -> {
             regMap.clear();
             switch (item) {
@@ -92,7 +90,7 @@ public class GraphColor {
                     Register.Virtual newVirtualReg = null;
                     if (insn.uses().contains(spilledReg)) {
                         newVirtualReg = Register.Virtual.create();
-                        newRegs.add(newVirtualReg);
+                        vrUsedForSpilling.add(newVirtualReg);
 
                         // update the interference graph
                         newSection.emit(OpCode.LA, newVirtualReg, spillLabel);
@@ -105,7 +103,7 @@ public class GraphColor {
                     Register.Virtual newVirtualReg2 = null;
                     if (defIsSpilled && !regMap.containsKey(spilledReg)) {
                         newVirtualReg2 = Register.Virtual.create();
-                        newRegs.add(newVirtualReg2);
+                        vrUsedForSpilling.add(newVirtualReg2);
                         regMap.put(spilledReg, newVirtualReg2);
                     }
 
@@ -116,7 +114,7 @@ public class GraphColor {
                     Register.Virtual newVirtualReg3 = null;
                     if (defIsSpilled) {
                         newVirtualReg3 = Register.Virtual.create();
-                        newRegs.add(newVirtualReg3);
+                        vrUsedForSpilling.add(newVirtualReg3);
 
                         newSection.emit(OpCode.LA, newVirtualReg3, spillLabel);
                         newSection.emit(OpCode.SW, regMap.get(spilledReg), newVirtualReg3, 0);
@@ -134,12 +132,10 @@ public class GraphColor {
                                                 .generateProgramFunctionCFGWihtoutRemovingDeadInstructions(newSection);
         var newIG = new InterferenceGraph(newCFG);
         newIG.buildInterferenceGraphFromFunctionCFG();
-        newRegs.forEach(r -> {
+        vrUsedForSpilling.forEach(r -> {
             newIG.nodesMapping.get(r).canSpill = false;
         });
         iGraphs.set(sectionIndex, newIG);
-
-        //this.iGraphs = new ArrayList<> (InterferenceGraph.buildInterferenceGraphFromCFGs(new CFGraph(this.asmProgWithVirtualRegs).generateProgramCFGs()));
     }
 
 
@@ -233,15 +229,13 @@ public class GraphColor {
      * @return an optional node that needs to be spilled, or empty if no node needs to be spilled
      */
     private void colorGraph(int index) {
-        // NOTE: remove later
-        int counter = 0;
-
+        ArrayList<Register.Virtual> vrUsedForSpilling = new ArrayList<>();
         Stack<InterferenceGraph.Node> stack = new Stack<>();
 
         int oldNbrRegs = this.iGraphs.get(index).nodesMapping.size();
         // keep deactivating nodes with degree less than the number of available colors (registers)
-        Function<InterferenceGraph.Node, Float> heuristicCost = n -> (float) (n.uses + n.defs) / n.degree;
-        Comparator<InterferenceGraph.Node> heuristicCostComparator = (n1, n2) -> Float.compare(heuristicCost.apply(n1), heuristicCost.apply(n2));
+        Function<InterferenceGraph.Node, Integer> heuristicCost = n -> n.uses + n.defs;
+        Comparator<InterferenceGraph.Node> heuristicCostComparator = (n1, n2) -> Integer.compare(heuristicCost.apply(n1), heuristicCost.apply(n2));
 
         while (stack.size() < this.iGraphs.get(index).nodesMapping.size()) {
             List<InterferenceGraph.Node> cantidates = this.iGraphs.get(index).allActiveNodes().stream().filter(n -> n.degree < availableRegs.size()).toList();
@@ -257,7 +251,7 @@ public class GraphColor {
                 } else {
                     spillNode = this.iGraphs.get(index).allActiveNodes().stream().min(heuristicCostComparator).get();
                 }
-                handleSpill(index, spillNode);
+                handleSpill(index, spillNode, vrUsedForSpilling);
                 stack.clear();
             } else {
                 // deactivate a candidate node
@@ -268,12 +262,8 @@ public class GraphColor {
             }
         }
 
-        // NOTE: remove later
-        if (stack.size() != iGraphs.get(index).nodesMapping.size()) {
-            throw new RuntimeException("All nodes are on the stack");
-        }
         if (stack.size() != oldNbrRegs) {
-            System.err.println("nbr of registers: "+ ((float) stack.size() / oldNbrRegs * 100)  + "% increase");
+            System.err.println("nbr of registers: "+ ((float) (stack.size() - oldNbrRegs) / oldNbrRegs * 100)  + "% increase");
         }
         // assign colors to the nodes on the stack
         while (!stack.isEmpty()) {

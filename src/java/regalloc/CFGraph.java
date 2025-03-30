@@ -239,9 +239,6 @@ public class CFGraph {
                     continue;
                 }
                 Node toNode = labelToNode.get(toLabel);
-                if (toNode == null) {
-                    System.err.println("fromNode: " + fromNode.instr + " toLabel: " + toLabel);
-                }
                 toNode.pred.add(fromNode);
                 fromNode.succ.add(toNode);
             }
