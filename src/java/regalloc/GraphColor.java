@@ -234,8 +234,8 @@ public class GraphColor {
 
         int oldNbrRegs = this.iGraphs.get(index).nodesMapping.size();
         // keep deactivating nodes with degree less than the number of available colors (registers)
-        Function<InterferenceGraph.Node, Integer> heuristicCost = n -> n.uses + n.defs;
-        Comparator<InterferenceGraph.Node> heuristicCostComparator = (n1, n2) -> Integer.compare(heuristicCost.apply(n1), heuristicCost.apply(n2));
+        Function<InterferenceGraph.Node, Float> heuristicCost = n -> (n.uses + n.defs) / (float) n.degree;
+        Comparator<InterferenceGraph.Node> heuristicCostComparator = (n1, n2) -> Float.compare(heuristicCost.apply(n1), heuristicCost.apply(n2));
 
         while (stack.size() < this.iGraphs.get(index).nodesMapping.size()) {
             List<InterferenceGraph.Node> cantidates = this.iGraphs.get(index).allActiveNodes().stream().filter(n -> n.degree < availableRegs.size()).toList();
