@@ -80,44 +80,43 @@ public class GraphColor {
         if (iGraph.nodes.size() == this.asmProgWithVirtualRegs.textSections.get(sectionIndex).items.size()) {
             throw new RuntimeException("nbr of nodes and instructions mismatch");
         }
-
         this.asmProgWithVirtualRegs.textSections.get(sectionIndex).items.forEach(item -> {
             regMap.clear();
             switch (item) {
                 case AssemblyTextItem it -> newSection.emit(it);
                 case Instruction insn -> {
+                    boolean loadSpilled = insn.uses().contains(spilledReg);
+                    boolean storeSpilled = insn.def() != null && insn.def() == spilledReg;
+
                     // handle the uses
-                    Register.Virtual newVirtualReg = null;
-                    if (insn.uses().contains(spilledReg)) {
-                        newVirtualReg = Register.Virtual.create();
-                        vrUsedForSpilling.add(newVirtualReg);
+                    if (loadSpilled) {
+                        Register.Virtual tempLoadReg = Register.Virtual.create();
+                        vrUsedForSpilling.add(tempLoadReg);
 
                         // update the interference graph
-                        newSection.emit(OpCode.LA, newVirtualReg, spillLabel);
-                        newSection.emit(OpCode.LW, newVirtualReg, newVirtualReg, 0);
-                        regMap.put(spilledReg, newVirtualReg);
+                        newSection.emit(OpCode.LA, tempLoadReg, spillLabel);
+                        newSection.emit(OpCode.LW, tempLoadReg, tempLoadReg, 0);
+                        regMap.put(spilledReg, tempLoadReg);
                     }
 
                     // handle the def
-                    boolean defIsSpilled = insn.def() != null && insn.def() == spilledReg;
-                    Register.Virtual newVirtualReg2 = null;
-                    if (defIsSpilled && !regMap.containsKey(spilledReg)) {
-                        newVirtualReg2 = Register.Virtual.create();
-                        vrUsedForSpilling.add(newVirtualReg2);
-                        regMap.put(spilledReg, newVirtualReg2);
+                    if (storeSpilled && !regMap.containsKey(spilledReg)) {
+                        Register.Virtual tempIntermediateReg = Register.Virtual.create();
+                        vrUsedForSpilling.add(tempIntermediateReg);
+
+                        regMap.put(spilledReg, tempIntermediateReg);
                     }
 
                     // rebuild the instruction, add to CFG and program
                     Instruction newInsn = insn.rebuild(regMap);
                     newSection.emit(newInsn);
 
-                    Register.Virtual newVirtualReg3 = null;
-                    if (defIsSpilled) {
-                        newVirtualReg3 = Register.Virtual.create();
-                        vrUsedForSpilling.add(newVirtualReg3);
+                    if (storeSpilled) {
+                        Register.Virtual tempStoreReg = Register.Virtual.create();
+                        vrUsedForSpilling.add(tempStoreReg);
 
-                        newSection.emit(OpCode.LA, newVirtualReg3, spillLabel);
-                        newSection.emit(OpCode.SW, regMap.get(spilledReg), newVirtualReg3, 0);
+                        newSection.emit(OpCode.LA, tempStoreReg, spillLabel);
+                        newSection.emit(OpCode.SW, regMap.get(spilledReg), tempStoreReg, 0);
                     }
                 }
                 default -> throw new RuntimeException("Unexpected item type: " + item.getClass());
