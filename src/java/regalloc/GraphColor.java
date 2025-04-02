@@ -171,8 +171,11 @@ public class GraphColor {
                 }
             });
 
-            ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
-            ArrayList<Label> usedLabelsList = new ArrayList<>(usedLabels);
+            // WARNING: remove later
+            //ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
+            //ArrayList<Label> usedLabelsList = new ArrayList<>(usedLabels);
+            ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(availableRegs);
+            ArrayList<Label> usedLabelsList = new ArrayList<>(newLabels);
             final AssemblyProgram.TextSection newSection2 = new TextSection();
 
             // registers that can be used for pushing and popping
