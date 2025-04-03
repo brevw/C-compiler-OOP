@@ -24,6 +24,8 @@ import regalloc.InterferenceGraph.Node;
 import util.Utils;
 
 public class GraphColor {
+    private static final List<Register.Arch> UNSAVED_ARCH_REGS = List.of(Register.Arch.sp, Register.Arch.ra, Register.Arch.fp, Register.Arch.zero);
+
     private final ArrayList<Register.Arch> availableRegs;
     public final AssemblyProgram asmProgWithVirtualRegs;
     public ArrayList<InterferenceGraph> iGraphs;
@@ -64,8 +66,6 @@ public class GraphColor {
      * @param n the node to be spilled
      */
     private void handleSpill(int sectionIndex, Node n, ArrayList<Register.Virtual> vrUsedForSpilling) {
-        InterferenceGraph iGraph = iGraphs.get(sectionIndex);
-
         TextSection newSection = new TextSection();
         Register.Virtual spilledReg = n.reg;
         Label spillLabel = Label.create(n.reg.name + "_spill");
@@ -76,10 +76,6 @@ public class GraphColor {
 
         // modify the text section to spill the register
         Map<Register, Register> regMap = new HashMap<>();
-        // NOTE: remove later
-        if (iGraph.nodes.size() == this.asmProgWithVirtualRegs.textSections.get(sectionIndex).items.size()) {
-            throw new RuntimeException("nbr of nodes and instructions mismatch");
-        }
         this.asmProgWithVirtualRegs.textSections.get(sectionIndex).items.forEach(item -> {
             regMap.clear();
             switch (item) {
@@ -160,7 +156,12 @@ public class GraphColor {
                             Instruction newInsn = insn.rebuild(vrArchMap);
                             newSection.emit(newInsn);
                             if (startCapturing.get()){
-                                usedArchRegs.addAll(newInsn.registers().stream().filter(r -> this.availableRegs.contains(r)).map(r -> (Register.Arch)r).collect(Collectors.toSet()));
+                                usedArchRegs.addAll(
+                                    newInsn.registers().stream()
+                                    .map(r -> (Register.Arch)r)
+                                    .filter(r -> !UNSAVED_ARCH_REGS.contains(r))
+                                    .collect(Collectors.toSet())
+                                );
                                 if (insn instanceof Instruction.LoadAddress la && newLabels.contains(la.label)){
                                     usedLabels.add(la.label);
                                 }
@@ -171,11 +172,8 @@ public class GraphColor {
                 }
             });
 
-            // WARNING: remove later
-            //ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
-            //ArrayList<Label> usedLabelsList = new ArrayList<>(usedLabels);
-            ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(availableRegs);
-            ArrayList<Label> usedLabelsList = new ArrayList<>(newLabels);
+            ArrayList<Register.Arch> usedArchRegsList = new ArrayList<>(usedArchRegs);
+            ArrayList<Label> usedLabelsList = new ArrayList<>(usedLabels);
             final AssemblyProgram.TextSection newSection2 = new TextSection();
 
             // registers that can be used for pushing and popping
