@@ -357,6 +357,9 @@ public class Tokeniser extends CompilerPass {
         map.put("sizeof", Token.Category.SIZEOF);
         map.put("continue", Token.Category.CONTINUE);
         map.put("break", Token.Category.BREAK);
+        map.put("class", Token.Category.CLASS);
+        map.put("new", Token.Category.NEW);
+        map.put("extends", Token.Category.EXTENDS);
 
         // Types
         map.put("int", Token.Category.INT);
