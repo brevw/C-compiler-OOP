@@ -1,26 +1,57 @@
 .data
-msg:
-.asciiz "Result: "
 
 .text
 .globl main
 main:
-li $v0, 5
-syscall
-addi v0, $v0, 0
-li v1, 1
-li v2, 1
-loop:
-mul v1, v1, v2
+addiu $fp,$sp,0
+addiu $sp,$sp,0
+addi v0, $zero, 0
+addi v1, $zero, 1
+addi v2, $zero, 2
+addi v3, $zero, 3
+addi v0, v0, 1
+addi v1, v1, 1
 addi v2, v2, 1
-addi v3, v0, 100
-sub v4, v0, v2
-blt v2, v0, loop
-li $v0, 4
-la $a0, msg
+addi v3, v3, 1
+add v0, v0, v0
+add v1, v1, v1
+add v2, v2, v2
+add v3, v3, v3
+addiu $sp, $sp, -4
+sw v0, 0($sp)
+jal print_i
+sw v1, 0($sp)
+jal print_i
+sw v2, 0($sp)
+jal print_i
+sw v3, 0($sp)
+jal print_i
+li $v0,10
 syscall
-li $v0, 1
-addi $a0, v1, 0
+
+.text
+print_i:
+# Original instruction: addiu $sp,$sp,-4
+addiu $sp,$sp,-4
+# Original instruction: sw $fp,0($sp)
+sw $fp,0($sp)
+# Original instruction: addi $fp,$sp,0
+addi $fp,$sp,0
+# Original instruction: addiu $sp,$sp,0
+addiu $sp,$sp,0
+# Original instruction: pushRegisters
+# Original instruction: lw $a0,4($fp)
+lw $a0,4($fp)
+# Original instruction: li $v0,1
+li $v0,1
+# Original instruction: syscall
 syscall
-li $v0, 10
-syscall
+print_i_epilogue:
+# Original instruction: popRegisters
+# Original instruction: addiu $sp,$fp,4
+addiu $sp,$fp,4
+# Original instruction: lw $fp,0($fp)
+lw $fp,0($fp)
+# Original instruction: jr $ra
+jr $ra
+

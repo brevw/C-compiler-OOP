@@ -1,46 +1,38 @@
 #include "minic-stdlib.h"
 
-struct Point {
-    int x;
-    int y;
+// Define a simple struct
+struct Age {
+    char age;
+    int age2;
 };
 
-int calculate_distance(struct Point p1, struct Point p2) {
-    int dx; int dy;
-    dx = p2.x - p1.x;
-    dy = p2.y - p1.y;
-    return dx * dx + dy * dy;
-}
+struct Person {
+    struct Age age;
+    int height;
+};
 
-void print_distance(struct Point p1, struct Point p2) {
-    print_s((char*) "Point 1: (");
-    print_i(p1.x);
-    print_s((char*)", ");
-    print_i(p1.y);
-    print_s((char*)")\n");
-
-    print_s((char*)"Point 2: (");
-    print_i(p2.x);
-    print_s((char*)", ");
-    print_i(p2.y);
-    print_s((char*)")\n");
-
-    print_s((char*)"Squared Distance: ");
-    print_i(calculate_distance(p1, p2));
+void print(struct Person p) {
+    print_s((char*)"Person's age char: ");
+    print_c(p.age.age);
     print_s((char*)"\n");
+
+    print_s((char*)"Person's age: ");
+    print_i(p.age.age2);
+    print_s((char*)"\n");
+
+    print_s((char*)"Person's height: ");
+    print_i(p.height);
+    print_s((char*)" cm\n");
 }
 
 void main() {
-    struct Point p1;
-    struct Point p2;
+    struct Person p;
 
-    p1.x = 10;
-    p1.y = 20;
+    // Assign values
+    p.age.age = 'A';
+    p.age.age2 = 10;
+    p.height = 170;
 
-    p2.x = 30;
-    p2.y = 40;
+    print(p);
 
-    print_distance(p1, p2);
-
-    return;
 }

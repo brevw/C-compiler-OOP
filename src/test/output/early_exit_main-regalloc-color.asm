@@ -6,10 +6,10 @@ main:
 addiu $fp,$sp,0
 addiu $sp,$sp,0
 li $t0,1
-addi $t0,$t0,0
+addi $t1,$t0,0
 j main_epilogue
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4

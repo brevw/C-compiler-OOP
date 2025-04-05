@@ -1,3 +1,3 @@
-Point 1: (10, 20)
-Point 2: (30, 40)
-Squared Distance: 800
+Person's age char: A
+Person's age: 10
+Person's height: 170 cm

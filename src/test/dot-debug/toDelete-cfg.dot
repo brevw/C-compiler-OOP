@@ -1,0 +1,535 @@
+digraph cfg {
+Node0 [label="LiveIn: []
+main : addiu $fp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,-4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+jal read_i
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addi v6,$sp,0
+LiveOut: [v6]"];
+Node0 [label="LiveIn: [v6]
+lw v7,0(v6)
+LiveOut: [v7]"];
+Node0 [label="LiveIn: [v7]
+addiu $sp,$sp,4
+LiveOut: [v7]"];
+Node0 [label="LiveIn: [v7]
+addi v0,v7,0
+LiveOut: [v0]"];
+Node0 [label="LiveIn: [v0]
+li v8,0
+LiveOut: [v0, v8]"];
+Node0 [label="LiveIn: [v0, v8]
+addi v1,v8,0
+LiveOut: [v0, v1]"];
+Node0 [label="LiveIn: [v0, v1]
+li v9,1
+LiveOut: [v0, v1, v9]"];
+Node0 [label="LiveIn: [v0, v1, v9]
+addi v2,v9,0
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+la v10,label_0_str
+LiveOut: [v0, v1, v2, v10]"];
+Node0 [label="LiveIn: [v0, v1, v2, v10]
+addiu v11,$sp,-4
+LiveOut: [v0, v1, v11, v2, v10]"];
+Node0 [label="LiveIn: [v0, v1, v11, v2, v10]
+sw v10,0(v11)
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+addiu $sp,$sp,-4
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+jal print_s
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+addiu $sp,$sp,4
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+addiu v12,$sp,-4
+LiveOut: [v0, v1, v2, v12]"];
+Node0 [label="LiveIn: [v0, v1, v2, v12]
+sw v0,0(v12)
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+addiu $sp,$sp,-4
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+jal print_i
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+addiu $sp,$sp,4
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+la v13,label_1_str
+LiveOut: [v0, v1, v13, v2]"];
+Node0 [label="LiveIn: [v0, v1, v13, v2]
+addiu v14,$sp,-4
+LiveOut: [v0, v1, v13, v14, v2]"];
+Node0 [label="LiveIn: [v0, v1, v13, v14, v2]
+sw v13,0(v14)
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+addiu $sp,$sp,-4
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+jal print_s
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+addiu $sp,$sp,4
+LiveOut: [v0, v1, v2]"];
+Node0 [label="LiveIn: [v0, v1, v2]
+li v15,0
+LiveOut: [v0, v15, v1, v2]"];
+Node0 [label="LiveIn: [v0, v15, v1, v2]
+addi v4,v15,0
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+slt v16,v4,v0
+LiveOut: [v0, v1, v4, v16, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v16, v2]
+beqz v16,label_7_next
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+label_9_body : li v17,1
+LiveOut: [v0, v1, v4, v17, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v17, v2]
+slt v18,v17,v4
+LiveOut: [v0, v1, v4, v18, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v18, v2]
+xori v18,v18,1
+LiveOut: [v0, v1, v4, v18, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v18, v2]
+beqz v18,label_10_ELSE
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+addi v3,v4,0
+LiveOut: [v0, v1, v4, v3, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v3, v2]
+j label_11_END
+LiveOut: [v0, v1, v4, v3, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+label_10_ELSE : add v19,v1,v2
+LiveOut: [v0, v19, v4, v2]"];
+Node0 [label="LiveIn: [v0, v19, v4, v2]
+addi v3,v19,0
+LiveOut: [v0, v4, v3, v2]"];
+Node0 [label="LiveIn: [v0, v4, v3, v2]
+addi v1,v2,0
+LiveOut: [v0, v1, v4, v3]"];
+Node0 [label="LiveIn: [v0, v1, v4, v3]
+addi v2,v3,0
+LiveOut: [v0, v1, v4, v3, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v3, v2]
+label_11_END : addiu v20,$sp,-4
+LiveOut: [v0, v1, v4, v3, v20, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v3, v20, v2]
+sw v3,0(v20)
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+addiu $sp,$sp,-4
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+jal print_i
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+addiu $sp,$sp,4
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+la v21,label_2_str
+LiveOut: [v0, v1, v4, v21, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v21, v2]
+addiu v22,$sp,-4
+LiveOut: [v0, v1, v4, v21, v22, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v21, v22, v2]
+sw v21,0(v22)
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+addiu $sp,$sp,-4
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+jal print_s
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+addiu $sp,$sp,4
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+li v23,1
+LiveOut: [v0, v23, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v23, v1, v4, v2]
+add v24,v4,v23
+LiveOut: [v0, v24, v1, v2]"];
+Node0 [label="LiveIn: [v0, v24, v1, v2]
+addi v4,v24,0
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v1, v4, v2]
+label_8_posttest : slt v25,v4,v0
+LiveOut: [v0, v25, v1, v4, v2]"];
+Node0 [label="LiveIn: [v0, v25, v1, v4, v2]
+bnez v25,label_9_body
+LiveOut: [v0, v1, v4, v2]"];
+Node0 [label="LiveIn: []
+label_7_next : li $v0,10
+LiveOut: []"];
+Node0 [label="LiveIn: []
+syscall
+LiveOut: []"];
+Node0 [label="LiveIn: []
+print_s : addiu $sp,$sp,-4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $fp,0($sp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addi $fp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+pushRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $a0,4($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+li $v0,4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+syscall
+LiveOut: []"];
+Node0 [label="LiveIn: []
+print_s_epilogue : popRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$fp,4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $fp,0($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+jr $ra
+LiveOut: []"];
+Node0 [label="LiveIn: []
+print_i : addiu $sp,$sp,-4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $fp,0($sp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addi $fp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+pushRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $a0,4($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+li $v0,1
+LiveOut: []"];
+Node0 [label="LiveIn: []
+syscall
+LiveOut: []"];
+Node0 [label="LiveIn: []
+print_i_epilogue : popRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$fp,4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $fp,0($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+jr $ra
+LiveOut: []"];
+Node0 [label="LiveIn: []
+print_c : addiu $sp,$sp,-4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $fp,0($sp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addi $fp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+pushRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $a0,4($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+li $v0,11
+LiveOut: []"];
+Node0 [label="LiveIn: []
+syscall
+LiveOut: []"];
+Node0 [label="LiveIn: []
+print_c_epilogue : popRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$fp,4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $fp,0($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+jr $ra
+LiveOut: []"];
+Node0 [label="LiveIn: []
+read_c : addiu $sp,$sp,-4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $fp,0($sp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addi $fp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+pushRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+li $v0,12
+LiveOut: []"];
+Node0 [label="LiveIn: []
+syscall
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $v0,4($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+read_c_epilogue : popRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$fp,4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $fp,0($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+jr $ra
+LiveOut: []"];
+Node0 [label="LiveIn: []
+read_i : addiu $sp,$sp,-4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $fp,0($sp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addi $fp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+pushRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+li $v0,5
+LiveOut: []"];
+Node0 [label="LiveIn: []
+syscall
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $v0,4($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+read_i_epilogue : popRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$fp,4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $fp,0($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+jr $ra
+LiveOut: []"];
+Node0 [label="LiveIn: []
+mcmalloc : addiu $sp,$sp,-4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $fp,0($sp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addi $fp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$sp,0
+LiveOut: []"];
+Node0 [label="LiveIn: []
+pushRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $a0,8($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+li $v0,9
+LiveOut: []"];
+Node0 [label="LiveIn: []
+syscall
+LiveOut: []"];
+Node0 [label="LiveIn: []
+sw $v0,4($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+mcmalloc_epilogue : popRegisters
+LiveOut: []"];
+Node0 [label="LiveIn: []
+addiu $sp,$fp,4
+LiveOut: []"];
+Node0 [label="LiveIn: []
+lw $fp,0($fp)
+LiveOut: []"];
+Node0 [label="LiveIn: []
+jr $ra
+LiveOut: []"];
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+Node0 -> Node0;
+}

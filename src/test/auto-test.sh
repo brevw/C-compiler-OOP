@@ -404,6 +404,14 @@ run_test_sem array_of_type_void "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 # -> last pass analysis
 run_test_sem struct_recursive_def_accepted "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem break_outside_loop "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+# -> oop
+run_test_sem single_class_declaration "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem extended_class_not_yet_declared "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem class_extend_other_class "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_method_overriding "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_field_overriding "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem single_class_instantiation "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_instantiation_wihtout_cast "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 
 # CodeGen tests
 print_test_name "CodeGen tests (Uses Naive Register Allocator)"
@@ -428,20 +436,24 @@ run_test_codegen pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_
 run_test_codegen shadowing_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen dec2bin "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen binary_search "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen poly_eval "$PASS" "$DEFAULT_TIMEOUT" "$DEFAULT_TIMEOUT" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen bank_management "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 # -> struct, arrays
 run_test_codegen struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen funcall_struct "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen print_matrix "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen big_program "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen big_program2 "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen array_inside_struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_codegen correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_codegen stress_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 
 print_test_name "Register Allocation tests (Using a Compiler that Promotes Variables to Registers)"
 # -> build-in functions
-run_test_regalloc_colour  print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
-run_test_regalloc_colour   print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour print_i_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour print_c_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour print_s_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour read_c_main "$PASS" "$DEFAULT_TIMEOUT" "a" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour read_i_main "$PASS" "$DEFAULT_TIMEOUT" "1" "$MARS_FORMAT_STDIN_FALSE"
@@ -460,16 +472,20 @@ run_test_regalloc_colour pascals_triangle "$PASS" "$DEFAULT_TIMEOUT" "10" "$MARS
 run_test_regalloc_colour shadowing_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour dec2bin "$PASS" "$DEFAULT_TIMEOUT" "15" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour binary_search "$PASS" "$DEFAULT_TIMEOUT" "7" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour poly_eval "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour bank_management "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 # -> struct, arrays
 run_test_regalloc_colour struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour rectangle_area "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour funcall_struct "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour print_matrix "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour big_program "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour big_program2 "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour sort_linked_list "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour array_inside_struct_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour correct_alignment_assign "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 run_test_regalloc_colour dead_code "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
+run_test_regalloc_colour stress_main "$PASS" "$DEFAULT_TIMEOUT" "$EMPTY_STDIN" "$MARS_FORMAT_STDIN_FALSE"
 
 # toDelete test file (for debugging)
 print_test_name "toDelete"

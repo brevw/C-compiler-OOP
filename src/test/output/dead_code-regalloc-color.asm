@@ -10,9 +10,9 @@ sw $ra,0($sp)
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t0,0($sp)
-addiu $sp,$sp,-4
 sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t0,0($sp)
 addiu $t0,$fp,4
 addi $t0,$t0,0
 lw $t1,0($t0)
@@ -31,9 +31,9 @@ jal print_i
 addiu $sp,$sp,4
 dead_function_epilogue:
 # Original instruction: popRegisters
-lw $t1,0($sp)
-addiu $sp,$sp,4
 lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t1,0($sp)
 addiu $sp,$sp,4
 lw $ra,-4($fp)
 addiu $sp,$fp,4
@@ -48,9 +48,9 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
-sw $t0,0($sp)
-addiu $sp,$sp,-4
 sw $t1,0($sp)
+addiu $sp,$sp,-4
+sw $t0,0($sp)
 addiu $t0,$fp,12
 lw $t1,0($t0)
 addiu $t0,$fp,8
@@ -61,9 +61,9 @@ sw $t0,0($t1)
 j dead_math_epilogue
 dead_math_epilogue:
 # Original instruction: popRegisters
-lw $t1,0($sp)
-addiu $sp,$sp,4
 lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t1,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -79,9 +79,9 @@ addi $t1,$t0,0
 li $t0,100
 sw $t0,0($t1)
 addiu $t0,$fp,-8
-addi $t0,$t0,4
-li $t1,200
-sw $t1,0($t0)
+addi $t1,$t0,4
+li $t0,200
+sw $t0,0($t1)
 li $t1,1
 addiu $t0,$sp,-4
 sw $t1,0($t0)
