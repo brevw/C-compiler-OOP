@@ -6,9 +6,11 @@
 # +  one or more
 # |  alternative
 
-program    ::= (include)* (structdecl | vardecl | fundecl | fundef)* EOF
+program    ::= (include)* (classdecl | structdecl | vardecl | fundecl | fundef)* EOF # Part V
 
 include    ::= "#include" STRING_LITERAL
+
+classdecl  ::= classtype ["extends" IDENT] "{" (vardecl)* (fundef)* "}" # Part V
 
 structdecl ::= structtype "{" (vardecl)+ "}" ";"    # structure declaration
 
@@ -18,7 +20,8 @@ fundef    ::= type IDENT "(" params ")" block       # function definition
 
 fundecl   ::= type IDENT "(" params ")" ";"         # function declaration
 
-type       ::= ("int" | "char" | "void" | structtype) ("*")*
+type       ::= ("int" | "char" | "void" | structtype | classtype) ("*")*   # Part V
+classtype  ::= "class" IDENT   # Part V
 structtype ::= "struct" IDENT
 
 params     ::= [ type IDENT ("[" INT_LITERAL "]")* ("," type IDENT ("[" INT_LITERAL "]")*)* ]
@@ -44,12 +47,14 @@ expr5       ::= expr6 (("<"|"<="|">"|">=") expr6)*                              
 expr6       ::= expr7 (("+"|"-") expr7)*                                          # add, sub (left to right)
 expr7       ::= expr8 (("*"|"/"|"%") expr8)*                                      # mult, div, rem (left to right)
 expr8       ::= ("&"|"*"|"+"|"-"|"(" type ")") expr8 | expr9                      # address of, dereference, cast, plus, minus (right to left)
-expr9       ::=( IDENT "(" [expr ("," expr)* ] ")"
+                | "new" classtype"()"                                             # new class object instantiation # Part V
+expr9       ::=( IDENT "(" [expr ("," expr)* ] ")"                                # funcall
                  | IDENT
                  | INT_LITERAL
                  | CHAR_LITERAL                                # primary
                  | STRING_LITERAL
                  | "sizeof" "(" type ")"
-                 | "(" expr ")" ) expr9_prime
+                 | "(" expr ")"  ) expr9_prime
 
-expr9_prime ::= (("." IDENT) | ("[" expr "]"))*   | epsilon
+expr9_prime ::= (("." IDENT) | ("." funcall) | ("[" expr "]"))*   | epsilon       # call to an instance method # Part V
+                                                                                  # class instance or structure field member access

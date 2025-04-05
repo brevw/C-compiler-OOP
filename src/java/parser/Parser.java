@@ -10,6 +10,8 @@ import ast.BinOp;
 import ast.Block;
 import ast.Break;
 import ast.ChrLiteral;
+import ast.ClassDecl;
+import ast.ClassType;
 import ast.Continue;
 import ast.Decl;
 import ast.Expr;
@@ -19,7 +21,9 @@ import ast.FunCallExpr;
 import ast.FunDecl;
 import ast.FunDef;
 import ast.If;
+import ast.InstanceFunCallExpr;
 import ast.IntLiteral;
+import ast.NewInstance;
 import ast.Op;
 import ast.PointerType;
 import ast.Program;
@@ -57,9 +61,9 @@ public class Parser extends CompilerPass {
 
     private final Tokeniser tokeniser;
 
-    private static final Category FIRST_TYPE[] = {Category.INT, Category.CHAR, Category.STRUCT, Category.VOID};
+    private static final Category FIRST_TYPE[] = {Category.INT, Category.CHAR, Category.STRUCT, Category.VOID, Category.CLASS};
     private static final Category FIRST_EXP_PRIME[] = {Category.ASSIGN, Category.GT, Category.LT, Category.GE, Category.LE, Category.NE, Category.EQ, Category.PLUS, Category.MINUS, Category.DIV, Category.ASTERISK, Category.REM, Category.LOGOR, Category.LOGAND, Category.LSBR, Category.DOT};
-    private static final Category FIRST_EXP[] = {Category.MINUS, Category.PLUS, Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.ASTERISK, Category.AND, Category.SIZEOF, Category.LPAR, Category.IDENTIFIER, Category.INT_LITERAL};
+    private static final Category FIRST_EXP[] = {Category.MINUS, Category.PLUS, Category.CHAR_LITERAL, Category.STRING_LITERAL, Category.ASTERISK, Category.AND, Category.SIZEOF, Category.LPAR, Category.IDENTIFIER, Category.INT_LITERAL, Category.NEW};
     private static final Category FIRST_STMT[] = combine(FIRST_EXP, Category.LBRA, Category.WHILE, Category.IF, Category.RETURN, Category.CONTINUE, Category.BREAK);
     private static final Category FIRST_BLOCK[] = {Category.LBRA};
 
@@ -171,8 +175,12 @@ public class Parser extends CompilerPass {
                     lookAhead(2).category == Category.LBRA) {
                 // parse as (structdecl)
                 decls.add(parseStructDecl());
-            }
-            else {
+            } else if (token.category == Category.CLASS &&
+                    lookAhead(1).category == Category.IDENTIFIER &&
+                    (lookAhead(2).category == Category.EXTENDS || lookAhead(2).category == Category.LBRA)) {
+                // parse as (classdecl)
+                decls.add(parseClassDecl());
+            } else {
                 // parse as (fundecl | fundef | vardecl)
                 Type type =  parseType();
                 Token id = expect(Category.IDENTIFIER);
@@ -212,6 +220,18 @@ public class Parser extends CompilerPass {
         }
     }
 
+    private ClassType parseClassType(){
+        ClassType type = null;
+        if (accept(Category.CLASS)) {
+            nextToken();
+            Token id = expect(Category.IDENTIFIER);
+            type = new ClassType(id.data);
+        } else {
+            error(Category.CLASS);
+        }
+        return type;
+    }
+
     private Type parseType(){
         Type type = BaseType.UNKNOWN;
         if (accept(FIRST_TYPE)){
@@ -219,6 +239,11 @@ public class Parser extends CompilerPass {
                 nextToken();
                 Token id = expect(Category.IDENTIFIER);
                 type = new StructType(id.data);
+            } else if (accept(Category.CLASS)) {
+                type = parseClassType();
+                if (type == null) {
+                    type = BaseType.UNKNOWN;
+                }
             } else {
                 switch (token.category) {
                     case Category.INT:
@@ -332,6 +357,40 @@ public class Parser extends CompilerPass {
         return new StructTypeDecl(id.data, varDecls);
     }
 
+    private ClassDecl parseClassDecl(){
+        List<VarDecl> varDecls = new ArrayList<>();
+        List<FunDef> funDecls = new ArrayList<>();
+        String name = "";
+        String superClassName = null;
+        expect(Category.CLASS);
+        name = expect(Category.IDENTIFIER).data;
+        if (accept(Category.EXTENDS)) {
+            nextToken();
+            superClassName = expect(Category.IDENTIFIER).data;
+        }
+        expect(Category.LBRA);
+        while (accept(FIRST_TYPE)) {
+            Type type = parseType();
+            Token id = expect(Category.IDENTIFIER);
+            if (accept(Category.LPAR)) {
+                // parse as fundef
+                nextToken();
+                var argsList = new ArrayList<VarDecl>();
+                parseParam(argsList);
+                expect(Category.RPAR);
+                funDecls.add(new FunDef(type, id.data, argsList, parseBlock()));
+            } else if (accept(Category.LSBR, Category.SC)) {
+                // parse as vardecl
+                varDecls.add(parseVarDeclWithoutTypeIdent(type, id));
+            } else {
+                error(Category.LPAR, Category.LSBR, Category.SC);
+            }
+        }
+        expect(Category.RBRA);
+
+        return new ClassDecl(name, superClassName, varDecls, funDecls);
+    }
+
     private Expr parseExpr(){
         return parseExprOne();
     }
@@ -431,9 +490,18 @@ public class Parser extends CompilerPass {
 
     private Expr parseExprEight(){
         var temp = lookAhead(1).category;
-        boolean lookAheadType =  temp == Category.INT || temp == Category.CHAR || temp == Category.STRUCT || temp == Category.VOID;
+        boolean lookAheadType =  temp == Category.INT || temp == Category.CHAR || temp == Category.STRUCT || temp == Category.VOID || temp == Category.CLASS;
 
-        if (accept(Category.AND)) {
+        if (accept(Category.NEW)) {
+            nextToken();
+            var type = parseClassType();
+            if (type == null) {
+                type = new ClassType("");
+            }
+            expect(Category.LPAR);
+            expect(Category.RPAR);
+            return new NewInstance(type);
+        } else if (accept(Category.AND)) {
             nextToken();
             return new AddressOfExpr(parseExprEight());
         } else if (accept(Category.ASTERISK)) {
@@ -503,12 +571,31 @@ public class Parser extends CompilerPass {
         if (tempExpr != null) {
             while (accept(Category.LSBR, Category.DOT)) {
                 if (accept(Category.LSBR)) {
+                    // parse as array access
                     nextToken();
                     tempExpr = new ArrayAccessExpr(tempExpr, parseExpr());
                     expect(Category.RSBR);
                 } else {
-                    nextToken();
-                    tempExpr = new FieldAccessExpr(tempExpr, expect(Category.IDENTIFIER).data);
+                    nextToken(); // get rid of the dot
+                    Token id = expect(Category.IDENTIFIER);
+                    if (accept(Category.LPAR)) {
+                        // parse as function call
+                        nextToken();
+                        var args = new ArrayList<Expr>();
+                        if (accept(FIRST_EXP)) {
+                            args.add(parseExpr());
+                            while (accept(Category.COMMA)) {
+                                nextToken();
+                                args.add(parseExpr());
+                            }
+                        }
+                        expect(Category.RPAR);
+                        var funcall = new FunCallExpr(id.data, args);
+                        tempExpr = new InstanceFunCallExpr(tempExpr, funcall);
+                    } else {
+                        // parse as field access
+                        tempExpr = new FieldAccessExpr(tempExpr, id.data);
+                    }
                 }
             }
         } else {
