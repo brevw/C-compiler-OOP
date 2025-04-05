@@ -24,8 +24,6 @@ import regalloc.InterferenceGraph.Node;
 import util.Utils;
 
 public class GraphColor {
-    private static final List<Register.Arch> UNSAVED_ARCH_REGS = List.of(Register.Arch.sp, Register.Arch.ra, Register.Arch.fp, Register.Arch.zero);
-
     private final ArrayList<Register.Arch> availableRegs;
     public final AssemblyProgram asmProgWithVirtualRegs;
     public ArrayList<InterferenceGraph> iGraphs;
@@ -159,7 +157,7 @@ public class GraphColor {
                                 usedArchRegs.addAll(
                                     newInsn.registers().stream()
                                     .map(r -> (Register.Arch)r)
-                                    .filter(r -> !UNSAVED_ARCH_REGS.contains(r))
+                                    .filter(r -> availableRegs.contains(r))
                                     .collect(Collectors.toSet())
                                 );
                                 if (insn instanceof Instruction.LoadAddress la && newLabels.contains(la.label)){
