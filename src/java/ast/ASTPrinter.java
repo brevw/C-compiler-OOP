@@ -47,6 +47,20 @@ public class ASTPrinter {
                 visit(vd.type);
                 writer.print(","+vd.name);
             }
+            case ClassDecl cd -> {
+                writer.print(cd.name);
+                if (cd.superClass != null) {
+                    writer.print(","+cd.superClass.name);
+                }
+                for (VarDecl vd : cd.varDecls) {
+                    writer.print(",");
+                    visit(vd);
+                }
+                for (FunDef fd : cd.funDefs) {
+                    writer.print(",");
+                    visit(fd);
+                }
+            }
 
 
             // Expr
@@ -79,6 +93,16 @@ public class ASTPrinter {
                 writer.print(","+fa.fieldName);
             }
 
+            case InstanceFunCallExpr ifc -> {
+                visit(ifc.classInstance);
+                writer.print(",");
+                visit(ifc.funCall);
+            }
+
+            case NewInstance ni -> {
+                visit(ni.ofClass);
+            }
+
             // Type
             case BaseType bt -> {
                 writer.print(bt.name());
@@ -91,6 +115,9 @@ public class ASTPrinter {
 
             case StructType st -> {
                 writer.print(st.name);
+            }
+            case ClassType ct -> {
+                writer.print(ct.name);
             }
 
             // Op

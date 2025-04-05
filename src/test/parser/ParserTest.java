@@ -118,13 +118,16 @@ class ParserTest {
     private static String generateStructType(){
         return STR."struct \{generateIdentifier(MAX_IDENTIFIER_LENGTH)}";
     }
+    private static String generateClassType() {return STR."class \{generateIdentifier(MAX_IDENTIFIER_LENGTH)}";}
     private static String generateType(){
         StringBuilder sb = new StringBuilder();
-        int index = RANDOM.nextInt(TYPES.length + 1);
+        int index = RANDOM.nextInt(TYPES.length + 2);
         if (index <= TYPES.length - 1){
             sb.append(TYPES[index]);
-        } else {
+        } else if (index == TYPES.length){
             sb.append(generateStructType());
+        } else {
+            sb.append(generateClassType());
         }
         sb.append(' ');
         int repetition = RANDOM.nextInt(MAX_ASTERISK_REPETITION + 1);
@@ -225,6 +228,7 @@ class ParserTest {
     }
     private static String generateValueAt(int depth, int recursiveCalls){
         return (new StringBuilder())
+                .append(' ')
                 .append('*')
                 .append(generateExp(depth, recursiveCalls + 1))
                 .toString();
@@ -246,10 +250,14 @@ class ParserTest {
     }
     private static String generateFunCall(int depth, int recursiveCalls){
         return (new StringBuilder())
+                .append(generateIdentifier(MAX_IDENTIFIER_LENGTH))
                 .append('(')
-                .append(generateType())
+                .append(generateExp(depth, recursiveCalls + 1))
+                .append(',')
+                .append(generateExp(depth, recursiveCalls + 1))
+                .append(',')
+                .append(generateExp(depth, recursiveCalls + 1))
                 .append(')')
-                .append(generateExp(depth + 1, recursiveCalls + 1))
                 .toString();
     }
     private static String generateTypeCast(int depth, int recursiveCalls){
@@ -260,9 +268,15 @@ class ParserTest {
                 .append(generateExp(depth, recursiveCalls + 1))
                 .toString();
     }
+    private static String generateInstanceFunCallExpr(int depth, int recursiveCalls){
+        return STR."\{generateExp(depth, recursiveCalls + 1)}.\{generateFunCall(depth, recursiveCalls + 1)}";
+    }
+    private static String generateNewInstance(int depth, int recursiveCalls){
+        return STR."(new \{generateClassType()}())";
+    }
     private static String generateExp(int depth, int recursiveCalls){
         StringBuilder sb = new StringBuilder();
-        int decision = RANDOM.nextInt(14);
+        int decision = RANDOM.nextInt(16);
         if (recursiveCalls > MAX_RECURSIVE_CALLS){
             decision = 4;
         }
@@ -311,6 +325,10 @@ class ParserTest {
                 return generateSizeOf();
             case 13:
                 return generateTypeCast(depth, recursiveCalls + 1);
+            case 14:
+                return generateNewInstance(depth, recursiveCalls + 1);
+            case 15:
+                return generateInstanceFunCallExpr(depth, recursiveCalls + 1);
             default:
                 assert false;
                 return null;
@@ -370,6 +388,20 @@ class ParserTest {
                 .append(generateBlock(depth + 1, recursiveCalls + 1))
                 .toString();
     }
+    private static String generateClassDecl(int depth){
+        StringBuilder sb = new StringBuilder();
+        sb.append(TAB.repeat(depth)).append(generateClassType()).append("{\n");
+        int repetition = RANDOM.nextInt(1, MAX_ASTERISK_REPETITION + 1);
+        for (int i = 0; i < repetition; i++) {
+            sb.append(generateVarDecl(depth + 1)).append('\n');
+        }
+        for (int i = 0; i < repetition; i++) {
+            sb.append(generateFunDef(depth + 1, 1)).append('\n');
+        }
+        return sb.append(TAB.repeat(depth))
+                .append("}")
+                .toString();
+    }
     private static String generateProgram(){
         int depth = 0;
         StringBuilder sb = new StringBuilder();
@@ -381,7 +413,7 @@ class ParserTest {
 
         int nbrRepetitions = RANDOM.nextInt(MAX_ASTERISK_REPETITION);
         for (int i = 0; i < nbrRepetitions; ++i){
-            int decision = RANDOM.nextInt(4);
+            int decision = RANDOM.nextInt(5);
             switch (decision){
                 case 0:
                     sb.append(generateStructDecl(depth)).append('\n');
@@ -396,6 +428,9 @@ class ParserTest {
                     sb.append(generateFunDef(depth, 0)).append('\n');
                     break;
                 case 4:
+                    sb.append(generateClassDecl(depth)).append('\n');
+                    break;
+                case 5:
                     assert false;
                     return null;
             }
