@@ -1,0 +1,34 @@
+Checked out: Moby Dick
+Checked out: War and Peace
+Returned: Moby Dick
+Checked out: The Great Gatsby
+
+ID: 1001
+Title: Moby Dick
+Author: Herman Melville
+Year: 1851
+Status: Available
+
+ID: 1002
+Title: War and Peace
+Author: Leo Tolstoy
+Year: 1869
+Status: Checked Out
+
+ID: 1003
+Title: 1984
+Author: George Orwell
+Year: 1949
+Status: Available
+
+ID: 1004
+Title: The Great Gatsby
+Author: F. Scott Fitzgerald
+Year: 1925
+Status: Checked Out
+
+ID: 1005
+Title: Pride and Prejudice
+Author: Jane Austen
+Year: 1813
+Status: Available

@@ -1,0 +1,5 @@
+Inside function
+1x2
+y3z
+4w5
+zy3z6
