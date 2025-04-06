@@ -7,6 +7,7 @@ public final class FunCallExpr extends Expr{
     public final String name;
     public final List<Expr> argsList;
     public FunDecl fd; // to be filled in by the name analyser
+    public boolean classMethodCall = false; // to be filled in by the name analyser
 
     public FunCallExpr(String name, List<Expr> argsList){
         this.name = name;

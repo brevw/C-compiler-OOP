@@ -1,8 +1,10 @@
 package sem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import ast.*;
@@ -11,7 +13,9 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
     private static final String UNKNOWN = "Unknown symbol type";
     private final HashSet<String> undefinedFunctions = new HashSet<>();
     private final HashSet<String> funDefBeforeDeclNoDecl = new HashSet<>();
+    private final Map<String, ClassDecl> classes = new HashMap<>();
 
+    private boolean isInClass = false;
     private Scope scope;
 
 	public void visit(ASTNode node) {
@@ -101,7 +105,9 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 
                 } else {
                     FunDecl decl = new FunDecl(fd.type, fd.name, fd.params);
-                    funDefBeforeDeclNoDecl.add(name);
+                    if (!isInClass) {
+                        funDefBeforeDeclNoDecl.add(name);
+                    }
                     scope.put(new FunSymbol(name, decl));
                 }
 
@@ -173,24 +179,79 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 }
 			}
 
+            case ClassDecl cd -> {
+                Scope oldScope = scope;
+                scope = new Scope(oldScope);
+                isInClass = true;
+                String name = cd.name;
+                String superName = cd.superClass == null ? null : cd.superClass.name;
+                if (classes.containsKey(name)) {
+                    error("Class " + name + " is already declared");
+                }
+                if (superName != null && !classes.containsKey(superName)) {
+                    error("Class " + superName + " is not declared");
+                }
+
+                List<VarDecl> superFields = new ArrayList<>();
+                List<FunDef> superMethods = new ArrayList<>();
+                ClassDecl temp = cd;
+                while (temp.superClass != null && classes.containsKey(temp.superClass.name)) {
+                    ClassDecl super_ = classes.get(temp.superClass.name);
+                    superFields.addAll(super_.varDecls);
+                    superMethods.addAll(super_.funDefs);
+                    temp = super_;
+                }
+
+                for (var vd: cd.varDecls) {
+                    if (superFields.stream().map(v -> v.name).anyMatch(vd.name::equals)) {
+                        error("Class " + name + ", duplicate variable names "+ vd.name + " in the declaration");
+                    }
+                }
+                for (var fd: cd.funDefs) {
+                    for (var fd1: superMethods) {
+                        if (fd.name.equals(fd1.name)) {
+                            if (!fd.type.equals(fd1.type)) {
+                                error("Class " + name + ", method " + fd.name + " has a different return type from the one in the superclasses");
+                            } else if (fd.params.size() != fd1.params.size()) {
+                                error("Class " + name + ", method " + fd.name + " was declared with different number of parameters from the one in the superclasses");
+                            } else {
+                                for (int i = 0; i < fd.params.size(); i++) {
+                                    if (!fd.params.get(i).type.equals(fd1.params.get(i).type)) {
+                                        error("Class " + name + ", method " + fd.name + " has a different types in parameter " + (i + 1) + " from the one in the superclasses");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                cd.varDecls.forEach(vd -> visit(vd));
+                cd.funDefs.forEach(fd -> visit(fd));
+                classes.put(name, cd);
+                scope = oldScope;
+                isInClass = false;
+            }
 
 
             case FunCallExpr fc -> {
-                String name = fc.name;
-                Optional<Symbol> sym = scope.lookup(name);
-                if (sym.isPresent()) {
-                    switch (sym.get()) {
-                        case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
-                        case FunSymbol fs -> {
-                            fc.fd = fs.fd;
-                            for (var a: fc.argsList) {
-                                visit(a);
-                            }
-                        }
-                        default -> error(UNKNOWN);
-                    }
+                if (fc.classMethodCall) {
+                    fc.argsList.forEach(arg -> visit(arg));
                 } else {
-                    error("Function " + name + " is not declared or defined in the current scope");
+                    String name = fc.name;
+                    Optional<Symbol> sym = scope.lookup(name);
+                    if (sym.isPresent()) {
+                        switch (sym.get()) {
+                            case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
+                            case FunSymbol fs -> {
+                                fc.fd = fs.fd;
+                                for (var a: fc.argsList) {
+                                    visit(a);
+                                }
+                            }
+                            default -> error(UNKNOWN);
+                        }
+                    } else {
+                        error("Function " + name + " is not declared or defined in the current scope");
+                    }
                 }
             }
 

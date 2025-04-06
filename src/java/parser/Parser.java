@@ -591,6 +591,7 @@ public class Parser extends CompilerPass {
                         }
                         expect(Category.RPAR);
                         var funcall = new FunCallExpr(id.data, args);
+                        funcall.classMethodCall = true;
                         tempExpr = new InstanceFunCallExpr(tempExpr, funcall);
                     } else {
                         // parse as field access

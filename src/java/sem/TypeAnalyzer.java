@@ -8,6 +8,7 @@ import ast.*;
 public class TypeAnalyzer extends BaseSemanticAnalyzer {
     private final Map<String, StructTypeDecl> structNameSpace = new HashMap<>();
     private FunDef currentFunDef = null;
+    private final Map<String, ClassDecl> classes = new HashMap<>();
 
 	public Type visit(ASTNode node) {
 		return switch(node) {
@@ -83,6 +84,13 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                 }
 				yield std.type;
 			}
+            case ClassDecl cd -> {
+                String name = cd.name;
+                cd.varDecls.forEach(vd -> visit(vd));
+                cd.funDefs.forEach(fd -> visit(fd));
+                classes.put(name, cd);
+                yield cd.type;
+            }
 
             // Type
 			case Type t -> {
@@ -99,6 +107,12 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                         Type type = visit(at.type);
                         if (type instanceof BaseType bt && bt == BaseType.VOID) {
                             error("Array cannot have type void");
+                            yield BaseType.UNKNOWN;
+                        }
+                    }
+                    case ClassType ct -> {
+                        if (!classes.containsKey(ct.name)) {
+                            error("Class " + ct.name + " is not defined");
                             yield BaseType.UNKNOWN;
                         }
                     }
@@ -235,6 +249,31 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                             }
                         }
                     }
+                    case ClassType ct -> {
+                        ClassDecl cd = classes.get(ct.name);
+                        boolean foundField = false;
+                        String temp = ct.name;
+                        while (temp != null) {
+                            cd = classes.get(temp);
+                            for (VarDecl vd : cd.varDecls) {
+                                if (vd.name.equals(fae.fieldName)) {
+                                    fae.type = vd.type;
+                                    foundField = true;
+                                    break;
+                                }
+                            }
+                            if (foundField) {
+                                break;
+                            }
+                            temp = cd.superClass == null ? null : cd.superClass.name;
+                        }
+
+                        if (!foundField) {
+                            error("Field (" + fae.fieldName + ") not found in class " + ct.name);
+                            fae.type = BaseType.UNKNOWN;
+                        }
+                    }
+
                     default -> {
                         error("Field access is only allowed for structs");
                         fae.type = BaseType.UNKNOWN;
@@ -286,8 +325,11 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                 } else if (fromType instanceof PointerType && toType instanceof PointerType) {
                     // cast from pointer to pointer
                     tce.type = toType;
+                } else if (fromType instanceof ClassType ct1 && toType instanceof ClassType ct2 && isSuperClass(ct2, ct1, classes)) {
+                    // cast from superclass to class
+                    tce.type = toType;
                 } else {
-                    error("Can only cast: char -> int, array -> pointer, pointer -> pointer");
+                    error("Can only cast: char -> int, array -> pointer, pointer -> pointer, class -> superclass");
                     tce.type = BaseType.UNKNOWN;
                 }
 
@@ -307,6 +349,52 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     a.type = left;
                 }
                 yield a.type;
+            }
+
+            case NewInstance ni -> {
+                ni.type = visit(ni.ofClass);
+                yield ni.type;
+            }
+
+            case InstanceFunCallExpr ifce -> {
+                Type instanceType = visit(ifce.classInstance);
+                if (instanceType instanceof ClassType ct) {
+                    ClassDecl cd = classes.get(ct.name);
+                    FunDef fdReferedTo = null;
+                    String temp = ct.name;
+                    while (temp != null) {
+                        cd = classes.get(temp);
+                        if (cd.funDefs.stream().anyMatch(fd -> fd.name.equals(ifce.funCall.name))) {
+                            fdReferedTo = cd.funDefs.stream().filter(fd -> fd.name.equals(ifce.funCall.name)).findFirst().get();
+                            break;
+                        }
+                        temp = cd.superClass == null ? null : cd.superClass.name;
+                    }
+                    if (fdReferedTo != null) {
+                        ifce.funDef = fdReferedTo;
+                        ifce.type = fdReferedTo.type;
+                        if (fdReferedTo.params.size() != ifce.funCall.argsList.size()) {
+                            error("Function " + ifce.funCall.name + " expects " + fdReferedTo.params.size() + " arguments but got " + ifce.funCall.argsList.size());
+                            ifce.type = BaseType.UNKNOWN;
+                        }
+                        for (int i = 0; i < ifce.funCall.argsList.size(); i++) {
+                            Type expected = fdReferedTo.params.get(i).type;
+                            Type actual = visit(ifce.funCall.argsList.get(i));
+                            if (!expected.equals(actual)) {
+                                error("Function " + ifce.funCall.name + " expects " + expected + " but got " + actual);
+                                ifce.type = BaseType.UNKNOWN;
+                                break;
+                            }
+                        }
+                    } else {
+                        error("Function " + ifce.funCall.name + " not found in class " + ct.name);
+                        ifce.type = BaseType.UNKNOWN;
+                    }
+                } else {
+                    error("Instance function call is only allowed for class instances");
+                    ifce.type = BaseType.UNKNOWN;
+                }
+                yield ifce.type;
             }
 
             // Stmt
@@ -395,6 +483,17 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
             }
             default -> {}
         };
+    }
+
+    private static boolean isSuperClass(ClassType superCt, ClassType ct, Map<String, ClassDecl> classes) {
+        ClassDecl cd = classes.get(ct.name);
+        while (cd != null) {
+            if (cd.superClass != null && cd.superClass.name.equals(superCt.name)) {
+                return true;
+            }
+            cd = classes.get(cd.superClass == null ? null : cd.superClass.name);
+        }
+        return false;
     }
 
 }
