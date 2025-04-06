@@ -1,2 +1,0 @@
-Person's age: 25
-Person's height: 175 cm

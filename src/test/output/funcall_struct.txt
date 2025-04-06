@@ -1,3 +1,0 @@
-Person's age char: A
-Person's age: 10
-Person's height: 170 cm

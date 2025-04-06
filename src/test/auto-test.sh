@@ -412,6 +412,21 @@ run_test_sem class_method_overriding "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem class_field_overriding "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 run_test_sem single_class_instantiation "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem class_instantiation_wihtout_cast "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem class_instantiation_with_cast "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem instantiation_undeclared_class "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem field_access_simple "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem field_access_inherited "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem field_access_undeclared "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem field_access_multiple "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_function_call_overrided_access_multiple "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_function_call_and_field_access "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_function_call_undeclared "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem class_function_call_inherited "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_type_casting_with_field_access_and_function_call "$PASS" "$DEFAULT_TIMEOUT"
+run_test_sem class_type_casting_with_invalid_field_access "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem class_type_casting_with_invalid_function_call "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+
+exit 0
 
 # CodeGen tests
 print_test_name "CodeGen tests (Uses Naive Register Allocator)"

@@ -1,2 +1,0 @@
-Polynomial value at x=2 is 25
-Derivative at x=2 is 80

@@ -1,2 +1,0 @@
-Rectangle Dimensions: 5 (width) x 10 (height)
-Area: 50
