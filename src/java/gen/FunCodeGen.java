@@ -24,21 +24,27 @@ public class FunCodeGen extends CodeGen {
         // This is necessary for the register allocator.
         TextSection funSection = asmProg.emitNewTextSection();
 
+        // create a label for the function
+        boolean isClassMethod = fd.label != null;
+        if (fd.label == null) {
+            fd.label = Label.get(fd.name);
+        }
+
         // 1) emit the prolog
         // set function name
-        if (fd.name.equals(Utils.MAIN_FUNCTION)) {
-            funSection.emit(new Directive(Utils.GLOBAL_DIRECTIVE + fd.name));
+        if (fd.label.name.equals(Utils.MAIN_FUNCTION)) {
+            funSection.emit(new Directive(Utils.GLOBAL_DIRECTIVE + fd.label.name));
         }
-        funSection.emit(Label.get(fd.name));
+        funSection.emit(fd.label);
 
         int localVarSize = fd.localVarSize;
         // handle case of main function
-        if (fd.name.equals(Utils.MAIN_FUNCTION)) {
+        if (fd.label.name.equals(Utils.MAIN_FUNCTION)) {
             // allocate space for local variables
             funSection.emit(OpCode.ADDIU, Arch.fp, Arch.sp, 0);
             funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -localVarSize);
             (new StmtCodeGen(asmProg)).visit(fd.block);
-            Label epilog = Label.get(fd.name + Utils.EPILOGUE_OF_FUNCTION); // early exit of the main function
+            Label epilog = Label.get(fd.label.name + Utils.EPILOGUE_OF_FUNCTION); // early exit of the main function
             funSection.emit(epilog);
             funSection.emit(OpCode.LI, Arch.v0, Utils.EXIT_CODE);
             funSection.emit(OpCode.SYSCALL);
@@ -67,45 +73,49 @@ public class FunCodeGen extends CodeGen {
         StmtCodeGen scd = new StmtCodeGen(asmProg);
 
         // define body of function (if build in function, emit syscall else visit block)
-        switch (fd.name) {
-            case "print_s" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
-                funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_STRING_CODE);
-                funSection.emit(OpCode.SYSCALL);
-            }
-            case "print_i" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
-                funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_INT_CODE);
-                funSection.emit(OpCode.SYSCALL);
-            }
-            case "print_c" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
-                funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_CHAR_CODE);
-                funSection.emit(OpCode.SYSCALL);
-            }
-            case "read_c" -> {
-                funSection.emit(OpCode.LI, Arch.v0, Utils.READ_CHAR_CODE);
-                funSection.emit(OpCode.SYSCALL);
-                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
-            }
-            case "read_i" -> {
-                funSection.emit(OpCode.LI, Arch.v0, Utils.READ_INT_CODE);
-                funSection.emit(OpCode.SYSCALL);
-                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
-            }
-            case "mcmalloc" -> {
-                funSection.emit(OpCode.LW, Arch.a0, Arch.fp, 2 * Utils.WORD_SIZE);
-                funSection.emit(OpCode.LI, Arch.v0, Utils.MALLOC_CODE);
-                funSection.emit(OpCode.SYSCALL);
-                funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
-            }
-            default -> {
+        if (isClassMethod) {
+                scd.visit(fd.block);
+        } else {
+            switch (fd.name) {
+                case "print_s" -> {
+                    funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
+                    funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_STRING_CODE);
+                    funSection.emit(OpCode.SYSCALL);
+                }
+                case "print_i" -> {
+                    funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
+                    funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_INT_CODE);
+                    funSection.emit(OpCode.SYSCALL);
+                }
+                case "print_c" -> {
+                    funSection.emit(OpCode.LW, Arch.a0, Arch.fp, Utils.WORD_SIZE);
+                    funSection.emit(OpCode.LI, Arch.v0, Utils.PRINT_CHAR_CODE);
+                    funSection.emit(OpCode.SYSCALL);
+                }
+                case "read_c" -> {
+                    funSection.emit(OpCode.LI, Arch.v0, Utils.READ_CHAR_CODE);
+                    funSection.emit(OpCode.SYSCALL);
+                    funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
+                }
+                case "read_i" -> {
+                    funSection.emit(OpCode.LI, Arch.v0, Utils.READ_INT_CODE);
+                    funSection.emit(OpCode.SYSCALL);
+                    funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
+                }
+                case "mcmalloc" -> {
+                    funSection.emit(OpCode.LW, Arch.a0, Arch.fp, 2 * Utils.WORD_SIZE);
+                    funSection.emit(OpCode.LI, Arch.v0, Utils.MALLOC_CODE);
+                    funSection.emit(OpCode.SYSCALL);
+                    funSection.emit(OpCode.SW, Arch.v0, Arch.fp, Utils.WORD_SIZE);
+                }
+                default -> {
                     scd.visit(fd.block);
+                }
             }
         }
 
         // 3) emit the epilog (in case of no return statement)
-        Label epilog = Label.get(fd.name + Utils.EPILOGUE_OF_FUNCTION);
+        Label epilog = Label.get(fd.label.name + Utils.EPILOGUE_OF_FUNCTION);
         funSection.emit(epilog);
         // restore saved registers
         funSection.emit(OpCode.POP_REGISTERS);
