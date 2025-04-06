@@ -20,6 +20,14 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 			case Program p -> {
                 for (ASTNode c : p.children())
                     visit(c);
+                p.decls.stream().filter(d -> d instanceof ClassDecl)
+                    .forEach(d -> {
+                        ClassDecl cd = (ClassDecl) d;
+                        ((ClassType) cd.type).decl = cd;
+                        if (cd.superClass != null) {
+                            ((cd.superClass)).decl = classes.get(cd.superClass.name);
+                        }
+                    });
                 yield BaseType.NONE;
 			}
 
@@ -495,5 +503,4 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
         }
         return false;
     }
-
 }

@@ -28,6 +28,7 @@ public class Utils {
     // directives
     public static final String ASCIIZ_DIRECTIVE = "asciiz ";
     public static final String SPACE_DIRECTIVE = "space ";
+    public static final String WORD_DIRECTIVE = "word ";
     public static final String ALIGN_DIRECTIVE = "align ";
     public static final String GLOBAL_DIRECTIVE = "globl ";
     public static final String SET_DIRECTIVE = "set ";
