@@ -56,6 +56,15 @@ public class ProgramCodeGen extends CodeGen {
                 });
             });
 
+        // modify instance functions by adding the class pointer as first parameter
+        p.decls.stream().filter(d -> d instanceof ClassDecl)
+            .forEach(d -> {
+                ClassDecl cd = (ClassDecl) d;
+                cd.funDefs.forEach(f -> {
+                    f.params.add(0, new VarDecl(cd.type, "this"));
+                });
+            });
+
         // generate the code for each function
         p.decls.forEach((d) -> {
             switch(d) {

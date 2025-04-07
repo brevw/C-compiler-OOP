@@ -14,9 +14,12 @@ public final class ClassDecl extends Decl{
     public final ClassType superClass; // null if no superclass
     public final List<VarDecl> varDecls;
     public final List<FunDef> funDefs;
+    public LinkedHashMap<String, Label> funToLabel; // to be filled by the virtual table creation and is ordered
     public Label virtualTableLabel = null; // to be filled by the virtual table creation
-    public LinkedHashMap<String, Label> funToLabel; // to be filled by the virtual table creation
-    public final List<VarDecl> allVarDecls = new ArrayList<>(); // to be filled when creating the virtual table
+    public final List<VarDecl> allVarDecls = new ArrayList<>(); // to be filled in the name analyzer
+                                                                // random order at first but in Virtual Table Creation will
+                                                                // be ordered
+    public final List<String> allFunNames = new ArrayList<>(); // to be filled in the name analyzer
 
     private Integer size = null;
     private HashMap<String, Integer> offsets = null;

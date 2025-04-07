@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import ast.*;
 
@@ -77,12 +78,12 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 
 			case FunDef fd -> {
                 String name = fd.name;
-                Optional<Symbol> sym = scope.lookup(name);
+                Optional<Symbol> sym = scope.lookupCurrent(name);
                 if (sym.isPresent()) {
                     switch (sym.get()) {
                         case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
                         case FunSymbol fs -> {
-                            if (!undefinedFunctions.contains(name)) {
+                            if (!undefinedFunctions.contains(name) && !isInClass) {
                                 error("Function " + name + " was previously defined");
                             } else {
                                 FunDecl decl = fs.fd;
@@ -97,7 +98,9 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                                         }
                                     }
                                 }
-                                undefinedFunctions.remove(name);
+                                if (!isInClass) {
+                                    undefinedFunctions.remove(name);
+                                }
                             }
                         }
                         default -> error(UNKNOWN);
@@ -137,6 +140,17 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 for (var decl: p.decls) {
                     visit(decl);
                 }
+
+                // assign the class decls to their types
+                p.decls.stream().filter(d -> d instanceof ClassDecl)
+                    .forEach(d -> {
+                        ClassDecl cd = (ClassDecl) d;
+                    ((ClassType) cd.type).decl = cd;
+                        if (cd.superClass != null) {
+                        ((cd.superClass)).decl = classes.get(cd.superClass.name);
+                        }
+                    });
+
 
                 if (!undefinedFunctions.isEmpty()) {
                     error("Undefined functions: " + String.join(", ", undefinedFunctions));
@@ -224,6 +238,24 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                         }
                     }
                 }
+                superFields.forEach(vd -> {
+                    scope.put(new VarSymbol(vd.name, vd));
+                });
+                superMethods.forEach(fd -> {
+                    FunDecl decl = new FunDecl(fd.type, fd.name, fd.params);
+                    scope.put(new FunSymbol(fd.name, decl));
+                });
+
+                // instance has all fields of the class and its superclasses
+                cd.allVarDecls.addAll(cd.varDecls);
+                cd.allVarDecls.addAll(superFields);
+
+                // instance has all decl of methods of the class and its superclasses
+                cd.allFunNames.addAll(Stream.concat(
+                    superMethods.stream().map(fs -> fs.name),
+                    cd.funDefs.stream().map(fs -> fs.name)
+                ).distinct().toList());
+
                 cd.varDecls.forEach(vd -> visit(vd));
                 cd.funDefs.forEach(fd -> visit(fd));
                 classes.put(name, cd);

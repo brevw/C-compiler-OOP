@@ -32,7 +32,9 @@ public class VirtualTablesCreation extends CodeGen{
             .forEach(d -> {
                 Stack<ClassDecl> ancestors = new Stack<>();
                 LinkedHashMap<String, Label> funToLabel = new LinkedHashMap<>();
-                ClassDecl cd = (ClassDecl) d;
+                ClassDecl thisClass = (ClassDecl) d;
+                ClassDecl cd = thisClass;
+                cd.allVarDecls.clear();
                 while (cd != null) {
                     ancestors.push(cd);
                     cd = cd.superClass == null ? null : classes.get(cd.superClass.name);
@@ -42,16 +44,12 @@ public class VirtualTablesCreation extends CodeGen{
                     cd.funDefs.forEach(f -> {
                         funToLabel.put(f.name, f.label);
                     });
-                    cd.allVarDecls.addAll(cd.varDecls);
+                    // put the class variables in order
+                    thisClass.allVarDecls.addAll(cd.varDecls);
                 }
-
                 // fill the class with appropriate attributes
-                cd.virtualTableLabel = Label.create(cd.name + "_vtable");
-                cd.funToLabel = funToLabel;
+                thisClass.virtualTableLabel = Label.create(cd.name + "_vtable");
+                thisClass.funToLabel = funToLabel;
             });
-
     }
-
-
-
 }

@@ -12,10 +12,13 @@ import ast.TypecastExpr;
 import ast.Assign;
 import ast.BinOp;
 import ast.IntLiteral;
+import ast.NewInstance;
 import ast.StrLiteral;
 import ast.Type;
 import ast.ChrLiteral;
+import ast.ClassType;
 import ast.FunCallExpr;
+import ast.InstanceFunCallExpr;
 import gen.asm.AssemblyProgram;
 import gen.asm.AssemblyProgram.TextSection;
 import gen.asm.Register;
@@ -271,6 +274,72 @@ public class ExprValCodeGen extends CodeGen {
                 Register reg = Register.Virtual.create();
                 currentSection.emit(OpCode.LI, reg, Utils.charToUnicode(cl.charValue));
                 yield reg;
+            }
+            case NewInstance ni -> {
+                Register reg = Register.Virtual.create();
+                Register temp = Register.Virtual.create();
+                currentSection.emit(OpCode.LI, Arch.v0, Utils.MALLOC_CODE);
+                currentSection.emit(OpCode.LI, Arch.a0, ni.type.getSize());
+                currentSection.emit(OpCode.SYSCALL);
+                currentSection.emit(OpCode.ADDIU, reg, Arch.v0, 0);
+                currentSection.emit(OpCode.LA, temp, ni.ofClass.decl.virtualTableLabel); // save vtable address
+                currentSection.emit(OpCode.SW, temp, reg, 0);
+                yield reg;
+            }
+            case InstanceFunCallExpr ifce -> {
+                Register reg = visit(ifce.classInstance);
+                Register funAddr = Register.Virtual.create();
+                currentSection.emit(OpCode.LW, funAddr , reg, 0); // load vtable address
+                int functionNumber = ((ClassType) ifce.classInstance.type).decl.funToLabel.entrySet().stream().map(entry -> entry.getKey()).toList().indexOf(ifce.funCall.name);
+                currentSection.emit(OpCode.LW, funAddr, funAddr, functionNumber * Utils.WORD_SIZE); // load function address
+
+
+                Register returnReg = null;
+                // precall
+                // TODO: refactor
+                // push arguments
+                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -Utils.WORD_SIZE); // reserve space for the this pointer
+                currentSection.emit(OpCode.SW, reg, Arch.sp, 0); // push the this pointer
+
+                int argsSize = 0;
+                var fce = ifce.funCall;
+                for (Expr arg : fce.argsList) {
+                    Register argReg = visit(arg);
+                    // if the argument is an array, pass the address of the array
+                    int argSize = Utils.getSizeOfFunArgsAndReturnTypes(arg.type);
+                    int offsetToAlignment = Utils.computeAlignmentOffset(argSize, Utils.WORD_SIZE);
+                    argsSize += argSize + offsetToAlignment;
+                    Register alignedArgAddr = Register.Virtual.create();
+                    currentSection.emit(OpCode.ADDIU, alignedArgAddr, Arch.sp, - argsSize);
+                    Utils.copyToAddr(currentSection, alignedArgAddr, argReg, arg.type, true);
+                }
+                if (argsSize > 0) {
+                    currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -argsSize);
+                }
+
+                // reserve space for return value
+                int returnSize = Utils.getSizeOfFunArgsAndReturnTypes(fce.type);
+                returnSize += Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
+                if (returnSize > 0) {
+                    currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -returnSize);
+                }
+
+                // JALR function
+                currentSection.emit(OpCode.JALR, funAddr);
+
+                // postreturn
+                // read the return value from stack (if there is one, it is pointed by $sp)
+                if (returnSize > 0) {
+                    returnReg = Register.Virtual.create();
+                    currentSection.emit(OpCode.ADDI, returnReg, Arch.sp, 0);
+                    returnReg = Utils.addrToValue(currentSection, returnReg, fce.type);
+                } else {
+                    returnReg = Arch.sp; // return value is in $sp as it won't be used
+                }
+
+                // reset stack
+                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, argsSize + returnSize);
+                yield returnReg;
             }
             default -> throw new RuntimeException("Unknown expression type: " + e);
         };

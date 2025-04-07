@@ -2,13 +2,13 @@ package sem;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import ast.*;
 
 public class TypeAnalyzer extends BaseSemanticAnalyzer {
     private final Map<String, StructTypeDecl> structNameSpace = new HashMap<>();
-    private FunDef currentFunDef = null;
-    private final Map<String, ClassDecl> classes = new HashMap<>();
+    private FunDef currentFunDef = null; private final Map<String, ClassDecl> classes = new HashMap<>();
 
 	public Type visit(ASTNode node) {
 		return switch(node) {
@@ -20,14 +20,6 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 			case Program p -> {
                 for (ASTNode c : p.children())
                     visit(c);
-                p.decls.stream().filter(d -> d instanceof ClassDecl)
-                    .forEach(d -> {
-                        ClassDecl cd = (ClassDecl) d;
-                        ((ClassType) cd.type).decl = cd;
-                        if (cd.superClass != null) {
-                            ((cd.superClass)).decl = classes.get(cd.superClass.name);
-                        }
-                    });
                 yield BaseType.NONE;
 			}
 
@@ -122,6 +114,9 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                         if (!classes.containsKey(ct.name)) {
                             error("Class " + ct.name + " is not defined");
                             yield BaseType.UNKNOWN;
+                        }
+                        if (ct.decl == null) {
+                            ct.decl = classes.get(ct.name);
                         }
                     }
                     default -> {
@@ -259,24 +254,10 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     }
                     case ClassType ct -> {
                         ClassDecl cd = classes.get(ct.name);
-                        boolean foundField = false;
-                        String temp = ct.name;
-                        while (temp != null) {
-                            cd = classes.get(temp);
-                            for (VarDecl vd : cd.varDecls) {
-                                if (vd.name.equals(fae.fieldName)) {
-                                    fae.type = vd.type;
-                                    foundField = true;
-                                    break;
-                                }
-                            }
-                            if (foundField) {
-                                break;
-                            }
-                            temp = cd.superClass == null ? null : cd.superClass.name;
-                        }
-
-                        if (!foundField) {
+                        Optional<VarDecl> hit = ((ClassType) cd.type).decl.allVarDecls.stream().filter(v -> v.name.equals(fae.fieldName)).findFirst();
+                        if (hit.isPresent()) {
+                            fae.type = hit.get().type;
+                        } else {
                             error("Field (" + fae.fieldName + ") not found in class " + ct.name);
                             fae.type = BaseType.UNKNOWN;
                         }
@@ -361,42 +342,17 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
 
             case NewInstance ni -> {
                 ni.type = visit(ni.ofClass);
+                ni.ofClass.decl = classes.get(ni.ofClass.name);
                 yield ni.type;
             }
 
             case InstanceFunCallExpr ifce -> {
                 Type instanceType = visit(ifce.classInstance);
                 if (instanceType instanceof ClassType ct) {
-                    ClassDecl cd = classes.get(ct.name);
-                    FunDef fdReferedTo = null;
-                    String temp = ct.name;
-                    while (temp != null) {
-                        cd = classes.get(temp);
-                        if (cd.funDefs.stream().anyMatch(fd -> fd.name.equals(ifce.funCall.name))) {
-                            fdReferedTo = cd.funDefs.stream().filter(fd -> fd.name.equals(ifce.funCall.name)).findFirst().get();
-                            break;
-                        }
-                        temp = cd.superClass == null ? null : cd.superClass.name;
-                    }
-                    if (fdReferedTo != null) {
-                        ifce.funDef = fdReferedTo;
-                        ifce.type = fdReferedTo.type;
-                        if (fdReferedTo.params.size() != ifce.funCall.argsList.size()) {
-                            error("Function " + ifce.funCall.name + " expects " + fdReferedTo.params.size() + " arguments but got " + ifce.funCall.argsList.size());
-                            ifce.type = BaseType.UNKNOWN;
-                        }
-                        for (int i = 0; i < ifce.funCall.argsList.size(); i++) {
-                            Type expected = fdReferedTo.params.get(i).type;
-                            Type actual = visit(ifce.funCall.argsList.get(i));
-                            if (!expected.equals(actual)) {
-                                error("Function " + ifce.funCall.name + " expects " + expected + " but got " + actual);
-                                ifce.type = BaseType.UNKNOWN;
-                                break;
-                            }
-                        }
+                    if(ct.decl.allFunNames.contains(ifce.funCall.name)) {
+                        ifce.type = visit(ifce.funCall);
                     } else {
                         error("Function " + ifce.funCall.name + " not found in class " + ct.name);
-                        ifce.type = BaseType.UNKNOWN;
                     }
                 } else {
                     error("Instance function call is only allowed for class instances");
