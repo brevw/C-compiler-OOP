@@ -349,7 +349,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
             case InstanceFunCallExpr ifce -> {
                 Type instanceType = visit(ifce.classInstance);
                 if (instanceType instanceof ClassType ct) {
-                    if(ct.decl.allFunDecls.containsKey(ifce.funCall.name)) {
+                    if(ct.decl != null && ct.decl.allFunDecls.containsKey(ifce.funCall.name)) {
                         // set funcallexpr fd to the function definition
                         ifce.funCall.fd = ct.decl.allFunDecls.get(ifce.funCall.name);
                         ifce.type = visit(ifce.funCall);

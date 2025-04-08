@@ -279,7 +279,7 @@ public class ExprValCodeGen extends CodeGen {
                 Register reg = Register.Virtual.create();
                 Register temp = Register.Virtual.create();
                 currentSection.emit(OpCode.LI, Arch.v0, Utils.MALLOC_CODE);
-                currentSection.emit(OpCode.LI, Arch.a0, ni.type.getSize());
+                currentSection.emit(OpCode.LI, Arch.a0, ((ClassType)ni.type).decl.getSize());
                 currentSection.emit(OpCode.SYSCALL);
                 currentSection.emit(OpCode.ADDIU, reg, Arch.v0, 0);
                 currentSection.emit(OpCode.LA, temp, ni.ofClass.decl.virtualTableLabel); // save vtable address
@@ -296,10 +296,6 @@ public class ExprValCodeGen extends CodeGen {
 
                 Register returnReg = null;
                 // precall
-                int pointerSize = Utils.WORD_SIZE;
-                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -Utils.WORD_SIZE); // reserve space for the this pointer
-                currentSection.emit(OpCode.SW, reg, Arch.sp, 0); // push the this pointer
-
                 int argsSize = 0;
                 var fce = ifce.funCall;
                 for (Expr arg : fce.argsList.reversed()) {
@@ -312,6 +308,10 @@ public class ExprValCodeGen extends CodeGen {
                     currentSection.emit(OpCode.ADDIU, alignedArgAddr, Arch.sp, - argsSize);
                     Utils.copyToAddr(currentSection, alignedArgAddr, argReg, arg.type, true);
                 }
+                int pointerSize = Utils.WORD_SIZE;
+                argsSize += pointerSize; // reserve space for the class pointer
+                currentSection.emit(OpCode.SW, reg, Arch.sp, -argsSize); // push the this pointer
+
                 if (argsSize > 0) {
                     currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -argsSize);
                 }
@@ -337,7 +337,7 @@ public class ExprValCodeGen extends CodeGen {
                 }
 
                 // reset stack
-                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, argsSize + returnSize + pointerSize);
+                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, argsSize + returnSize);
                 yield returnReg;
             }
             default -> throw new RuntimeException("Unknown expression type: " + e);

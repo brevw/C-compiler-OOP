@@ -39,7 +39,7 @@ public class ExprAddrCodeGen extends CodeGen {
                     if (ve.vd.upgradeToReg != null && ve.vd.upgradeToReg) {
                         reg = ve.vd.reg;
                     } else {
-                        if (ve.vd.classVar) {
+                        if (ve.vd.classVar && !ve.vd.isFunArg) {
                             currentSection.emit(OpCode.LW, reg, Arch.fp, Utils.WORD_SIZE + FunCodeGen.currentFunction.returnSize);
                             currentSection.emit(OpCode.ADDIU, reg, reg, FunCodeGen.currentClass.getOffset(ve.vd.name));
                         } else {

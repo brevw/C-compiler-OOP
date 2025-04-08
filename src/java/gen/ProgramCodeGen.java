@@ -54,6 +54,7 @@ public class ProgramCodeGen extends CodeGen {
                 for (var entry : cd.funToLabel.entrySet()) {
                     asmProg.dataSection.emit(new Directive(Utils.WORD_DIRECTIVE + entry.getValue()));
                 }
+                asmProg.dataSection.emit(new Directive(Utils.ALIGN_DIRECTIVE + Utils.WORD_ALIGNMENT_CONST));
                 // emit the class methods
                 cd.funDefs.forEach(f -> {
                     FunCodeGen.currentClass = cd;
