@@ -450,6 +450,9 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
     }
 
     private static boolean isSuperClass(ClassType superCt, ClassType ct, Map<String, ClassDecl> classes) {
+        if (ct.name.equals(superCt.name)) {
+            return true;
+        }
         ClassDecl cd = classes.get(ct.name);
         while (cd != null) {
             if (cd.superClass != null && cd.superClass.name.equals(superCt.name)) {

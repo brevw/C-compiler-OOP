@@ -111,6 +111,11 @@ public class Utils {
                 currentSection.emit(OpCode.LW, value, addr, 0);
                 return value;
             }
+            case ClassType ct -> {
+                Register value = Register.Virtual.create();
+                currentSection.emit(OpCode.LW, value, addr, 0);
+                return value;
+            }
             case ArrayType at -> {
                 // just return the address of the array
                 return addr;
@@ -135,6 +140,11 @@ public class Utils {
                 currentSection.emit(op, value, addr, 0);
             }
             case PointerType pt -> {
+                currentSection.emit(OpCode.SW, value, addr, 0);
+            }
+            case ClassType ct -> {
+                // in this case left and right side are pointers
+                // copy the class
                 currentSection.emit(OpCode.SW, value, addr, 0);
             }
             case StructType st -> {

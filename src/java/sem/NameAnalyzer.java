@@ -160,6 +160,9 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 
 			case VarDecl vd -> {
                 String name = vd.name;
+                if (isInClass) {
+                    vd.classVar = true;
+                }
                 Optional<Symbol> sym = scope.lookupCurrent(name);
                 if (sym.isPresent()) {
                     switch (sym.get()) {

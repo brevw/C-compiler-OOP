@@ -59,8 +59,9 @@ public class MemAllocCodeGen extends CodeGen {
                 this.fpOffset = 0;
                 if (!fd.name.equals(Utils.MAIN_FUNCTION)) {
                     int returnSize = Utils.getSizeOfFunArgsAndReturnTypes(fd.type);
+                    fd.returnSize = returnSize;
                     int argumentsOffset = Utils.WORD_SIZE + returnSize + Utils.computeAlignmentOffset(returnSize, Utils.WORD_SIZE);
-                    for (VarDecl vd : fd.params.reversed()) {
+                    for (VarDecl vd : fd.params) {
                         // array arguments are passed by reference
                         int size = Utils.getSizeOfFunArgsAndReturnTypes(vd.type);
                         vd.fpOffset = argumentsOffset;

@@ -1,6 +1,7 @@
 package gen;
 
 
+import ast.ClassDecl;
 import ast.FunDef;
 import gen.asm.AssemblyProgram;
 import gen.asm.Directive;
@@ -15,11 +16,15 @@ import util.Utils;
  */
 public class FunCodeGen extends CodeGen {
 
+    static FunDef currentFunction = null;
+    static ClassDecl currentClass = null;
     public FunCodeGen(AssemblyProgram asmProg) {
         this.asmProg = asmProg;
     }
 
     void visit(FunDef fd) {
+        this.currentFunction = fd;
+
         // Each function should be produced in its own section.
         // This is necessary for the register allocator.
         TextSection funSection = asmProg.emitNewTextSection();
@@ -135,6 +140,7 @@ public class FunCodeGen extends CodeGen {
         funSection.emit(OpCode.JR, Arch.ra);
 
 
+        this.currentFunction = null;
     }
 
 

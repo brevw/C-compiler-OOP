@@ -36,9 +36,13 @@ public class ProgramCodeGen extends CodeGen {
         p.decls.add(new FunDef(BaseType.INT, "read_i", List.of(), new Block(List.of(), List.of())));
         p.decls.add(new FunDef(new PointerType(BaseType.VOID), "mcmalloc", List.of(new VarDecl(BaseType.INT, "size")), new Block(List.of(), List.of())));
 
+        // modify instance functions by adding the class pointer as first parameter
+        TweakClassFuns.tweakClassFuns(p);
+
         // allocate all variables
         MemAllocCodeGen allocator = new MemAllocCodeGen(asmProg);
         allocator.visit(p);
+
 
         // emit the virtual tables and the class methods
         p.decls.stream().filter(d -> d instanceof ClassDecl)
@@ -52,18 +56,12 @@ public class ProgramCodeGen extends CodeGen {
                 }
                 // emit the class methods
                 cd.funDefs.forEach(f -> {
+                    FunCodeGen.currentClass = cd;
                     (new FunCodeGen(asmProg)).visit(f);
+                    FunCodeGen.currentClass = null;
                 });
             });
 
-        // modify instance functions by adding the class pointer as first parameter
-        p.decls.stream().filter(d -> d instanceof ClassDecl)
-            .forEach(d -> {
-                ClassDecl cd = (ClassDecl) d;
-                cd.funDefs.forEach(f -> {
-                    f.params.add(0, new VarDecl(cd.type, "this"));
-                });
-            });
 
         // generate the code for each function
         p.decls.forEach((d) -> {

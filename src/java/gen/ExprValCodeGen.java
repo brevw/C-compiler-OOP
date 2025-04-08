@@ -54,7 +54,7 @@ public class ExprValCodeGen extends CodeGen {
                 // precall
                 // push arguments
                 int argsSize = 0;
-                for (Expr arg : fce.argsList) {
+                for (Expr arg : fce.argsList.reversed()) {
                     Register argReg = visit(arg);
                     // if the argument is an array, pass the address of the array
                     int argSize = Utils.getSizeOfFunArgsAndReturnTypes(arg.type);
@@ -296,14 +296,13 @@ public class ExprValCodeGen extends CodeGen {
 
                 Register returnReg = null;
                 // precall
-                // TODO: refactor
-                // push arguments
+                int pointerSize = Utils.WORD_SIZE;
                 currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -Utils.WORD_SIZE); // reserve space for the this pointer
                 currentSection.emit(OpCode.SW, reg, Arch.sp, 0); // push the this pointer
 
                 int argsSize = 0;
                 var fce = ifce.funCall;
-                for (Expr arg : fce.argsList) {
+                for (Expr arg : fce.argsList.reversed()) {
                     Register argReg = visit(arg);
                     // if the argument is an array, pass the address of the array
                     int argSize = Utils.getSizeOfFunArgsAndReturnTypes(arg.type);
@@ -338,7 +337,7 @@ public class ExprValCodeGen extends CodeGen {
                 }
 
                 // reset stack
-                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, argsSize + returnSize);
+                currentSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, argsSize + returnSize + pointerSize);
                 yield returnReg;
             }
             default -> throw new RuntimeException("Unknown expression type: " + e);
