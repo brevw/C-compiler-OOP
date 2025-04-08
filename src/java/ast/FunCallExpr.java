@@ -6,7 +6,7 @@ import java.util.List;
 public final class FunCallExpr extends Expr{
     public final String name;
     public final List<Expr> argsList;
-    public FunDecl fd; // to be filled in by the name analyser
+    public FunDecl fd; // to be filled in by the name analyser (and by the type analyzer if it is a class method)
     public boolean classMethodCall = false; // to be filled in by the name analyser
 
     public FunCallExpr(String name, List<Expr> argsList){

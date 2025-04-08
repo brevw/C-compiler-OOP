@@ -93,6 +93,10 @@ public class MemAllocCodeGen extends CodeGen {
 
             case ClassDecl cd -> {
                 cd.funDefs.forEach(fd -> visit(fd));
+                // set class attributes as non-global
+                cd.varDecls.forEach(vd -> {
+                    vd.fpOffset = 0; // put anything
+                });
             }
 
             default -> {

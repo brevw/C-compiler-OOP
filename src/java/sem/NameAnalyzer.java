@@ -244,9 +244,11 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 superFields.forEach(vd -> {
                     scope.put(new VarSymbol(vd.name, vd));
                 });
+
                 superMethods.forEach(fd -> {
                     FunDecl decl = new FunDecl(fd.type, fd.name, fd.params);
                     scope.put(new FunSymbol(fd.name, decl));
+                    cd.allFunDecls.put(fd.name, decl);
                 });
 
                 // instance has all fields of the class and its superclasses
@@ -254,13 +256,23 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 cd.allVarDecls.addAll(superFields);
 
                 // instance has all decl of methods of the class and its superclasses
-                cd.allFunNames.addAll(Stream.concat(
-                    superMethods.stream().map(fs -> fs.name),
-                    cd.funDefs.stream().map(fs -> fs.name)
-                ).distinct().toList());
+                cd.funDefs.forEach(fd -> {
+                    FunDecl decl = new FunDecl(fd.type, fd.name, fd.params);
+                    cd.allFunDecls.put(fd.name, decl);
+                });
 
                 cd.varDecls.forEach(vd -> visit(vd));
-                cd.funDefs.forEach(fd -> visit(fd));
+                // scope will not detect duplicate names in the class so do it manually
+                ArrayList<String> funNames = new ArrayList<>();
+                cd.funDefs.forEach(fd -> {
+                    if (funNames.contains(fd.name)) {
+                        error("Class " + name + ", method " + fd.name + " is already declared");
+                    } else {
+                        funNames.add(fd.name);
+                    }
+                    visit(fd);
+                });
+
                 classes.put(name, cd);
                 scope = oldScope;
                 isInClass = false;
@@ -291,9 +303,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
             }
 
             default -> {
-                for (var n: node.children()) {
-                    visit(n);
-                }
+                node.children().forEach(this::visit);
             }
 
         };

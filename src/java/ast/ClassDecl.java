@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import gen.asm.Label;
@@ -19,7 +20,7 @@ public final class ClassDecl extends Decl{
     public final List<VarDecl> allVarDecls = new ArrayList<>(); // to be filled in the name analyzer
                                                                 // random order at first but in Virtual Table Creation will
                                                                 // be ordered
-    public final List<String> allFunNames = new ArrayList<>(); // to be filled in the name analyzer
+    public final Map<String, FunDecl> allFunDecls = new HashMap<>(); // to be filled in the name analyzer
 
     private Integer size = null;
     private HashMap<String, Integer> offsets = null;
@@ -58,9 +59,9 @@ public final class ClassDecl extends Decl{
     }
 
     private void computeOffsetsAndSize(){
-        size = 1; // one byte for the vtable pointer
+        size = Utils.WORD_SIZE; // word for the vtable pointer
         offsets = new HashMap<>();
-        for (VarDecl vd : varDecls){
+        for (VarDecl vd : allVarDecls){
             int fieldSize = vd.type.getSize();
             int alignment = (vd.type instanceof StructType st) ? st.getLargestAlignment() : fieldSize;
             int offsetToCorrectAlignment = Utils.computeAlignmentOffset(size, alignment);
