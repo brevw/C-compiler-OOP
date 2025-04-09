@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import ast.*;
+import util.Utils;
 
 public class TypeAnalyzer extends BaseSemanticAnalyzer {
     private final Map<String, StructTypeDecl> structNameSpace = new HashMap<>();
@@ -166,6 +167,9 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                             yield BaseType.UNKNOWN;
                         }
                     }
+                }
+                if (fce.implicitClassMethodCall) {
+                    fce.outerFunReturnSize = Utils.getSizeOfFunArgsAndReturnTypes(fce.type);
                 }
                 yield fce.type;
             }

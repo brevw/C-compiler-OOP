@@ -2,7 +2,6 @@ package gen;
 
 import ast.ASTNode;
 import ast.ClassDecl;
-import ast.InstanceFunCallExpr;
 import ast.VarDecl;
 
 public class TweakClassFuns {
@@ -11,15 +10,10 @@ public class TweakClassFuns {
 
         switch (n) {
             case ClassDecl cd -> {
+                // add the "this" parameter to all class methods to have correct parameter offsets
                 cd.funDefs.forEach(f -> {
                     f.params.add(0, new VarDecl(cd.type, "this"));
                 });
-            }
-            case InstanceFunCallExpr ifce -> {
-                var fce = ifce.funCall;
-                if (fce.classMethodCall) {
-                    fce.fd.params.add(0, new VarDecl(ifce.type, "this"));
-                }
             }
             default -> n.children().forEach(TweakClassFuns::tweakClassFuns);
         }

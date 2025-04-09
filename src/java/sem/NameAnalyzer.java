@@ -17,6 +17,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
     private final Map<String, ClassDecl> classes = new HashMap<>();
 
     private boolean isInClass = false;
+    private ClassDecl currentClass = null;
     private Scope scope;
 
 	public void visit(ASTNode node) {
@@ -111,7 +112,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                     if (!isInClass) {
                         funDefBeforeDeclNoDecl.add(name);
                     }
-                    scope.put(new FunSymbol(name, decl));
+                    scope.put(new FunSymbol(name, decl, isInClass));
                 }
 
                 // go inside the function, also params are inside the block scope
@@ -197,6 +198,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			}
 
             case ClassDecl cd -> {
+                this.currentClass = cd;
                 Scope oldScope = scope;
                 scope = new Scope(oldScope);
                 isInClass = true;
@@ -247,7 +249,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 
                 superMethods.forEach(fd -> {
                     FunDecl decl = new FunDecl(fd.type, fd.name, fd.params);
-                    scope.put(new FunSymbol(fd.name, decl));
+                    scope.put(new FunSymbol(fd.name, decl, true));
                     cd.allFunDecls.put(fd.name, decl);
                 });
 
@@ -276,6 +278,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                 classes.put(name, cd);
                 scope = oldScope;
                 isInClass = false;
+                currentClass = null;
             }
 
 
@@ -290,6 +293,10 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                             case VarSymbol vs -> error(vs.name + " was previously declared as a variable");
                             case FunSymbol fs -> {
                                 fc.fd = fs.fd;
+                                if (fs.isClassMethod) {
+                                    fc.implicitClassMethodCall = true;
+                                    fc.implicitClassDecl = currentClass;
+                                }
                                 for (var a: fc.argsList) {
                                     visit(a);
                                 }

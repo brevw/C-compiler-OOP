@@ -16,6 +16,7 @@ import ast.NewInstance;
 import ast.StrLiteral;
 import ast.Type;
 import ast.ChrLiteral;
+import ast.ClassDecl;
 import ast.ClassType;
 import ast.FunCallExpr;
 import ast.InstanceFunCallExpr;
@@ -50,6 +51,12 @@ public class ExprValCodeGen extends CodeGen {
                 }
             }
             case FunCallExpr fce -> {
+                if (fce.implicitClassMethodCall) {
+                    // if there is an implicit call to class method
+                    var dummyVar = new VarExpr(null);
+                    yield visit(new InstanceFunCallExpr(dummyVar, fce));
+                }
+
                 Register returnReg = null;
                 // precall
                 // push arguments
@@ -76,7 +83,7 @@ public class ExprValCodeGen extends CodeGen {
                 }
 
                 // call function
-                currentSection.emit(OpCode.JAL, Label.get(fce.name));
+                    currentSection.emit(OpCode.JAL, Label.get(fce.name));
 
                 // postreturn
                 // read the return value from stack (if there is one, it is pointed by $sp)
@@ -287,10 +294,23 @@ public class ExprValCodeGen extends CodeGen {
                 yield reg;
             }
             case InstanceFunCallExpr ifce -> {
-                Register reg = visit(ifce.classInstance);
+                Register reg = null;
+                boolean useImplicitClassFunCall = ifce.funCall.implicitClassMethodCall;
+                ClassDecl classDecl = null;
+                if (useImplicitClassFunCall) {
+                    // case we have a class method call but is done without explicitly using (instance.classMethod) notation
+                    // ignore the class instance (it is a dummu variable)
+                    reg = Register.Virtual.create();
+                    currentSection.emit(OpCode.LW, reg, Arch.fp, Utils.WORD_SIZE + ifce.funCall.outerFunReturnSize); // load pointer to the class structure
+                    classDecl = ifce.funCall.implicitClassDecl;
+                } else {
+                    // case we have a class method call using (instance.classMethod) notation
+                    reg = visit(ifce.classInstance);
+                    classDecl = ((ClassType) ifce.classInstance.type).decl;
+                }
                 Register funAddr = Register.Virtual.create();
                 currentSection.emit(OpCode.LW, funAddr , reg, 0); // load vtable address
-                int functionNumber = ((ClassType) ifce.classInstance.type).decl.funToLabel.entrySet().stream().map(entry -> entry.getKey()).toList().indexOf(ifce.funCall.name);
+                int functionNumber = classDecl.funToLabel.entrySet().stream().map(entry -> entry.getKey()).toList().indexOf(ifce.funCall.name);
                 currentSection.emit(OpCode.LW, funAddr, funAddr, functionNumber * Utils.WORD_SIZE); // load function address
 
 
