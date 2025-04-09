@@ -12,7 +12,10 @@ public class TweakClassFuns {
             case ClassDecl cd -> {
                 // add the "this" parameter to all class methods to have correct parameter offsets
                 cd.funDefs.forEach(f -> {
-                    f.params.add(0, new VarDecl(cd.type, "this"));
+                    var newParam = new VarDecl(cd.type, "this");
+                    newParam.isFunArg = true;
+                    newParam.isClassPointer = true;
+                    f.params.add(0, newParam);
                 });
             }
             default -> n.children().forEach(TweakClassFuns::tweakClassFuns);

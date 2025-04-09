@@ -9,7 +9,8 @@ import util.Utils;
 
 public class TypeAnalyzer extends BaseSemanticAnalyzer {
     private final Map<String, StructTypeDecl> structNameSpace = new HashMap<>();
-    private FunDef currentFunDef = null; private final Map<String, ClassDecl> classes = new HashMap<>();
+    private FunDef currentFunDef = null;
+    private final Map<String, ClassDecl> classes = new HashMap<>();
 
 	public Type visit(ASTNode node) {
 		return switch(node) {
@@ -169,7 +170,7 @@ public class TypeAnalyzer extends BaseSemanticAnalyzer {
                     }
                 }
                 if (fce.implicitClassMethodCall) {
-                    fce.outerFunReturnSize = Utils.getSizeOfFunArgsAndReturnTypes(fce.type);
+                    fce.outerFunReturnSize = Utils.getSizeOfFunArgsAndReturnTypes(currentFunDef.type);
                 }
                 yield fce.type;
             }

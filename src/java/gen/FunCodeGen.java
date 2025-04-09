@@ -69,7 +69,9 @@ public class FunCodeGen extends CodeGen {
         }
 
         // allocate space for local variables
-        funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -localVarSize);
+        if (localVarSize > 0) {
+            funSection.emit(OpCode.ADDIU, Arch.sp, Arch.sp, -localVarSize);
+        }
 
         // push saved registers
         funSection.emit(OpCode.PUSH_REGISTERS);
