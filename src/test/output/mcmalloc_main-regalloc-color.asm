@@ -14,10 +14,10 @@ jal mcmalloc
 addi $t0,$sp,0
 lw $t0,0($t0)
 addiu $sp,$sp,8
-addi $t0,$t0,0
-li $t1,2
-sw $t1,0($t0)
-lw $t0,0($t0)
+addi $t1,$t0,0
+li $t0,2
+sw $t0,0($t1)
+lw $t0,0($t1)
 addiu $t1,$sp,-4
 sw $t0,0($t1)
 addiu $sp,$sp,-4

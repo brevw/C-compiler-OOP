@@ -22,9 +22,9 @@ addiu $sp,$sp,4
 addi $t3,$t0,0
 li $t0,1
 addi $t2,$t0,0
-la $t0,label_0_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_0_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
@@ -40,29 +40,29 @@ addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
 li $t0,1
-addi $t1,$t0,0
-slt $t0,$t3,$t1
-xori $t0,$t0,1
-beqz $t0,label_7_next
+addi $t0,$t0,0
+slt $t1,$t3,$t0
+xori $t1,$t1,1
+beqz $t1,label_7_next
 label_9_body:
-mul $t0,$t2,$t1
-addi $t2,$t0,0
-li $t0,1
-add $t0,$t1,$t0
-addi $t1,$t0,0
+mul $t1,$t2,$t0
+addi $t2,$t1,0
+li $t1,1
+add $t0,$t0,$t1
+addi $t0,$t0,0
 label_8_posttest:
-slt $t0,$t3,$t1
-xori $t0,$t0,1
-bnez $t0,label_9_body
+slt $t1,$t3,$t0
+xori $t1,$t1,1
+bnez $t1,label_9_body
 label_7_next:
 addiu $t0,$sp,-4
 sw $t2,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4
-la $t0,label_2_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_2_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4

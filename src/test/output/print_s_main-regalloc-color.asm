@@ -8,9 +8,9 @@ label_0_str:
 main:
 addiu $fp,$sp,0
 addiu $sp,$sp,0
-la $t0,label_0_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_0_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4

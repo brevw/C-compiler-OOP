@@ -1,16 +1,16 @@
 .data
 # Allocated labels for virtual registers
-label_18_v2:
-.space 4
 label_21_v3:
 .space 4
-label_16_v1:
+label_18_v2:
 .space 4
 label_25_v5:
 .space 4
 label_19_v0:
 .space 4
 label_24_v4:
+.space 4
+label_16_v1:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

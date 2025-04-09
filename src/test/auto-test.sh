@@ -425,6 +425,7 @@ run_test_sem class_function_call_inherited "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem class_type_casting_with_field_access_and_function_call "$PASS" "$DEFAULT_TIMEOUT"
 run_test_sem class_type_casting_with_invalid_field_access "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 run_test_sem class_type_casting_with_invalid_function_call "$SEM_FAIL" "$DEFAULT_TIMEOUT"
+run_test_sem class_method_redefined "$SEM_FAIL" "$DEFAULT_TIMEOUT"
 
 # CodeGen tests
 print_test_name "CodeGen tests (Uses Naive Register Allocator)"

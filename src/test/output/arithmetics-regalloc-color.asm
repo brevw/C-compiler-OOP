@@ -6,27 +6,27 @@ main:
 addiu $fp,$sp,0
 addiu $sp,$sp,0
 li $t0,0
-addi $t0,$t0,0
-li $t1,0
-addi $t2,$t1,0
-li $t1,10
-slt $t1,$t0,$t1
-beqz $t1,label_1_next
+addi $t2,$t0,0
+li $t0,0
+addi $t1,$t0,0
+li $t0,10
+slt $t0,$t2,$t0
+beqz $t0,label_1_next
 label_3_body:
-add $t1,$t2,$t0
-addi $t2,$t1,0
-li $t1,1
-add $t0,$t0,$t1
-addi $t0,$t0,0
+add $t0,$t1,$t2
+addi $t1,$t0,0
+li $t0,1
+add $t0,$t2,$t0
+addi $t2,$t0,0
 label_2_posttest:
-li $t1,10
-slt $t1,$t0,$t1
-bnez $t1,label_3_body
+li $t0,10
+slt $t0,$t2,$t0
+bnez $t0,label_3_body
 label_1_next:
 li $t0,2
-mul $t0,$t0,$t2
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+mul $t1,$t0,$t1
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_i
 addiu $sp,$sp,4

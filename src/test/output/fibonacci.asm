@@ -9,115 +9,115 @@ label_2_str:
 .asciiz " "
 .align 2
 # Allocated labels for virtual registers
-label_97_v34:
-.space 4
-label_31_v3:
-.space 4
-label_73_v24:
-.space 4
-label_94_v35:
-.space 4
-label_131_v53:
-.space 4
-label_133_v54:
-.space 4
-label_113_v44:
-.space 4
-label_85_v31:
-.space 4
-label_119_v47:
-.space 4
-label_100_v38:
-.space 4
-label_103_v37:
-.space 4
-label_58_v18:
-.space 4
-label_122_v49:
-.space 4
-label_120_v48:
-.space 4
-label_35_v5:
-.space 4
-label_87_v30:
-.space 4
-label_79_v25:
-.space 4
-label_116_v46:
-.space 4
-label_76_v26:
-.space 4
-label_48_v12:
-.space 4
-label_96_v36:
-.space 4
-label_38_v7:
-.space 4
-label_30_v4:
+label_130_v51:
 .space 4
 label_82_v29:
 .space 4
-label_128_v52:
+label_61_v19:
 .space 4
-label_24_v1:
+label_87_v30:
 .space 4
-label_88_v32:
+label_120_v48:
 .space 4
-label_52_v15:
+label_122_v49:
 .space 4
-label_53_v14:
+label_102_v39:
 .space 4
-label_26_v2:
-.space 4
-label_123_v45:
-.space 4
-label_112_v43:
-.space 4
-label_45_v11:
-.space 4
-label_91_v28:
-.space 4
-label_125_v50:
-.space 4
-label_34_v6:
-.space 4
-label_41_v9:
-.space 4
-label_55_v16:
+label_76_v26:
 .space 4
 label_109_v42:
 .space 4
-label_69_v22:
+label_90_v33:
 .space 4
-label_65_v21:
-.space 4
-label_78_v27:
-.space 4
-label_105_v40:
-.space 4
-label_27_v0:
+label_88_v32:
 .space 4
 label_49_v13:
 .space 4
-label_39_v8:
+label_113_v44:
 .space 4
-label_130_v51:
+label_112_v43:
+.space 4
+label_27_v0:
+.space 4
+label_79_v25:
 .space 4
 label_63_v20:
 .space 4
 label_108_v41:
 .space 4
-label_60_v17:
+label_65_v21:
 .space 4
-label_68_v23:
+label_38_v7:
+.space 4
+label_128_v52:
+.space 4
+label_85_v31:
+.space 4
+label_26_v2:
+.space 4
+label_73_v24:
+.space 4
+label_119_v47:
+.space 4
+label_78_v27:
 .space 4
 label_44_v10:
 .space 4
-label_102_v39:
+label_41_v9:
 .space 4
-label_61_v19:
+label_105_v40:
 .space 4
-label_90_v33:
+label_125_v50:
+.space 4
+label_100_v38:
+.space 4
+label_34_v6:
+.space 4
+label_68_v23:
+.space 4
+label_123_v45:
+.space 4
+label_24_v1:
+.space 4
+label_30_v4:
+.space 4
+label_45_v11:
+.space 4
+label_103_v37:
+.space 4
+label_60_v17:
+.space 4
+label_55_v16:
+.space 4
+label_133_v54:
+.space 4
+label_69_v22:
+.space 4
+label_94_v35:
+.space 4
+label_131_v53:
+.space 4
+label_39_v8:
+.space 4
+label_31_v3:
+.space 4
+label_116_v46:
+.space 4
+label_52_v15:
+.space 4
+label_96_v36:
+.space 4
+label_48_v12:
+.space 4
+label_58_v18:
+.space 4
+label_35_v5:
+.space 4
+label_97_v34:
+.space 4
+label_53_v14:
+.space 4
+label_91_v28:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

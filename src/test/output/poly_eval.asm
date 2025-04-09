@@ -9,419 +9,419 @@ label_2_str:
 .asciiz "Derivative at x="
 .align 2
 # Allocated labels for virtual registers
-label_121_v38:
-.space 4
-label_107_v30:
-.space 4
-label_153_v53:
-.space 4
-label_174_v62:
-.space 4
-label_155_v50:
-.space 4
-label_162_v57:
-.space 4
-label_204_v78:
-.space 4
-label_217_v84:
-.space 4
-label_249_v99:
-.space 4
 label_110_v33:
-.space 4
-label_168_v60:
-.space 4
-label_448_v197:
-.space 4
-label_129_v43:
-.space 4
-label_82_v21:
-.space 4
-label_141_v49:
-.space 4
-label_299_v124:
-.space 4
-label_334_v142:
-.space 4
-label_445_v196:
-.space 4
-label_348_v149:
-.space 4
-label_120_v37:
-.space 4
-label_39_v1:
-.space 4
-label_103_v31:
-.space 4
-label_146_v45:
-.space 4
-label_458_v202:
-.space 4
-label_317_v133:
-.space 4
-label_98_v28:
-.space 4
-label_269_v108:
-.space 4
-label_372_v157:
-.space 4
-label_283_v104:
-.space 4
-label_63_v14:
-.space 4
-label_418_v182:
-.space 4
-label_231_v86:
-.space 4
-label_402_v175:
-.space 4
-label_207_v79:
-.space 4
-label_35_v2:
-.space 4
-label_96_v27:
-.space 4
-label_213_v81:
-.space 4
-label_159_v40:
-.space 4
-label_241_v92:
-.space 4
-label_449_v198:
-.space 4
-label_228_v90:
-.space 4
-label_214_v83:
-.space 4
-label_455_v201:
-.space 4
-label_36_v3:
-.space 4
-label_301_v125:
-.space 4
-label_412_v180:
-.space 4
-label_434_v190:
-.space 4
-label_126_v42:
-.space 4
-label_55_v9:
-.space 4
-label_225_v89:
-.space 4
-label_70_v16:
-.space 4
-label_87_v24:
-.space 4
-label_91_v23:
-.space 4
-label_43_v0:
-.space 4
-label_342_v146:
-.space 4
-label_156_v54:
-.space 4
-label_185_v67:
-.space 4
-label_71_v12:
-.space 4
-label_56_v10:
-.space 4
-label_293_v117:
-.space 4
-label_333_v140:
-.space 4
-label_286_v118:
-.space 4
-label_201_v75:
-.space 4
-label_454_v200:
-.space 4
-label_188_v70:
-.space 4
-label_279_v106:
-.space 4
-label_276_v112:
-.space 4
-label_255_v103:
-.space 4
-label_304_v127:
-.space 4
-label_406_v177:
-.space 4
-label_410_v179:
-.space 4
-label_419_v183:
-.space 4
-label_347_v147:
-.space 4
-label_369_v158:
-.space 4
-label_367_v159:
-.space 4
-label_219_v85:
-.space 4
-label_295_v122:
-.space 4
-label_140_v48:
-.space 4
-label_114_v35:
-.space 4
-label_252_v98:
-.space 4
-label_421_v184:
-.space 4
-label_351_v145:
-.space 4
-label_48_v8:
-.space 4
-label_378_v164:
-.space 4
-label_181_v65:
-.space 4
-label_67_v13:
-.space 4
-label_130_v44:
-.space 4
-label_399_v165:
-.space 4
-label_431_v189:
-.space 4
-label_169_v56:
-.space 4
-label_289_v119:
-.space 4
-label_171_v61:
-.space 4
-label_298_v123:
-.space 4
-label_358_v154:
-.space 4
-label_385_v169:
-.space 4
-label_95_v26:
-.space 4
-label_59_v5:
-.space 4
-label_437_v192:
-.space 4
-label_370_v160:
-.space 4
-label_451_v199:
-.space 4
-label_42_v4:
-.space 4
-label_195_v73:
-.space 4
-label_271_v107:
-.space 4
-label_76_v20:
-.space 4
-label_262_v109:
-.space 4
-label_222_v87:
-.space 4
-label_83_v17:
-.space 4
-label_165_v58:
-.space 4
-label_465_v206:
-.space 4
-label_247_v100:
-.space 4
-label_320_v135:
-.space 4
-label_435_v191:
-.space 4
-label_111_v29:
-.space 4
-label_331_v141:
-.space 4
-label_440_v193:
-.space 4
-label_357_v153:
-.space 4
-label_265_v110:
-.space 4
-label_115_v34:
-.space 4
-label_314_v131:
-.space 4
-label_290_v120:
-.space 4
-label_321_v134:
-.space 4
-label_373_v161:
-.space 4
-label_177_v64:
-.space 4
-label_184_v68:
-.space 4
-label_58_v11:
-.space 4
-label_389_v167:
-.space 4
-label_337_v143:
-.space 4
-label_350_v150:
-.space 4
-label_459_v203:
-.space 4
-label_64_v15:
-.space 4
-label_180_v66:
-.space 4
-label_444_v195:
-.space 4
-label_79_v18:
-.space 4
-label_150_v52:
-.space 4
-label_137_v47:
-.space 4
-label_325_v136:
-.space 4
-label_158_v55:
-.space 4
-label_200_v76:
-.space 4
-label_133_v41:
-.space 4
-label_339_v144:
-.space 4
-label_237_v94:
-.space 4
-label_152_v51:
-.space 4
-label_243_v97:
-.space 4
-label_166_v59:
-.space 4
-label_47_v7:
-.space 4
-label_211_v82:
-.space 4
-label_253_v102:
-.space 4
-label_361_v151:
-.space 4
-label_327_v138:
-.space 4
-label_400_v174:
-.space 4
-label_386_v170:
-.space 4
-label_427_v187:
-.space 4
-label_308_v129:
-.space 4
-label_315_v132:
-.space 4
-label_363_v156:
-.space 4
-label_205_v77:
-.space 4
-label_394_v172:
-.space 4
-label_123_v39:
-.space 4
-label_280_v115:
-.space 4
-label_397_v173:
-.space 4
-label_403_v163:
-.space 4
-label_464_v205:
-.space 4
-label_227_v88:
-.space 4
-label_240_v96:
-.space 4
-label_396_v171:
-.space 4
-label_194_v72:
-.space 4
-label_424_v185:
-.space 4
-label_415_v181:
-.space 4
-label_324_v137:
-.space 4
-label_375_v162:
-.space 4
-label_277_v114:
-.space 4
-label_104_v32:
-.space 4
-label_461_v204:
-.space 4
-label_250_v101:
-.space 4
-label_425_v186:
-.space 4
-label_382_v168:
-.space 4
-label_144_v46:
-.space 4
-label_238_v95:
-.space 4
-label_282_v116:
-.space 4
-label_360_v155:
-.space 4
-label_191_v71:
-.space 4
-label_274_v113:
-.space 4
-label_266_v111:
-.space 4
-label_430_v188:
-.space 4
-label_197_v74:
-.space 4
-label_311_v130:
-.space 4
-label_305_v126:
-.space 4
-label_230_v91:
-.space 4
-label_441_v194:
-.space 4
-label_354_v152:
-.space 4
-label_189_v69:
-.space 4
-label_391_v166:
-.space 4
-label_175_v63:
-.space 4
-label_258_v105:
-.space 4
-label_336_v139:
-.space 4
-label_99_v22:
-.space 4
-label_309_v128:
-.space 4
-label_292_v121:
-.space 4
-label_413_v176:
-.space 4
-label_117_v36:
-.space 4
-label_51_v6:
-.space 4
-label_345_v148:
 .space 4
 label_88_v25:
 .space 4
-label_216_v80:
+label_141_v49:
+.space 4
+label_162_v57:
+.space 4
+label_144_v46:
+.space 4
+label_150_v52:
+.space 4
+label_195_v73:
+.space 4
+label_207_v79:
+.space 4
+label_237_v94:
+.space 4
+label_98_v28:
+.space 4
+label_158_v55:
+.space 4
+label_437_v192:
+.space 4
+label_120_v37:
+.space 4
+label_70_v16:
+.space 4
+label_130_v44:
+.space 4
+label_289_v119:
+.space 4
+label_324_v137:
+.space 4
+label_435_v191:
+.space 4
+label_339_v144:
+.space 4
+label_111_v29:
+.space 4
+label_99_v22:
+.space 4
+label_159_v40:
+.space 4
+label_448_v197:
+.space 4
+label_309_v128:
+.space 4
+label_87_v24:
+.space 4
+label_253_v102:
+.space 4
+label_354_v152:
+.space 4
+label_249_v99:
+.space 4
+label_59_v5:
+.space 4
+label_406_v177:
+.space 4
+label_213_v81:
+.space 4
+label_391_v166:
+.space 4
+label_197_v74:
+.space 4
+label_91_v23:
+.space 4
+label_200_v76:
+.space 4
+label_123_v39:
+.space 4
+label_222_v87:
+.space 4
+label_440_v193:
+.space 4
+label_219_v85:
+.space 4
+label_204_v78:
+.space 4
+label_445_v196:
+.space 4
+label_290_v120:
+.space 4
+label_402_v175:
+.space 4
+label_424_v185:
+.space 4
+label_117_v36:
+.space 4
+label_42_v4:
+.space 4
+label_217_v84:
+.space 4
+label_58_v11:
 .space 4
 label_75_v19:
 .space 4
-label_234_v93:
+label_79_v18:
+.space 4
+label_331_v141:
+.space 4
+label_465_v206:
+.space 4
+label_146_v45:
+.space 4
+label_174_v62:
+.space 4
+label_56_v10:
+.space 4
+label_51_v6:
+.space 4
+label_276_v112:
+.space 4
+label_320_v135:
+.space 4
+label_274_v113:
+.space 4
+label_188_v70:
+.space 4
+label_444_v195:
+.space 4
+label_181_v65:
+.space 4
+label_250_v101:
+.space 4
+label_269_v108:
+.space 4
+label_252_v98:
+.space 4
+label_295_v122:
+.space 4
+label_394_v172:
+.space 4
+label_400_v174:
 .space 4
 label_409_v178:
+.space 4
+label_334_v142:
+.space 4
+label_357_v153:
+.space 4
+label_358_v154:
+.space 4
+label_216_v80:
+.space 4
+label_293_v117:
+.space 4
+label_129_v43:
+.space 4
+label_103_v31:
+.space 4
+label_234_v93:
+.space 4
+label_410_v179:
+.space 4
+label_333_v140:
+.space 4
+label_36_v3:
+.space 4
+label_367_v159:
+.space 4
+label_168_v60:
+.space 4
+label_48_v8:
+.space 4
+label_121_v38:
+.space 4
+label_461_v204:
+.space 4
+label_370_v160:
+.space 4
+label_421_v184:
+.space 4
+label_152_v51:
+.space 4
+label_277_v114:
+.space 4
+label_169_v56:
+.space 4
+label_286_v118:
+.space 4
+label_348_v149:
+.space 4
+label_403_v163:
+.space 4
+label_82_v21:
+.space 4
+label_43_v0:
+.space 4
+label_427_v187:
+.space 4
+label_360_v155:
+.space 4
+label_441_v194:
+.space 4
+label_184_v68:
+.space 4
+label_279_v106:
+.space 4
+label_64_v15:
+.space 4
+label_255_v103:
+.space 4
+label_211_v82:
+.space 4
+label_71_v12:
+.space 4
+label_153_v53:
+.space 4
+label_455_v201:
+.space 4
+label_238_v95:
+.space 4
+label_311_v130:
+.space 4
+label_425_v186:
+.space 4
+label_96_v27:
+.space 4
+label_325_v136:
+.space 4
+label_430_v188:
+.space 4
+label_345_v148:
+.space 4
+label_283_v104:
+.space 4
+label_107_v30:
+.space 4
+label_305_v126:
+.space 4
+label_280_v115:
+.space 4
+label_458_v202:
+.space 4
+label_308_v129:
+.space 4
+label_363_v156:
+.space 4
+label_166_v59:
+.space 4
+label_175_v63:
+.space 4
+label_47_v7:
+.space 4
+label_373_v161:
+.space 4
+label_327_v138:
+.space 4
+label_351_v145:
+.space 4
+label_449_v198:
+.space 4
+label_55_v9:
+.space 4
+label_171_v61:
+.space 4
+label_434_v190:
+.space 4
+label_67_v13:
+.space 4
+label_140_v48:
+.space 4
+label_126_v42:
+.space 4
+label_314_v131:
+.space 4
+label_155_v50:
+.space 4
+label_191_v71:
+.space 4
+label_114_v35:
+.space 4
+label_336_v139:
+.space 4
+label_225_v89:
+.space 4
+label_137_v47:
+.space 4
+label_241_v92:
+.space 4
+label_156_v54:
+.space 4
+label_35_v2:
+.space 4
+label_205_v77:
+.space 4
+label_243_v97:
+.space 4
+label_459_v203:
+.space 4
+label_342_v146:
+.space 4
+label_317_v133:
+.space 4
+label_386_v170:
+.space 4
+label_378_v164:
+.space 4
+label_418_v182:
+.space 4
+label_464_v205:
+.space 4
+label_299_v124:
+.space 4
+label_304_v127:
+.space 4
+label_361_v151:
+.space 4
+label_194_v72:
+.space 4
+label_382_v168:
+.space 4
+label_115_v34:
+.space 4
+label_266_v111:
+.space 4
+label_385_v169:
+.space 4
+label_369_v158:
+.space 4
+label_454_v200:
+.space 4
+label_214_v83:
+.space 4
+label_230_v91:
+.space 4
+label_389_v167:
+.space 4
+label_185_v67:
+.space 4
+label_412_v180:
+.space 4
+label_413_v176:
+.space 4
+label_315_v132:
+.space 4
+label_372_v157:
+.space 4
+label_265_v110:
+.space 4
+label_95_v26:
+.space 4
+label_451_v199:
+.space 4
+label_240_v96:
+.space 4
+label_415_v181:
+.space 4
+label_375_v162:
+.space 4
+label_133_v41:
+.space 4
+label_228_v90:
+.space 4
+label_271_v107:
+.space 4
+label_350_v150:
+.space 4
+label_180_v66:
+.space 4
+label_262_v109:
+.space 4
+label_258_v105:
+.space 4
+label_419_v183:
+.space 4
+label_189_v69:
+.space 4
+label_301_v125:
+.space 4
+label_292_v121:
+.space 4
+label_231_v86:
+.space 4
+label_431_v189:
+.space 4
+label_347_v147:
+.space 4
+label_177_v64:
+.space 4
+label_399_v165:
+.space 4
+label_165_v58:
+.space 4
+label_247_v100:
+.space 4
+label_321_v134:
+.space 4
+label_83_v17:
+.space 4
+label_298_v123:
+.space 4
+label_282_v116:
+.space 4
+label_396_v171:
+.space 4
+label_104_v32:
+.space 4
+label_39_v1:
+.space 4
+label_337_v143:
+.space 4
+label_76_v20:
+.space 4
+label_201_v75:
+.space 4
+label_63_v14:
+.space 4
+label_227_v88:
+.space 4
+label_397_v173:
 .space 4
 # Allocated labels for virtual registers
 # Allocated labels for virtual registers

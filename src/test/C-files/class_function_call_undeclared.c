@@ -33,7 +33,3 @@ void main() {
     o = (class Object) new class Node();
     o.hey();
 }
-
-
-
-

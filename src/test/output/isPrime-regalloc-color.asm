@@ -17,11 +17,11 @@ addi $fp,$sp,0
 addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
+sw $t1,0($sp)
+addiu $sp,$sp,-4
 sw $t0,0($sp)
 addiu $sp,$sp,-4
 sw $t2,0($sp)
-addiu $sp,$sp,-4
-sw $t1,0($sp)
 addiu $t0,$fp,8
 lw $t1,0($t0)
 li $t0,2
@@ -35,9 +35,9 @@ label_4_END:
 li $t0,2
 addi $t0,$t0,0
 addiu $t1,$fp,8
-lw $t2,0($t1)
-li $t1,2
-div $t2,$t1
+lw $t1,0($t1)
+li $t2,2
+div $t1,$t2
 mflo $t1
 slt $t1,$t1,$t0
 xori $t1,$t1,1
@@ -51,9 +51,9 @@ li $t2,0
 xor $t1,$t1,$t2
 sltiu $t1,$t1,1
 beqz $t1,label_9_END
-li $t2,0
-addi $t1,$fp,4
-sw $t2,0($t1)
+li $t1,0
+addi $t2,$fp,4
+sw $t1,0($t2)
 j is_prime_epilogue
 label_9_END:
 li $t1,1
@@ -61,9 +61,9 @@ add $t0,$t0,$t1
 addi $t0,$t0,0
 label_7_posttest:
 addiu $t1,$fp,8
-lw $t2,0($t1)
-li $t1,2
-div $t2,$t1
+lw $t1,0($t1)
+li $t2,2
+div $t1,$t2
 mflo $t1
 slt $t1,$t1,$t0
 xori $t1,$t1,1
@@ -75,11 +75,11 @@ sw $t1,0($t0)
 j is_prime_epilogue
 is_prime_epilogue:
 # Original instruction: popRegisters
-lw $t1,0($sp)
-addiu $sp,$sp,4
 lw $t2,0($sp)
 addiu $sp,$sp,4
 lw $t0,0($sp)
+addiu $sp,$sp,4
+lw $t1,0($sp)
 addiu $sp,$sp,4
 addiu $sp,$fp,4
 lw $fp,0($fp)
@@ -98,9 +98,9 @@ lw $t0,0($t0)
 addiu $sp,$sp,4
 sw $t0,0($t1)
 la $t0,n
-lw $t0,0($t0)
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+lw $t1,0($t0)
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 addiu $sp,$sp,-4
 jal is_prime
@@ -112,17 +112,17 @@ li $t1,1
 xor $t0,$t0,$t1
 sltiu $t0,$t0,1
 beqz $t0,label_12_ELSE
-la $t0,label_1_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_1_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
 j label_13_END
 label_12_ELSE:
-la $t0,label_2_str
-addiu $t1,$sp,-4
-sw $t0,0($t1)
+la $t1,label_2_str
+addiu $t0,$sp,-4
+sw $t1,0($t0)
 addiu $sp,$sp,-4
 jal print_s
 addiu $sp,$sp,4
