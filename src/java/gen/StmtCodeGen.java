@@ -82,7 +82,7 @@ public class StmtCodeGen extends CodeGen {
                     asmProg.getCurrentTextSection().emit(OpCode.ADDI, retAddr, Arch.fp, 4);
                     Utils.copyToAddr(asmProg.getCurrentTextSection(), retAddr, ret, r.expr.type, true);
                 }
-                Label epilog = Label.get(ProgramCodeGen.currentFunction.name + Utils.EPILOGUE_OF_FUNCTION);
+                Label epilog = Label.get(FunCodeGen.currentFunction.label.name + Utils.EPILOGUE_OF_FUNCTION);
                 asmProg.getCurrentTextSection().emit(OpCode.J, epilog);
             }
             case Continue c -> {
