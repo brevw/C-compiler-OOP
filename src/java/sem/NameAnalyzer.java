@@ -17,6 +17,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
     private final Map<String, ClassDecl> classes = new HashMap<>();
 
     private boolean isInClass = false;
+    private boolean isClassVar = false;
     private ClassDecl currentClass = null;
     private Scope scope;
 
@@ -162,7 +163,7 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
 			case VarDecl vd -> {
                 String name = vd.name;
                 if (isInClass) {
-                    vd.classVar = true;
+                    vd.classVar = isClassVar;
                 }
                 Optional<Symbol> sym = scope.lookupCurrent(name);
                 if (sym.isPresent()) {
@@ -263,7 +264,9 @@ public class NameAnalyzer extends BaseSemanticAnalyzer {
                     cd.allFunDecls.put(fd.name, decl);
                 });
 
+                this.isClassVar = true;
                 cd.varDecls.forEach(vd -> visit(vd));
+                this.isClassVar = false;
                 // scope will not detect duplicate names in the class so do it manually
                 ArrayList<String> funNames = new ArrayList<>();
                 cd.funDefs.forEach(fd -> {
