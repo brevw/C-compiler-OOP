@@ -4,8 +4,14 @@ bin/
 out/
 project/
 target/
-comp520-coursework-w2025.iml
 out.log
 
-# file system files
+# MacOs system files
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux desktop service store
+*.swp
+*~
+.directory
