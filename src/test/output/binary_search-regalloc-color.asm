@@ -93,7 +93,6 @@ binary_search:
 addiu $sp,$sp,-4
 sw $fp,0($sp)
 addi $fp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 addiu $sp,$sp,-4
 sw $t1,0($sp)
@@ -188,7 +187,6 @@ print_s:
 addiu $sp,$sp,-4
 sw $fp,0($sp)
 addi $fp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 lw $a0,4($fp)
 li $v0,4
@@ -204,7 +202,6 @@ print_i:
 addiu $sp,$sp,-4
 sw $fp,0($sp)
 addi $fp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 lw $a0,4($fp)
 li $v0,1
@@ -220,7 +217,6 @@ print_c:
 addiu $sp,$sp,-4
 sw $fp,0($sp)
 addi $fp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 lw $a0,4($fp)
 li $v0,11
@@ -236,7 +232,6 @@ read_c:
 addiu $sp,$sp,-4
 sw $fp,0($sp)
 addi $fp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 li $v0,12
 syscall
@@ -252,7 +247,6 @@ read_i:
 addiu $sp,$sp,-4
 sw $fp,0($sp)
 addi $fp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 li $v0,5
 syscall
@@ -268,7 +262,6 @@ mcmalloc:
 addiu $sp,$sp,-4
 sw $fp,0($sp)
 addi $fp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 lw $a0,8($fp)
 li $v0,9

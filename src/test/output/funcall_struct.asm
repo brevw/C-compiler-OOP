@@ -115,8 +115,6 @@ addi $fp,$sp,0
 addiu $sp,$sp,-4
 # Original instruction: sw $ra,0($sp)
 sw $ra,0($sp)
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 la $t0,label_46_v12
 lw $t0,0($t0)
@@ -816,8 +814,6 @@ addiu $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,4($fp)
 lw $a0,4($fp)
@@ -842,8 +838,6 @@ addiu $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,4($fp)
 lw $a0,4($fp)
@@ -868,8 +862,6 @@ addiu $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,4($fp)
 lw $a0,4($fp)
@@ -894,8 +886,6 @@ addiu $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: li $v0,12
 li $v0,12
@@ -920,8 +910,6 @@ addiu $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: li $v0,5
 li $v0,5
@@ -946,8 +934,6 @@ addiu $sp,$sp,-4
 sw $fp,0($sp)
 # Original instruction: addi $fp,$sp,0
 addi $fp,$sp,0
-# Original instruction: addiu $sp,$sp,0
-addiu $sp,$sp,0
 # Original instruction: pushRegisters
 # Original instruction: lw $a0,8($fp)
 lw $a0,8($fp)

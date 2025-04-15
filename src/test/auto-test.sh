@@ -1,4 +1,6 @@
-#!/bin/zsh
+#!/bin/bash
+
+INTERPRETER="BASH"
 
 # PATHS
 CURR_DIR=$(pwd)
@@ -22,10 +24,17 @@ SEM_FAIL=240;
 PASS=0;
 
 # Color CONST
-RED='\e[31m'
-GREEN='\e[32m' YELLOW='\e[33m'
-BLUE='\e[34m'
-RESET='\e[0m'
+if [ "$INTERPRETER" = "ZSH" ]; then
+    RED='\e[31m'
+    GREEN='\e[32m' YELLOW='\e[33m'
+    BLUE='\e[34m'
+    RESET='\e[0m'
+else
+    RED=''
+    GREEN=''
+    BLUE=''
+    RESET=''
+fi
 
 # Other CONST
 DEFAULT_TIMEOUT=5
