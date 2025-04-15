@@ -7,6 +7,16 @@ The compiler is stricter than the standard C as it is strongly typed and will ne
 The compiler targets MIPS, so we will the Mars MIPS simulator to run compiled code and tests. <br>
 The register allocator currently uses Chaitin's algorithm and only uses `$s and $t architecture registers`.
 
+<br> Built-in functions
+```C
+void print_s(char* s);
+void print_i(int i);
+void print_c(char c);
+char read_c();
+int read_i();
+void* mcmalloc(int size);
+```
+
 Example of a C file that can be compiled:
 ```C
 #include "minic-stdlib.h"
