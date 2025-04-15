@@ -121,7 +121,7 @@ $ java -jar ./description/Mars4_5.jar sm nc me path_to_asm_file
 ```
 
 ## Running tests ##
-This shell script only works on macos for now and will require installing extra packages using brew
+If you are using macos, you need to install extra packages using brew as we use `timeout`
 ```bash
 $ brew install coreutils
 ```

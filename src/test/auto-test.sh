@@ -69,7 +69,7 @@ run_test_lexer() {
     echo "$ARROW $filename"
 
     # Execute the program and redirect output
-    gtimeout "$timelimit" java -cp bin Main1 -lexer "$c_file_path" > "$output_path"
+    timeout "$timelimit" java -cp bin Main1 -lexer "$c_file_path" > "$output_path"
     local exit_code=$?  # Capture the program's exit code
 
     # Check if program timeouts
@@ -114,7 +114,7 @@ run_test_parser() {
     echo "$ARROW $filename"
 
     # Execute the program
-    gtimeout "$timelimit" java -cp bin Main1 -parser "$c_file_path" > /dev/null
+    timeout "$timelimit" java -cp bin Main1 -parser "$c_file_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
 
     # Check if program timeouts
@@ -143,7 +143,7 @@ run_test_ast() {
     echo "$ARROW $filename"
 
     # Execute the program
-    gtimeout "$timelimit" java -cp bin Main2 -ast "$c_file_path" "$output_path" > /dev/null
+    timeout "$timelimit" java -cp bin Main2 -ast "$c_file_path" "$output_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
 
     # Check if program timeouts
@@ -178,7 +178,7 @@ run_test_sem() {
     echo "$ARROW $filename"
 
     # Execute the program
-    gtimeout "$timelimit" java -cp bin Main2 -sem "$c_file_path" > /dev/null
+    timeout "$timelimit" java -cp bin Main2 -sem "$c_file_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
 
     # Check if program timeouts
@@ -230,7 +230,7 @@ run_test_codegen() {
     echo "$stdin" | "$executable_file_path" > "$gcc_exec_output"
 
     # Execute the program
-    gtimeout "$timelimit" java -cp bin Main3 -gen "$c_file_path" "$asm_file_path" > /dev/null
+    timeout "$timelimit" java -cp bin Main3 -gen "$c_file_path" "$asm_file_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
     # Check if program timeouts
     if [ $exit_code -eq 124 ]; then
@@ -245,7 +245,7 @@ run_test_codegen() {
 
 
     # Run the generated assembly code with Mars Mips Simulator and redirect stderr to trash
-    echo -e "$stdin_mars" | gtimeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
+    echo -e "$stdin_mars" | timeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
     local exit_code=$?  # Capture the program's exit code
     # Check if program timeouts
     if [ $exit_code -eq 124 ]; then
@@ -299,7 +299,7 @@ run_test_regalloc_colour () {
     echo "$stdin" | "$executable_file_path" > "$gcc_exec_output"
 
     # Execute the program
-    gtimeout "$timelimit" java -cp bin Main4_promoteVarToReg -gen colour "$c_file_path" "$asm_file_path" > /dev/null
+    timeout "$timelimit" java -cp bin Main4_promoteVarToReg -gen colour "$c_file_path" "$asm_file_path" > /dev/null
     local exit_code=$?  # Capture the program's exit code
     # Check if program timeouts
     if [ $exit_code -eq 124 ]; then
@@ -314,7 +314,7 @@ run_test_regalloc_colour () {
 
 
     # Run the generated assembly code with Mars Mips Simulator and redirect stderr to trash
-    echo -e "$stdin_mars" | gtimeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
+    echo -e "$stdin_mars" | timeout "$timelimit" java -jar "$MARS_SIM_PATH" sm nc me "$asm_file_path" > "$mars_output" 2> /dev/null
     local exit_code=$?  # Capture the program's exit code
     # Check if program timeouts
     if [ $exit_code -eq 124 ]; then
